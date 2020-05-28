@@ -4,7 +4,7 @@
 
 **Version:** 0.6 (28/5/2020)
 
-**Status: ** Draft
+**Status:** Draft
 
 # Introduction
 
@@ -18,7 +18,37 @@ The requirements document received from the Dutch health authority GGD are leadi
 
 # Table of contents
 
-[[TOC]]
+- [COVID-19 Notification App - Solution Architecture](#covid-19-notification-app---solution-architecture)
+  * [Baseline for the "Proof of Concept"](#baseline-for-the--proof-of-concept-)
+- [Introduction](#introduction)
+- [Table of contents](#table-of-contents)
+- [Guiding principles](#guiding-principles)
+- [Key characteristics](#key-characteristics)
+  * [Decentralised approach](#decentralised-approach)
+  * [Bluetooth Low Energy (BLE)](#bluetooth-low-energy--ble-)
+  * [Google/Apple Exposure Notification framework (GAEN)](#google-apple-exposure-notification-framework--gaen-)
+- [Baseline Approach](#baseline-approach)
+  * [Recording encounters](#recording-encounters)
+  * [Taking a test](#taking-a-test)
+  * [Checking for exposures](#checking-for-exposures)
+  * [Risk assessment](#risk-assessment)
+  * [Notification of exposure](#notification-of-exposure)
+  * [Summary](#summary)
+- [System Landscape](#system-landscape)
+- [Security & Privacy](#security---privacy)
+  * [Overview](#overview)
+  * [Blinding](#blinding)
+  * [Lab result validation flow](#lab-result-validation-flow)
+- [Backend Considerations](#backend-considerations)
+  * [Backend overview](#backend-overview)
+  * [Infrastructure](#infrastructure)
+  * [App/Device Verification](#app-device-verification)
+- [App Considerations](#app-considerations)
+  * [Native vs hybrid development](#native-vs-hybrid-development)
+  * [Lifecycle Management](#lifecycle-management)
+- [GAEN protocol considerations](#gaen-protocol-considerations)
+  * [Challenges to be addressed](#challenges-to-be-addressed)
+  * [Proposed enhancements to the GAEN protocol](#proposed-enhancements-to-the-gaen-protocol)
 
 # Guiding principles
 
