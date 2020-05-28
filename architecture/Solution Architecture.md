@@ -170,7 +170,7 @@ The GAEN protocol breaks each parameter up into 8 buckets. By assigning values t
 
 For an understanding of how these buckets and parameters work, we have made available a test sheet that can be copied and used to get an understanding of the calculation: [https://docs.google.com/spreadsheets/d/18RVkBjahiVxd3lLgOS7weKEoc8KxxTufZVQ2exWOgR4/edit?usp=sharing](https://docs.google.com/spreadsheets/d/18RVkBjahiVxd3lLgOS7weKEoc8KxxTufZVQ2exWOgR4/edit?usp=sharing)
 
-**Note:** a prior version of the GAEN protocol allowed these experts to not only assign scores to the buckets, but also to provided weights that could be used to make, for example, duration more important than attenuation. These weights have been removed in the mid-May 2020 version of the GAEN protocol.
+**Note:** A prior version of the GAEN protocol allowed these experts to not only assign scores to the buckets, but also to provided weights that could be used to make, for example, duration more important than attenuation. These weights have been removed in the mid-May 2020 version of the GAEN protocol.
 
 ## Notification of exposure
 
@@ -341,4 +341,3 @@ There are some additional considerations that are not easy to work around, which
 Proposals that have been drafted, but later decided that we do not need them:
 
 * GACT-VF-EW - A proposal that builds on top of the above mentioned GACT-VF and adds an ‘early warning’ system by implementing a secondary contact tracing protocol. Although it will not be used in the Proof of Concept app, we have published it for other parties to consider.
-
