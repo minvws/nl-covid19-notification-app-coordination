@@ -54,9 +54,9 @@ The requirements document received from the Dutch health authority GGD are leadi
 
 We have defined a number of guiding principles that a solution must adhere to. This means that this project has a number of key contextual requirements that drive or otherwise define the architecture or are used as a benchmark:
 
-* The eHealth Network toolbox  "Mobile applications to support contact tracing in the EU’s fight against COVID-19" as published by the European commission <[https://ec.europa.eu/health/sites/health/files/ehealth/docs/covid-19_apps_en.pdf](https://ec.europa.eu/health/sites/health/files/ehealth/docs/covid-19_apps_en.pdf)>
+* The eHealth Network toolbox  "[Mobile applications to support contact tracing in the EU's fight against COVID-19](https://ec.europa.eu/health/sites/health/files/ehealth/docs/covid-19_apps_en.pdf)" as published by the European commission 
 
-* The key principles as published by "Veilig Tegen Corona" at [http://veiligtegencorona.nl](http://veiligtegencorona.nl) (This is an approximate translation of the key principles, see the Veilig Tegen Corona site for the original Dutch manifesto):
+* The key principles as published by "[Veilig Tegen Corona](https://veiligtegencorona.nl)" (This is an approximate translation of the key principles, see the Veilig Tegen Corona site for the original Dutch manifesto):
 
 1. Only one goal: keeping the virus under control
 
@@ -80,17 +80,17 @@ We have defined a number of guiding principles that a solution must adhere to. T
 
 * The baseline standard that applies to all government systems in the Netherlands:
 
-* Baseline Informatiebeveiliging Overheid 1.04 [https://bio-overheid.nl/media/1400/70463-rapport-bio-versie-104_digi.pdf](https://bio-overheid.nl/media/1400/70463-rapport-bio-versie-104_digi.pdf)
+* [Baseline Informatiebeveiliging Overheid 1.04](https://bio-overheid.nl/media/1400/70463-rapport-bio-versie-104_digi.pdf)
 
-* Algemene Verordening Gegevensbescherming (AVG) [https://autoriteitpersoonsgegevens.nl/sites/default/files/atoms/files/verordening_2016_-_679_definitief.pdf](https://autoriteitpersoonsgegevens.nl/sites/default/files/atoms/files/verordening_2016_-_679_definitief.pdf) 
+* [Algemene Verordening Gegevensbescherming (AVG)](https://autoriteitpersoonsgegevens.nl/sites/default/files/atoms/files/verordening_2016_-_679_definitief.pdf) 
 
-* Handreiking Mobiele App Ontwikkeling en Beheer 3.0 [https://www.noraonline.nl/images/noraonline/a/a5/Handreiking_Mobiele_App_3.0.pdf](https://www.noraonline.nl/images/noraonline/a/a5/Handreiking_Mobiele_App_3.0.pdf) 
+* [Handreiking Mobiele App Ontwikkeling en Beheer 3.0](https://www.noraonline.nl/images/noraonline/a/a5/Handreiking_Mobiele_App_3.0.pdf) 
 
-* Web Content Accessibility Guidelines 2.1 [https://www.w3.org/TR/WCAG21/](https://www.w3.org/TR/WCAG21/)
+* [Web Content Accessibility Guidelines 2.1](https://www.w3.org/TR/WCAG21/)
 
-* NCSC beveiligingsrichtlijnen voor webapplicaties [https://www.ncsc.nl/documenten/publicaties/2019/mei/01/ict-beveiligingsrichtlijnen-voor-webapplicaties](https://www.ncsc.nl/documenten/publicaties/2019/mei/01/ict-beveiligingsrichtlijnen-voor-webapplicaties)
+* [NCSC beveiligingsrichtlijnen voor webapplicaties](https://www.ncsc.nl/documenten/publicaties/2019/mei/01/ict-beveiligingsrichtlijnen-voor-webapplicaties)
 
-* NCSC beveiligingsrichtlijnen voor mobiele apps [https://www.ncsc.nl/documenten/publicaties/2019/mei/01/ict-beveiligingsrichtlijnen-voor-mobiele-apps](https://www.ncsc.nl/documenten/publicaties/2019/mei/01/ict-beveiligingsrichtlijnen-voor-mobiele-apps)
+* [NCSC beveiligingsrichtlijnen voor mobiele apps](https://www.ncsc.nl/documenten/publicaties/2019/mei/01/ict-beveiligingsrichtlijnen-voor-mobiele-apps)
 
 # Key characteristics
 
@@ -122,7 +122,7 @@ This chapter describes the core flow that we are following, which is partially d
 
 ## Recording encounters 
 
-As described in the GAEN document set - the users’ mobile phones are able to record ephemeral IDs of other phones they meet. These are generated from a daily seed key (Temporary Exposure Key, TEK). Details about this can be found in the GAEN documentation, but it boils down to the following:
+As described in the GAEN document set - the users’ mobile phones are able to record ephemeral IDs of other phones they meet. These are generated from a daily seed key (Temporary Exposure Key, TEK). Details about this can be found in the GAEN documentation (See Cryptography Specification: [Apple](https://www.apple.com/covid19/contacttracing), [Google](https://www.google.com/covid19/exposurenotifications/)), but it boils down to the following:
 
 ![image alt text](images/image_0.png)
 
