@@ -7,3 +7,26 @@ sentimentBotToxicityThreshold: .75
 # Comment to reply with
 sentimentBotReplyComment: >
   Please be sure to review the [Code of Conduct](https://github.com/minvws/.github/blob/master/CODE_OF_CONDUCT.md) and be respectful of other users. cc/ @EdoPlantinga
+
+# Configuration for welcome bot - https://github.com/behaviorbot/new-issue-welcome
+newIssueWelcomeComment: |
+  Thanks for opening your first issue in this repository! We know that the process of creating an issue and pull request can sometimes be the biggest barrier for new contributors. So first of all thank you!
+
+  If this is your first time contributing to open source we recommend checking out the [First Timers Only website](https://www.firsttimersonly.com/).
+
+  ### 🤔 What you will need to know
+  This automated comment is meant to welcome you to our community and we are happy to walk you through the process. In case you haven't yet, we ask you to read our [Code of Conduct](https://github.com/minvws/.github/blob/master/CODE_OF_CONDUCT.md), and [contributing documentation](https://github.com/minvws/.github/blob/master/CONTRIBUTING.md). If you're not super familiar with GitHub yet please feel free to follow one of the [Learning Lab courses](https://lab.github.com/).
+
+  If you're reporting a 🐞, please make sure you include as much relevant information as possible, like a screenshot and steps to reproduce it.
+
+  ### ⌛ What to expect
+  We receive a lot of input, so please be patient and we will get back to you as soon as we can! 😊
+
+  ### 👍 Involvement
+  If you plan to do something more involved, please reach out to us via Slack at [praatmee.codefor.nl](https://praatmee.codefor.nl). This will avoid unnecessary work and surely give you and us a good deal of inspiration.
+
+newPRWelcomeComment: >
+  🙌 Thanks for opening your first pull request! You're awesome. If this is your first time contributing to open source we recommend checking out the [First Timers Only website](https://www.firsttimersonly.com/).
+
+firstPRMergeComment: >
+  Congrats on merging your first pull request!

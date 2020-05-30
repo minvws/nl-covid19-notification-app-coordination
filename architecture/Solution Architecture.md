@@ -4,7 +4,7 @@
 
 **Version:** 0.6 (28/5/2020)
 
-**Status: ** Draft
+**Status:** Draft
 
 # Introduction
 
@@ -18,15 +18,45 @@ The requirements document received from the Dutch health authority GGD are leadi
 
 # Table of contents
 
-[[TOC]]
+- [COVID-19 Notification App - Solution Architecture](#covid-19-notification-app---solution-architecture)
+  * [Baseline for the "Proof of Concept"](#baseline-for-the-proof-of-concept)
+- [Introduction](#introduction)
+- [Table of contents](#table-of-contents)
+- [Guiding principles](#guiding-principles)
+- [Key characteristics](#key-characteristics)
+  * [Decentralised approach](#decentralised-approach)
+  * [Bluetooth Low Energy (BLE)](#bluetooth-low-energy-ble)
+  * [Google/Apple Exposure Notification framework (GAEN)](#googleapple-exposure-notification-framework-gaen)
+- [Baseline Approach](#baseline-approach)
+  * [Recording encounters](#recording-encounters)
+  * [Taking a test](#taking-a-test)
+  * [Checking for exposures](#checking-for-exposures)
+  * [Risk assessment](#risk-assessment)
+  * [Notification of exposure](#notification-of-exposure)
+  * [Summary](#summary)
+- [System Landscape](#system-landscape)
+- [Security & Privacy](#security--privacy)
+  * [Overview](#overview)
+  * [Blinding](#blinding)
+  * [Lab result validation flow](#lab-result-validation-flow)
+- [Backend Considerations](#backend-considerations)
+  * [Backend overview](#backend-overview)
+  * [Infrastructure](#infrastructure)
+  * [App/Device Verification](#appdevice-verification)
+- [App Considerations](#app-considerations)
+  * [Native vs hybrid development](#native-vs-hybrid-development)
+  * [Lifecycle Management](#lifecycle-management)
+- [GAEN protocol considerations](#gaen-protocol-considerations)
+  * [Challenges to be addressed](#challenges-to-be-addressed)
+  * [Proposed enhancements to the GAEN protocol](#proposed-enhancements-to-the-gaen-protocol)
 
 # Guiding principles
 
 We have defined a number of guiding principles that a solution must adhere to. This means that this project has a number of key contextual requirements that drive or otherwise define the architecture or are used as a benchmark:
 
-* The eHealth Network toolbox  "Mobile applications to support contact tracing in the EU’s fight against COVID-19" as published by the European commission <[https://ec.europa.eu/health/sites/health/files/ehealth/docs/covid-19_apps_en.pdf](https://ec.europa.eu/health/sites/health/files/ehealth/docs/covid-19_apps_en.pdf)>
+* The eHealth Network toolbox  "[Mobile applications to support contact tracing in the EU's fight against COVID-19](https://ec.europa.eu/health/sites/health/files/ehealth/docs/covid-19_apps_en.pdf)" as published by the European commission 
 
-* The key principles as published by "Veilig Tegen Corona" at [http://veiligtegencorona.nl](http://veiligtegencorona.nl) (This is an approximate translation of the key principles, see the Veilig Tegen Corona site for the original Dutch manifesto):
+* The key principles as published by "[Veilig Tegen Corona](https://veiligtegencorona.nl)" (This is an approximate translation of the key principles, see the Veilig Tegen Corona site for the original Dutch manifesto):
 
 1. Only one goal: keeping the virus under control
 
@@ -50,17 +80,17 @@ We have defined a number of guiding principles that a solution must adhere to. T
 
 * The baseline standard that applies to all government systems in the Netherlands:
 
-* Baseline Informatiebeveiliging Overheid 1.04 [https://bio-overheid.nl/media/1400/70463-rapport-bio-versie-104_digi.pdf](https://bio-overheid.nl/media/1400/70463-rapport-bio-versie-104_digi.pdf)
+* [Baseline Informatiebeveiliging Overheid 1.04](https://bio-overheid.nl/media/1400/70463-rapport-bio-versie-104_digi.pdf)
 
-* Algemene Verordening Gegevensbescherming (AVG) [https://autoriteitpersoonsgegevens.nl/sites/default/files/atoms/files/verordening_2016_-_679_definitief.pdf](https://autoriteitpersoonsgegevens.nl/sites/default/files/atoms/files/verordening_2016_-_679_definitief.pdf) 
+* [Algemene Verordening Gegevensbescherming (AVG)](https://autoriteitpersoonsgegevens.nl/sites/default/files/atoms/files/verordening_2016_-_679_definitief.pdf) 
 
-* Handreiking Mobiele App Ontwikkeling en Beheer 3.0 [https://www.noraonline.nl/images/noraonline/a/a5/Handreiking_Mobiele_App_3.0.pdf](https://www.noraonline.nl/images/noraonline/a/a5/Handreiking_Mobiele_App_3.0.pdf) 
+* [Handreiking Mobiele App Ontwikkeling en Beheer 3.0](https://www.noraonline.nl/images/noraonline/a/a5/Handreiking_Mobiele_App_3.0.pdf) 
 
-* Web Content Accessibility Guidelines 2.1 [https://www.w3.org/TR/WCAG21/](https://www.w3.org/TR/WCAG21/)
+* [Web Content Accessibility Guidelines 2.1](https://www.w3.org/TR/WCAG21/)
 
-* NCSC beveiligingsrichtlijnen voor webapplicaties [https://www.ncsc.nl/documenten/publicaties/2019/mei/01/ict-beveiligingsrichtlijnen-voor-webapplicaties](https://www.ncsc.nl/documenten/publicaties/2019/mei/01/ict-beveiligingsrichtlijnen-voor-webapplicaties)
+* [NCSC beveiligingsrichtlijnen voor webapplicaties](https://www.ncsc.nl/documenten/publicaties/2019/mei/01/ict-beveiligingsrichtlijnen-voor-webapplicaties)
 
-* NCSC beveiligingsrichtlijnen voor mobiele apps [https://www.ncsc.nl/documenten/publicaties/2019/mei/01/ict-beveiligingsrichtlijnen-voor-mobiele-apps](https://www.ncsc.nl/documenten/publicaties/2019/mei/01/ict-beveiligingsrichtlijnen-voor-mobiele-apps)
+* [NCSC beveiligingsrichtlijnen voor mobiele apps](https://www.ncsc.nl/documenten/publicaties/2019/mei/01/ict-beveiligingsrichtlijnen-voor-mobiele-apps)
 
 # Key characteristics
 
@@ -92,7 +122,7 @@ This chapter describes the core flow that we are following, which is partially d
 
 ## Recording encounters 
 
-As described in the GAEN document set - the users’ mobile phones are able to record ephemeral IDs of other phones they meet. These are generated from a daily seed key (Temporary Exposure Key, TEK). Details about this can be found in the GAEN documentation, but it boils down to the following:
+As described in the GAEN document set - the users’ mobile phones are able to record ephemeral IDs of other phones they meet. These are generated from a daily seed key (Temporary Exposure Key, TEK). Details about this can be found in the GAEN documentation (See Cryptography Specification: [Apple](https://www.apple.com/covid19/contacttracing), [Google](https://www.google.com/covid19/exposurenotifications/)), but it boils down to the following:
 
 ![image alt text](images/image_0.png)
 
@@ -140,7 +170,7 @@ The GAEN protocol breaks each parameter up into 8 buckets. By assigning values t
 
 For an understanding of how these buckets and parameters work, we have made available a test sheet that can be copied and used to get an understanding of the calculation: [https://docs.google.com/spreadsheets/d/18RVkBjahiVxd3lLgOS7weKEoc8KxxTufZVQ2exWOgR4/edit?usp=sharing](https://docs.google.com/spreadsheets/d/18RVkBjahiVxd3lLgOS7weKEoc8KxxTufZVQ2exWOgR4/edit?usp=sharing)
 
-**Note: **a prior version of the GAEN protocol allowed these experts to not only assign scores to the buckets, but also to provided weights that could be used to make, for example, duration more important than attenuation. These weights have been removed in the mid-May 2020 version of the GAEN protocol.
+**Note:** A prior version of the GAEN protocol allowed these experts to not only assign scores to the buckets, but also to provided weights that could be used to make, for example, duration more important than attenuation. These weights have been removed in the mid-May 2020 version of the GAEN protocol.
 
 ## Notification of exposure
 
@@ -180,7 +210,7 @@ TODO more detailed description of system landscape
 
 The details surrounding the security and privacy implementation of the Proof of Concept is laid out in the document ‘Corona Cryptografie Raamwerk’, which is currently being prepared. While the details and rationale surrounding the choices can be found in that document, for this solution architecture we have outlined the key principles from the preliminary version in the following diagram.
 
-**NOTE: **Some items, such as the orange items, dotted items and items with question marks are currently under consideration or to be investigated, so this is not a complete picture yet. It will be updated alongside progress in the Cryptografie Raamwerk.
+**NOTE:** Some items, such as the orange items, dotted items and items with question marks are currently under consideration or to be investigated, so this is not a complete picture yet. It will be updated alongside progress in the Cryptografie Raamwerk.
 
 ![image alt text](images/image_6.png)
 
@@ -260,7 +290,7 @@ The Android Developer blog states:
 
 "*In other words, not all users who fail attestation are necessarily abusers, and not all abusers will necessarily fail attestation. By blocking users solely on their attestation results, you might be missing abusive users that don't fail attestations. Furthermore, you might also be blocking legitimate, loyal customers who fail attestations for reasons other than abuse*" (NOTE:  https://android-developers.googleblog.com/2017/11/10-things-you-might-be-doing-wrong-when.html)
 
-The safetynet attestation documentation further states about attestation failure: *"Most likely, the device launched with an Android version less than 7.0 and it does not support hardware attestation. In this case, Android has a software implementation of attestation which produces the s**ame sort of attestation certificate, but signed with a key hardcoded in Android source code. Because this signing key is not a secret, the attestation could have been created by an attacker pretending to provide secure hardware* (NOTE:  https://developer.android.com/training/articles/security-key-attestation)*"***.**
+The safetynet attestation documentation further states about attestation failure: *"Most likely, the device launched with an Android version less than 7.0 and it does not support hardware attestation. In this case, Android has a software implementation of attestation which produces the same sort of attestation certificate, but signed with a key hardcoded in Android source code. Because this signing key is not a secret, the attestation could have been created by an attacker pretending to provide secure hardware"* (NOTE:  https://developer.android.com/training/articles/security-key-attestation)
 
 This leads us to believe that when applying these checks, we could be rejecting keys from legitimate users, while not preventing any attack. TODO: Get more information and clarity around this check.
 
@@ -281,6 +311,8 @@ We have carefully considered whether to do native development or use a cross pla
 * The available development team has sufficient capability in native app development.
 
 * It is expected that, should we need help from Google or Apple to resolve issues while implementing their protocol, they can do so more efficiently if we use the development stack provided by the vendors.
+
+* In order to ease [security] code-reviews and thus keeping them accessible to a wider audience, it is prudent to keep the app's stack and usage of programming paradigms as vanilla and lean as possible.
 
 ## Lifecycle Management
 
@@ -311,4 +343,3 @@ There are some additional considerations that are not easy to work around, which
 Proposals that have been drafted, but later decided that we do not need them:
 
 * GACT-VF-EW - A proposal that builds on top of the above mentioned GACT-VF and adds an ‘early warning’ system by implementing a secondary contact tracing protocol. Although it will not be used in the Proof of Concept app, we have published it for other parties to consider.
-
