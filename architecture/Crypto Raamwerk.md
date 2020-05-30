@@ -1,5 +1,3 @@
-###### This is WIP - Lennert212
-
 # Covid-19 Exposure Notification Cryptografie raamwerk
 
 
