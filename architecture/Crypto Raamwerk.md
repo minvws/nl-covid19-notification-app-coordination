@@ -327,151 +327,80 @@ Implementatie:
 
 2.  **Voorkom brute force uploads, fake keys**
 
--   SOC / Firewall oplossing ter voorkoming brute force attack. Afweging
-    hierbij is dat het aantal uploads relatief laag is (in theorie de
-    testcapaciteit) en dat telefoons maar zelden contact maken. Dit
-    maakt brute-force "DoS" mitigatie makkelijk en het dus mogelijk de
-    cryptografische oplossing minder zwaar te maken ten einde de
-    gebruikersvriendelijkheid tegemoet te komen.
+-   SOC / Firewall oplossing ter voorkoming brute force attack. Afweging hierbij is dat het aantal uploads relatief laag is (in theorie de testcapaciteit) en dat telefoons maar zelden contact maken. Dit maakt brute-force "DoS" mitigatie makkelijk en het dus mogelijk de cryptografische oplossing minder zwaar te maken ten einde de gebruikersvriendelijkheid tegemoet te komen.
 
 3.  **Authenticiteit van de uploaded TEKs**
 
 -   TLS eenzijdig, certificate pinning op Staat der Nerderlanden RootCA
-    (of een lager gelegen certificaat, TBD). Dit geeft aanvullende
-    integriteit tijdens transport met een werkbare implementatie van het
-    sleutelbeheer. Een hard coded check op een vast end entity
-    certificaat is operationeel bewerkelijk en foutgevoelig.
+    _(of een lager gelegen certificaat, TBD)_. Dit geeft aanvullende integriteit tijdens transport met een werkbare implementatie van het sleutelbeheer. Een hard coded check op een vast end entity certificaat is operationeel bewerkelijk en foutgevoelig.
 
 -   TanCode1 (L:10-12), gebruik bij upload van shared secret binnen
     TLS.\
     <https://gitlab.com/PrivateTracer/caregiversportal/-/blob/master/AuthenticationCodes.md>\
-    De TanCode is een link tussen een shared secret en een mobiele
-    telefoon en de diagnosed keys daarop.
+    De TanCode is een link tussen een shared secret en een mobiele telefoon en de diagnosed keys daarop.
 
--   HMAC op basis van shared secret t.b.v. de authenticiteit van de
-    diagnosed keys.
+-   HMAC op basis van shared secret t.b.v. de authenticiteit van de diagnosed keys.
 
--   Gebruik van deDeviceCheck API indien niet linkable aan telefoon of
-    gebruiker (AVG). 
+-   Gebruik van deDeviceCheck API indien niet linkable aan telefoon of gebruiker (AVG). 
 
--   Wissel bij testlocatie van TanCode1 TanCode2 om de procesen te
-    ontkoppelen (AVG).
+-   Wissel bij testlocatie van TanCode1 TanCode2 om de procesen te ontkoppelen (AVG).
 
--   Vrijgave shared secret voor upload middels TanCode1 (of bij wissel
-    TanCode2)
+-   Vrijgave shared secret voor upload middels TanCode1 (of bij wissel TanCode2)
 
--   Vernietiging van TanCodes en shared secret aan beide zijden, zo
-    vroeg als mogelijk in het proces.
+-   Vernietiging van TanCodes en shared secret aan beide zijden, zo vroeg als mogelijk in het proces.
 
-4.  **Authenticiteit van de receiving server\
-    **PKI-O certificaat, certificaat ; aanvraag bij CIBG , in ieder
-    geval PKI-O\
-    VWS in subject. *CAA record in DNS*\
+4.  **Authenticiteit van de receiving server\**
+    PKI-O certificaat, certificaat ; aanvraag bij CIBG , in ieder geval PKI-O VWS in subject. (_CAA record in DNS* TBD_)
     Toegestane TLS strings:
 
   ECDHE\_RSA TLS\_AES\_256\_GCM\_SHA384
-  ----------------------------------------------
   ECDHE\_RSA TLS\_AES\_128\_GCM\_SHA256
   TLS\_ECDHE\_RSA\_WITH\_AES\_256\_GCM\_SHA384
   TLS\_ECDHE\_RSA\_WITH\_AES\_128\_GCM\_SHA256
   TLS\_ECDHE\_RSA\_WITH\_AES\_256\_CBC\_SHA384
   TLS\_ECDHE\_RSA\_WITH\_AES\_128\_CBC\_SHA256
 
-Onderstaande **[voorstel]{.underline}** beoogt:
+Onderstaande **[voorstel]** beoogt:
 
-1.  authenticiteit van de TEKs (bron integriteit en integriteit bij
-    transport)
+1.  authenticiteit van de  (bron integriteit en integriteit bij transport)
 
-2.  privacy preserving in de uitwerking van de authenticiteit.
+1.  privacy preserving in de uitwerking van de authenticiteit.
 
-> Tevens wordt uitgegaan van:
+Tevens wordt uitgegaan van:
 
 1.  Upload van TEKs na positieve test aanslag
 
-2.  Wisselen van TanCode op testlocatie is acceptabel voor GGD.
+1.  Wisselen van TanCode op testlocatie is acceptabel voor GGD.
 
-Indien 2 niet acceptabel is dan ontstaat meer linkability naar de
-mobiele telefoon (tijdelijk) en is er geen digicheck op een ingevoerde
-tan code ?
+Indien 2 niet acceptabel is dan ontstaat meer linkability naar de mobiele telefoon (tijdelijk) en is er geen digicheck op een ingevoerde tan code ?
 
-![](media/image3.emf){width="5.365277777777778in"
-height="6.659027777777778in"}
+![](media/image3.emf)
 
-Ruwe tekst t.a.v. flow:
+###### Ruwe tekst t.a.v. flow:
 
-1\. User gaat naar test locatie en drukt, in zijn app op 'autoriseer
-test'.\
-2. Telefoon stuurt nu een random 128 bits secret naar een server en
-krijgt een tan1 terug. De telefoon heeft dan 128 bits key en tan1. Deze
-tan\_1 wordt in het scherm getoond en de user toont deze code aan de
-medewerker.\
-3. Lab medewerker voert de tangaqmin-Kyfgu6-bypwuj)1 in op een
-eenvoudige site en krijgt een tan\_2 terug. (Deze site zit idealiter
-achter een login, maar indien dat een bezwaar is, is er ook een variant
-denkbaar zonder login, omdat hier slechts een 'tan wissel' plaatsvindt,
-en een aanvaller niets kan met de code die eruit komt.Dit maakt het
-proces makkelijk overal benaderbaar, ook bij pop up labs (een telefoon
-met browser is genoeg).\
-4. Onder water verwisselt de server tan1 met tan\_2 als index op de
-key.\
-de server heeft nu de key en tan\_2\
-5. Tan\_1 wordt weggegooid. Door die korte leeftijd kan die tan kort
-gehouden worden.\
-6. Tan\_2 komt op het lab formulier of gaat een geautomatiseerd lab
+1. User gaat naar test locatie en drukt, in zijn app op 'autoriseer test'.
+1. Telefoon stuurt nu een random 128 bits secret naar een server en krijgt een tan1 terug. De telefoon heeft dan 128 bits key en tan1. Deze tan_1 wordt in het scherm getoond en de user toont deze code aan de medewerker.
+1. Lab medewerker voert de tangaqmin-Kyfgu6-bypwuj)1 in op een eenvoudige site en krijgt een tan_2 terug. (Deze site zit idealiter achter een login, maar indien dat een bezwaar is, is er ook een variant denkbaar zonder login, omdat hier slechts een 'tan wissel' plaatsvindt, en een aanvaller niets kan met de code die eruit komt.Dit maakt het proces makkelijk overal benaderbaar, ook bij pop up labs (een telefoon met browser is genoeg).
+4. Onder water verwisselt de server tan1 met tan\_2 als index op de key. De server heeft nu de key en tan_2
+5. Tan_1 wordt weggegooid. Door die korte leeftijd kan die tan kort gehouden worden.
+6. Tan_2 komt op het lab formulier of gaat een geautomatiseerd lab
 proces in (belangrijk is dat deze code, die het testresultaat
-uiteindelijk terugkoppelt aan een anonieme telefoon, bewaard blijft tot
-het resultaat van de test positief blijkt, en dan weer kan worden
-ingevoerd in het app ecosysteem.\
-7. Het nummer op het form (tan\_2) en de telefoon hebben geen enkele
-directe relatie met elkaar ( immers de telefoon heeft geen weet van
-tan\_2. De enige relatie die bestaat is in de vorm van de 128 bits
-secret.\
-8. Uitslag wordt bekend. Het lab/huisarts/testlocatie voert tan\_2 in en
-meldt hem positief. Dit wordt encrypted opgeslagen in de database.
-Indien deze tan\_2-\>positief verwerking in batchs wordt uitgevoerd, kan
-het voorkomen dat deze actie pas wordt gedaan nadat de user zijn keys
-heeft geupload. Dat is echter niet erg, de keys wachten op de
-autorisatie en andersom. Pas als beide compleet zijn worden de keys
-gepubliceerd.\
-9. De gebruiker wordt nu geinformeerd over het resultaat van zijn test.
-(telefonisch, meestal).\
-10. Er wordt aan de gebruiker gevraagd of hij in de app wil kiezen voor
-'upload van keys'.
+uiteindelijk terugkoppelt aan een anonieme telefoon, bewaard blijft tot het resultaat van de test positief blijkt, en dan weer kan worden ingevoerd in het app ecosysteem.
+7. Het nummer op het form (tan_2) en de telefoon hebben geen enkele directe relatie met elkaar ( immers de telefoon heeft geen weet van tan_2. De enige relatie die bestaat is in de vorm van de 128 bits secret.
+8. Uitslag wordt bekend. Het lab/huisarts/testlocatie voert tan_2 in en meldt hem positief. Dit wordt encrypted opgeslagen in de database. Indien deze tan_2 ->p ositief verwerking in batchs wordt uitgevoerd, kan het voorkomen dat deze actie pas wordt gedaan nadat de user zijn keys heeft geupload. Dat is echter niet erg, de keys wachten op de autorisatie en andersom. Pas als beide compleet zijn worden de keys gepubliceerd.
+9. De gebruiker wordt nu geinformeerd over het resultaat van zijn test. (telefonisch, meestal).\
+10. Er wordt aan de gebruiker gevraagd of hij in de app wil kiezen voor 'upload van keys'.
+11. User stuurt z'n TEKs in. Omdat zijn secret gekoppeld is aan een positieve test, kan de telefoon een verifieerbare HMAC uitvoeren mbv het secret, op de set van keys. Daarna wordt de set aan keys geaccepteerd en gepubliceerd. Een autorisatie (tan) is in deze stap niet nodig. De secret is door het lab als het ware 'hot' gemaakt. (we nemen hier aan dat de gebruiker zelf controle heeft over zijn telefoon en niet iemand anders voor hem kan beslissen om de keys te uploaden. Mocht dit voor het proces een twijfelpunt zijn, dan kan de medewerker een autorisatiecode aan de patient geven, maar dit betekent extra stappen en extra afhaakmoment. (vooral als er een code moet worden onthouden tijdens het telefoongesprek)
 
-11\. User stuurt z'n teks in. Omdat zijn secret gekoppeld is aan een
-positieve test, kan de telefoon een verifieerbare HMAC uitvoeren mbv het
-secret, op de set van keys. Daarna wordt de set aan keys geaccepteerd en
-gepubliceerd. Een autorisatie (tan) is in deze stap niet nodig. De
-secret is door het lab als het ware 'hot' gemaakt. (we nemen hier aan
-dat de gebruiker zelf controle heeft over zijn telefoon en niet iemand
-anders voor hem kan beslissen om de keys te uploaden. Mocht dit voor het
-proces een twijfelpunt zijn, dan kan de medewerker een autorisatiecode
-aan de patient geven, maar dit betekent extra stappen en extra
-afhaakmoment. (vooral als er een code moet worden onthouden tijdens het
-telefoongesprek)\
-\
-Na afloop dienen Tan1, Tan2 en het shared secret verwijderd te worden,
-zowel op de mobiele telefoon als aan de server zijde. Dit om de
-opgebouwde authenticatie link weer volledig door te knippen (privacy by
-design).
+Na afloop dienen Tan1, Tan2 en het shared secret verwijderd te worden, zowel op de mobiele telefoon als aan de server zijde. Dit om de opgebouwde authenticatie link weer volledig door te knippen (privacy by design).
 
-Bovenstaand proces betekent minimale hoeveelheden werk op de juiste
-momenten. Meeste gebeurt onder water. Enige plek waar een vorm van auth
-nodig is op de plek waar de secret hot gemaakt wordt.\
-\
-Bijkomend voordeel: de app van de user weet niet of de secret hot is of
-niet. Er is op geen enkele manier, door wat voor reverse engineering dan
-ook, aan de telefoon te zien dat hij bij een positieve test hoort.\
-\
-Nadeel: de user kan zijn teks met een Cold secret ook gewoon inzenden.
-Die teks worden in stilte genegeerd, maar het is toch verkeer. Dit helpt
-weer wel met de privacy. Want Nu kan een sniffer minder makkelijk zien
-of de gebruiker keys upload en dus besmet bent.
+Bovenstaand proces betekent minimale hoeveelheden werk op de juiste momenten. Meeste gebeurt onder water. Enige plek waar een vorm van auth nodig is op de plek waar de secret hot gemaakt wordt.
 
-Aanbevolen is om het insturen van de keys verder te blinderen door de
-apps regelmatig 'decoy' uploads te laten doen, zodat een netwerk sniffer
-niet kan concluderen dat en patient positief is op basis van het
-netwerkverkeer dat hij voorbij ziet komen.
+Bijkomend voordeel: de app van de user weet niet of de secret hot is of niet. Er is op geen enkele manier, door wat voor reverse engineering dan ook, aan de telefoon te zien dat hij bij een positieve test hoort.
+
+Nadeel: de user kan zijn TEKs met een Cold secret ook gewoon inzenden. Die TEKs worden in stilte genegeerd, maar het is toch verkeer. Dit helpt weer wel met de privacy. Want nu kan een sniffer minder makkelijk zien of de gebruiker keys upload en dus besmet bent.
+
+Aanbevolen is om het insturen van de keys verder te blinderen door de apps regelmatig 'decoy' uploads te laten doen, zodat een netwerk sniffer niet kan concluderen dat en patient positief is op basis van het netwerkverkeer dat hij voorbij ziet komen.
 
 Verantwoording:
 
@@ -479,81 +408,44 @@ Het dilemma: anonimiteit lijkt haaks te staan op bron integriteit.
 
 Technische oplossingen ter discussie
 
-1.  Eenmalig TanCode uitwisselen voor upload. Het netwerktransport van
-    de code (risico op replay) kan gemitigeerd worden door een éénmalige
-    karakter in gebruik en de versleuteling door TLS. Biedt op zich geen
-    integriteit tijdens transport.
+1.  Eenmalig TanCode uitwisselen voor upload. Het netwerktransport van de code (risico op replay) kan gemitigeerd worden door een éénmalige karakter in gebruik en de versleuteling door TLS. Biedt op zich geen integriteit tijdens transport.
 
-2.  MAC, Message Authentication Code op basis van HMAC. Een MAC waarde
-    is een cryptografisch controle getal voor:
+2.  MAC, Message Authentication Code op basis van HMAC. Een MAC waarde is een cryptografisch controle getal voor:
 
-    a.  Verificatie van onveranderlijkheid van de data (b.v. tijdens
-        transport)
+    a.  Verificatie van onveranderlijkheid van de data (b.v. tijdens transport)
 
-    b.  Verificatie van de bron, alleen partijen die de juiste sleutel
-        hebben kunnen de MAC waarde berekenen. In ons voorbeeld is dat
-        de app op de mobiele telefoon en de receiving server.
+    b.  Verificatie van de bron, alleen partijen die de juiste sleutel hebben kunnen de MAC waarde berekenen. In ons voorbeeld is dat de app op de mobiele telefoon en de receiving server.
 
-3.  TLS tijdens transport, eenzijdig geauthentiseerd, alleen server
-    certificate. *CAA record in DNS*\
-    Biedt doel integriteit (server authenticatie), integriteit tijdens
-    transport en vertrouwelijkheid (TEKs waren al anoniem, geen echte
-    requirement).
+3.  TLS tijdens transport, eenzijdig geauthentiseerd, alleen server certificate. (_CAA record in DNS_
+    Biedt doel integriteit (server authenticatie), integriteit tijdens transport en vertrouwelijkheid (TEKs waren al anoniem, geen echte requirement).
 
-4.  TLS tijdens transport, tweezijdig geauthentiseerd, dus inclusief
-    client authenticatie en bron integriteit waarbij:
+4.  TLS tijdens transport, tweezijdig geauthentiseerd, dus inclusief client authenticatie en bron integriteit waarbij:
 
-    a.  Alle app instanties zelfde certificaat en dan weinig waarde,
-        geen bron integriteit
+    a.  Alle app instanties zelfde certificaat en dan weinig waarde, geen bron integriteit
 
-    b.  Iedere app een eigen certificaat , wel bron integriteit maar
-        leidt tot authenticatie en verlies van anonimiteit.
+    b.  Iedere app een eigen certificaat , wel bron integriteit maar leidt tot authenticatie en verlies van anonimiteit.
 
-5.  Bij voorkomen van brute force door netwerk technische maatregelen
-    zullen geslaagde uploads van fake keys "enkelvoudig" zijn en door de
-    grootte van de keyspace voor de TEKs niet merkbaar tot false
-    positives leiden. Tevens verhindert dit een brute force attack op de
-    AuthenticationCode / TanCode.
+5.  Bij voorkomen van brute force door netwerk technische maatregelen zullen geslaagde uploads van fake keys "enkelvoudig" zijn en door de grootte van de keyspace voor de TEKs niet merkbaar tot false positives leiden. Tevens verhindert dit een brute force attack op de AuthenticationCode / TanCode.
 
-  ----------------------------------------------------------------------------------------------------------
-                                  AuthenticationCode\       MAC            TLS-éénzijdig   TLS-mutual auth
-                                  /Tan                                                     
-  ------------------------------- ------------------------- -------------- --------------- -----------------
-  anoniem                         Herleidbaar (tijdelijk)   Herleidbaar\   ja              nee
-                                                            (tijdelijk)                    
+|**AuthenticationCode/Tan**|**MAC**|**TLS-éénzijdig**|**TLS-mutual auth**
+-----|-----|-----|-----|-----
+anoniem|Herleidbaar (tijdelijk)|Herleidbaar (tijdelijk)|ja|nee
+Integriteit tijdens transport|nee|ja|ja|ja
+Bron integriteit|ja|ja|nee|ja
+Doel integriteit|nee|nee|ja|ja
+Voorkom wilde uploads|nee|nee|nee|ja
 
-  Integriteit tijdens transport   nee                       ja             ja              ja
+De combinatie van TAN1 en Tan2 aangevuld met HMAC en eenzijdig TLS ondersteunt door netwerk technische maatregelen ter voorkoming van "bruteforce" pogingen tot uploaden van fake keys biedt:
+Authenticiteit van TEKs (bron integriteit van de TEKs en integriteit bij transport) en privacy preserving in de uitwerking van de authenticiteit.
 
-  Bron integriteit                ja                        ja             nee             ja
+AVG technisch is er dan nog het ip-adres. Bij een upload is er een ip adres dat in principe herleidbaar is (via en met behulp van andere data, maar dat telt) tot de persoon en dus voor AVG niet anoniem. Registratie van het ip-adres mag dan niet.
 
-  Doel integriteit                nee                       nee            ja              ja
+###### Hiervoor is in het operations en governance model een logische 'ip address firewall' voor opgenomen. Dit is een netwerk element (IBM WebSphere DataPower) welke voor, en los, staat van het backend - en wier taak het is de inkomende berichten te valideren en -zonder- IP address door te geven aan het backend. Dit ondersteund door middel van functiescheiding, 4-Eye SOPs en aanverwante maatregelen (zie DPIA).
 
-  Voorkom wilde uploads           nee                       nee            nee             ja
-  ----------------------------------------------------------------------------------------------------------
 
-De combinatie van TAN1 en Tan2 aangevuld met HMAC en eenzijdig TLS
-ondersteunt door netwerk technische maatregelen ter voorkoming van
-"bruteforce" pogingen tot uploaden van fake keys biedt:\
-Authenticiteit van TEKs (bron integriteit van de TEKs en integriteit bij
-transport) en privacy preserving in de uitwerking van de authenticiteit.
+### 2.7.2 Download van TEKs
 
-AVG technisch is er dan nog het ip-adres. Bij een upload is er een ip
-adres dat in principe herleidbaar is (via en met behulp van andere data,
-maar dat telt) tot de persoon en dus voor AVG niet anoniem. Registratie
-van het ip-adres mag dan niet.
-
-Hiervoor is in het operations en governance model een logische 'ip
-address firewall' voor opgenomen. Dit is een netwerk element (IBM
-WebSphere DataPower) welke voor, en los, staat van het backend - en wier
-taak het is de inkomende berichten te valideren en -zonder- IP address
-door te geven aan het backend. Dit ondersteund door middel van
-functiescheiding, 4-Eye SOPs en aanverwante maatregelen (zie DPIA).
-
-### Download van TEKs
-
-1.  Authenticiteit voor diagnose keys:\
-    bron integriteit + integriteit tijden transport en (kortstondig) na
-    download.
+1.  Authenticiteit voor diagnose keys: bron integriteit + integriteit tijden transport en (kortstondig) na download.
 
 2.  Authenticiteit voor download / Distribution Server / CDN
 
@@ -561,103 +453,71 @@ functiescheiding, 4-Eye SOPs en aanverwante maatregelen (zie DPIA).
 
 4.  Authenticiteit van config files
 
-```{=html}
-<!-- -->
-```
-1.  **Authenticiteit van de diagnosed keys:\
-    **Twee sporen:
 
-```{=html}
-<!-- -->
-```
+1.  **Authenticiteit van de diagnosed keys:**
+    Twee sporen:
+
+
 I.  Ge-avanceerde pki certificaat gebaseerde handtekening:
 
-    a.  sterkte en algoritme conform Google specs en Nederlandse
-        overheid: ECDSA, P-256 curve, SHA256 hash of equivalent.
+    a.  sterkte en algoritme conform Google specs en Nederlandse overheid: ECDSA, P-256 curve, SHA256 hash of equivalent.
 
-    b.  signing certificaat aanvragen bij CIBG/VWS,\
-        uit voor VWS relevante Private G1 hiërarchie van PKI overheid\
-        signing = critical
+    b.  signing certificaat aanvragen bij CIBG/VWS, uit voor VWS relevante Private G1 hiërarchie van PKI overheid signing = critical
 
-    c.  Handtekening op basis van CMS / RFC 5652\
-        optioneel: S/MIME of RFC3161 (Time Stamped)
+    c.  Handtekening op basis van CMS / RFC 5652 optioneel: S/MIME of RFC3161 (Time Stamped)
 
 II. indien 1 niet lukt (direct starten)
 
-```{=html}
-<!-- -->
-```
-a.  Handtekening zonder certificaat, conform huidige Google specs,
-    zelfde sterkte.
+    a.  Handtekening zonder certificaat, conform huidige Google specs zelfde sterkte.
 
-Private key van de handtekening beheren op basis van FIPS 140-2, L2+ in
-netHSM.
+Private key van de handtekening beheren op basis van FIPS 140-2, L2+ in netHSM.
 
-*Zie ook:*
+###### Zie ook:*
 
-*Managed signature on infected-key distribution ("GACT"-PKI)*
+###### Managed signature on infected-key distribution ("GACT"-PKI)*
 
-*(<https://docs.google.com/document/d/1f1wJx-EdKOwRLkLVsu7J7OUayFoaRPwEIuQmL5o8UnU/edit>)
--*
+###### (<https://docs.google.com/document/d/1f1wJx-EdKOwRLkLVsu7J7OUayFoaRPwEIuQmL5o8UnU/edit>)
 
-2.  **Authenticiteit voor download / Distribution Server / CDN\
-    \
-    **De origin server wordt voorzien van een PKI Certificaat (overheids
-    webside moet herkenbaar) en ondersteunt TLS.\
-    Het gebruikte CDN (voor verdere propagatie en distributie ) wordt
-    met het oog op de beoogde brede participatie en daarom overwogen
-    Zero-Rating zonder PKI-certificaat aangeboden.\
-    \
-    \
+
+
+2.  **Authenticiteit voor download / Distribution Server / CDN\**
+    De origin server wordt voorzien van een PKI Certificaat (overheids webside moet herkenbaar) en ondersteunt TLS.\
+    Het gebruikte CDN (voor verdere propagatie en distributie ) wordt met het oog op de beoogde brede participatie en daarom overwogen Zero-Rating zonder PKI-certificaat aangeboden.\
+
     Aanvragen bij CIBG , in ieder geval PKI-O\
     project specifieke naam en/of VWS in subject DN.
 
-3.  **Verificatie op Client van de gedistribueerde bestanden met
-    diagnosed keys\
-    **\
-    Indien PKI certificaat gebaseerde handtekening op basis van CMS, dan
-    verificatie volgens CMS (RFC RFC 5652)\
-    pinning op Aut = Auth key indentifier van issuing CA\
-    zo niet, dan GAEN volgen bij verificatie.
+3.  **Verificatie op Client van de gedistribueerde bestanden met diagnosed keys**
+    Indien PKI certificaat gebaseerde handtekening op basis van CMS, dan verificatie volgens CMS (RFC RFC 5652) pinning op Aut = Auth key indentifier van issuing CA zo niet, dan GAEN volgen bij verificatie.
 
-4.  **Verificatie op Client van de Config Files\
-    **De config files welke door de apps gedownload en verwerkt worden
-    dienen eveneens gesigned en geverifieerd te worden (zelfde manier
-    als voor de diagnosed keys)
+4.  **Verificatie op Client van de Config Files**
+    De config files welke door de apps gedownload en verwerkt worden dienen eveneens gesigned en geverifieerd te worden (zelfde manier als voor de diagnosed keys)
 
-Crypto Specs, algorithms, schema's and protocols
+## 2.8 Crypto Specs, algorithms, schema's and protocols
 ------------------------------------------------
+| HKDF    | Output <- HKDF(Key, Salt, Info, OutputLength) | IETF RFC 5869 |
+| AES     | Output <- AES128(Key, Data)                   | 128 bits      |
+| AES-CTR | MAC <- HMAC(Key, Data)                        | 128 bits      |
+| HMAC    | MAC <- HMAC(Key, Data)                        | 128 bits      |
 
-  HKDF      Output HKDF(Key, Salt, Info, OutputLength)   IETF RFC 5869
-  --------- -------------------------------------------- ---------------
-  AES       Output AES128(Key, Data)                     128 bits
-  AES-CTR   Ciphertext AES−CTR(Key, IV, Data)            128 bits
-  HMAC      MACHMAC(Key, Data)                           128 bits
+###### CRNG The CRNG function designates a cryptographic random number generator:
+###### Output ← CRNG(OutputLeng)
 
-CRNG The CRNG function designates a cryptographic random number
-generator:
-
-Output ← CRNG(OutputLeng)
-
-Rest risico's
+## 2.9 Rest risico's
 -------------
 
 Het crypto raamwerk is geen oplossing voor:
 
--   power and storage drain (aanbieden vna grote hoeveelheden RPIs)
+-   power and storage drain (aanbieden van grote hoeveelheden RPIs)
 
 -   Replay (opvangen en broadcasten van RPIs)
 
 -   Relay (opvangen, overzenden en broadcasten van RPIs)
 
--   Trolling attacks (meegeven van positief geteste telefoon aan ander
-    mens , dier of vervoermiddel)
+-   Trolling attacks (meegeven van positief geteste telefoon aan ander mens , dier of vervoermiddel)
 
--   Tracking and Deanonymization Attacks (combineren van RPIs en camera
-    beelden )
+-   Tracking and Deanonymization Attacks (combineren van RPIs en camera beelden )
 
--   Server modification (aanvallen direct op de receiving of
-    distribution servers)
+-   Server modification (aanvallen direct op de receiving of distribution servers)
 
--   Noodzaak tot zaken als een 'decoy' om bepaalde zaken te verhullen /
-    niet herleidbaar in tijd en plaats te maken.
+-   Noodzaak tot zaken als een 'decoy' om bepaalde zaken te verhullen / niet herleidbaar in tijd en plaats te maken.
