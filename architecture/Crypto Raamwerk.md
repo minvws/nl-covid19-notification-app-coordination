@@ -407,7 +407,7 @@ Technische oplossingen ter discussie
 
 5.  Bij voorkomen van brute force door netwerk technische maatregelen zullen geslaagde uploads van fake keys "enkelvoudig" zijn en door de grootte van de keyspace voor de TEKs niet merkbaar tot false positives leiden. Tevens verhindert dit een brute force attack op de AuthenticationCode / TanCode.
 
-| **AuthenticationCode/Tan** | **MAC** | **TLS-éénzijdig** | **TLS-mutual auth** |
+|  | **AuthenticationCode/Tan** | **MAC** | **TLS-éénzijdig** | **TLS-mutual auth** |
 |-----|-----|-----|-----|-----|
 | anoniem | Herleidbaar (tijdelijk)| Herleidbaar (tijdelijk)| ja | nee |
 | Integriteit tijdens transport | nee | ja | ja | ja |
@@ -476,6 +476,8 @@ Private key van de handtekening beheren op basis van FIPS 140-2, L2+ in netHSM.
 
 ## 2.8 Crypto Specs, algorithms, schema's and protocols
 
+| Specs?? | ??                                            | ??            |
+|---------|-----------------------------------------------|---------------|
 | HKDF    | Output <- HKDF(Key, Salt, Info, OutputLength) | IETF RFC 5869 |
 | AES     | Output <- AES128(Key, Data)                   | 128 bits      |
 | AES-CTR | MAC <- HMAC(Key, Data)                        | 128 bits      |
