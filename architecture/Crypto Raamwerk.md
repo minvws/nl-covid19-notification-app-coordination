@@ -1,3 +1,5 @@
+###### This is WIP - Lennert212
+
 # Covid-19 Exposure Notification Cryptografie raamwerk
 Author: Dienst ICT Uitvoering Ministerie van Economische Zaken
 
@@ -17,8 +19,7 @@ Author: Dienst ICT Uitvoering Ministerie van Economische Zaken
 
 
 
-## Inhoud {#inhoud .list-paragraph}
-======
+## Inhoud
 
 
 1.  Inleiding---6
@@ -39,9 +40,9 @@ Author: Dienst ICT Uitvoering Ministerie van Economische Zaken
 
     2.3 Key Usage---11
 
-        2.3.1 Encryptie, generatie van RPI en AEM---11
+      2.3.1 Encryptie, generatie van RPI en AEM---11
 
-        2.3.2 Encryptie, generatie van potentially contacted RPIs---11
+      2.3.2 Encryptie, generatie van potentially contacted RPIs---11
 
     2.4 Key Backup---12
 
@@ -51,13 +52,14 @@ Author: Dienst ICT Uitvoering Ministerie van Economische Zaken
 
     2.7 Key Distributie---14
 
-        2.7.1 Upload van TEKs---14
+      2.7.1 Upload van TEKs---14
 
-        2.7.2 Download van TEKs---20
+      2.7.2 Download van TEKs---20
 
     2.8 Crypto Specs, algorithms, schema's and protocols---22
 
     2.9 Rest risico's---23
+
 
 
 **Documentbeheer**
