@@ -333,12 +333,12 @@ Implementatie:
     PKI-O certificaat, certificaat ; aanvraag bij CIBG , in ieder geval PKI-O VWS in subject. (_CAA record in DNS* TBD_)
     Toegestane TLS strings:
 
-|  ECDHE\_RSA TLS\_AES\_256\_GCM\_SHA384 |
-|  ECDHE\_RSA TLS\_AES\_128\_GCM\_SHA256 |
-|  TLS\_ECDHE\_RSA\_WITH\_AES\_256\_GCM\_SHA384 |
-|  TLS\_ECDHE\_RSA\_WITH\_AES\_128\_GCM\_SHA256 |
-|  TLS\_ECDHE\_RSA\_WITH\_AES\_256\_CBC\_SHA384 |
-|  TLS\_ECDHE\_RSA\_WITH\_AES\_128\_CBC\_SHA256 |
+| ECDHE\_RSA TLS\_AES\_256\_GCM\_SHA384 |
+| ECDHE\_RSA TLS\_AES\_128\_GCM\_SHA256 |
+| TLS\_ECDHE\_RSA\_WITH\_AES\_256\_GCM\_SHA384 |
+| TLS\_ECDHE\_RSA\_WITH\_AES\_128\_GCM\_SHA256 |
+| TLS\_ECDHE\_RSA\_WITH\_AES\_256\_CBC\_SHA384 |
+| TLS\_ECDHE\_RSA\_WITH\_AES\_128\_CBC\_SHA256 |
 
 Onderstaande **[voorstel]** beoogt:
 
@@ -407,7 +407,7 @@ Technische oplossingen ter discussie
 
 5.  Bij voorkomen van brute force door netwerk technische maatregelen zullen geslaagde uploads van fake keys "enkelvoudig" zijn en door de grootte van de keyspace voor de TEKs niet merkbaar tot false positives leiden. Tevens verhindert dit een brute force attack op de AuthenticationCode / TanCode.
 
-| **AuthenticationCode/Tan** | **MAC** | **TLS-éénzijdig** | **TLS-mutual auth ** |
+| **AuthenticationCode/Tan** | **MAC** | **TLS-éénzijdig** | **TLS-mutual auth** |
 |-----|-----|-----|-----|-----|
 | anoniem | Herleidbaar (tijdelijk)| Herleidbaar (tijdelijk)| ja | nee |
 | Integriteit tijdens transport | nee | ja | ja | ja |
