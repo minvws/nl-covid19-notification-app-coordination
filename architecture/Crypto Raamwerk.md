@@ -330,15 +330,17 @@ Implementatie:
 -   Vernietiging van TanCodes en shared secret aan beide zijden, zo vroeg als mogelijk in het proces.
 
 4.  **Authenticiteit van de receiving server\**
-    PKI-O certificaat, certificaat ; aanvraag bij CIBG , in ieder geval PKI-O VWS in subject. (_CAA record in DNS* TBD_)
+    PKI-O certificaat, certificaat ; aanvraag bij CIBG , in ieder geval PKI-O VWS in subject. (_CAA record in DNS*_)
     Toegestane TLS strings:
 
-* ECDHE\_RSA TLS\_AES\_256\_GCM\_SHA384
-* ECDHE\_RSA TLS\_AES\_128\_GCM\_SHA256
-* TLS\_ECDHE\_RSA\_WITH\_AES\_256\_GCM\_SHA384
-* TLS\_ECDHE\_RSA\_WITH\_AES\_128\_GCM\_SHA256
-* TLS\_ECDHE\_RSA\_WITH\_AES\_256\_CBC\_SHA384
-* TLS\_ECDHE\_RSA\_WITH\_AES\_128\_CBC\_SHA256
+| Toegestane TLS strings |
+|-----------------------------------------------|
+| ECDHE\_RSA TLS\_AES\_256\_GCM\_SHA384 |
+| ECDHE\_RSA TLS\_AES\_128\_GCM\_SHA256 |
+| TLS\_ECDHE\_RSA\_WITH\_AES\_256\_GCM\_SHA384 |
+| TLS\_ECDHE\_RSA\_WITH\_AES\_128\_GCM\_SHA256 |
+| TLS\_ECDHE\_RSA\_WITH\_AES\_256\_CBC\_SHA384 |
+| TLS\_ECDHE\_RSA\_WITH\_AES\_128\_CBC\_SHA256 |
 
 Onderstaande **[voorstel]** beoogt:
 
@@ -354,7 +356,7 @@ Tevens wordt uitgegaan van:
 
 Indien 2 niet acceptabel is dan ontstaat meer linkability naar de mobiele telefoon (tijdelijk) en is er geen digicheck op een ingevoerde tan code ?
 
-![image alt text](images/Flow.pdf)
+![image alt text](images/Flow.png)
 
 ###### Ruwe tekst t.a.v. flow:
 
@@ -452,9 +454,7 @@ AVG technisch is er dan nog het ip-adres. Bij een upload is er een ip adres dat 
 
 Private key van de handtekening beheren op basis van FIPS 140-2, L2+ in netHSM.
 
-###### Zie ook:*
-
-###### Managed signature on infected-key distribution ("GACT"-PKI)*
+###### Zie ook: Managed signature on infected-key distribution ("GACT"-PKI)*
 
 ###### (<https://docs.google.com/document/d/1f1wJx-EdKOwRLkLVsu7J7OUayFoaRPwEIuQmL5o8UnU/edit>)
 
@@ -476,15 +476,14 @@ Private key van de handtekening beheren op basis van FIPS 140-2, L2+ in netHSM.
 
 ## 2.8 Crypto Specs, algorithms, schema's and protocols
 
-| Specs?? | ??                                            | ??            |
+| ??      | ??                                            | ??            |
 |---------|-----------------------------------------------|---------------|
 | HKDF    | Output <- HKDF(Key, Salt, Info, OutputLength) | IETF RFC 5869 |
 | AES     | Output <- AES128(Key, Data)                   | 128 bits      |
 | AES-CTR | MAC <- HMAC(Key, Data)                        | 128 bits      |
 | HMAC    | MAC <- HMAC(Key, Data)                        | 128 bits      |
 
-###### CRNG The CRNG function designates a cryptographic random number generator:
-###### Output ← CRNG(OutputLeng)
+###### CRNG The CRNG function designates a cryptographic random number generator: Output ← CRNG(OutputLeng)
 
 
 ## 2.9 Rest risico's
