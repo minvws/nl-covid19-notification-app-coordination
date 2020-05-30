@@ -101,7 +101,7 @@ Binnen het Covid aanvalsprogramma zijn er een aantal werkstromen die allemaal bi
 
 1. De GGD Covid19 notificatieapp - een breed uitgezette mobile app voor het publiek dat versneld informatie verstrekt aan de contacten van een door een laboratorium test besmet gevonden persoon.
 
-1. Een Thuis Rapportage App \-- een ondersteunden app voor positief geteste personen die actief begeleid worden door de GGD.
+1. Een Thuis Rapportage App - een ondersteunden app voor positief geteste personen die actief begeleid worden door de GGD.
 
 1. Een directe ondersteuning van de bestaande B&C opsporingsonderzoeken middels een portaal of website die een deel van de huidige formulier/telefoon gebaseerde processen automatiseert.
 
@@ -333,12 +333,12 @@ Implementatie:
     PKI-O certificaat, certificaat ; aanvraag bij CIBG , in ieder geval PKI-O VWS in subject. (_CAA record in DNS* TBD_)
     Toegestane TLS strings:
 
-| ECDHE\_RSA TLS\_AES\_256\_GCM\_SHA384 |
-| ECDHE\_RSA TLS\_AES\_128\_GCM\_SHA256 |
-| TLS\_ECDHE\_RSA\_WITH\_AES\_256\_GCM\_SHA384 |
-| TLS\_ECDHE\_RSA\_WITH\_AES\_128\_GCM\_SHA256 |
-| TLS\_ECDHE\_RSA\_WITH\_AES\_256\_CBC\_SHA384 |
-| TLS\_ECDHE\_RSA\_WITH\_AES\_128\_CBC\_SHA256 |
+* ECDHE\_RSA TLS\_AES\_256\_GCM\_SHA384
+* ECDHE\_RSA TLS\_AES\_128\_GCM\_SHA256
+* TLS\_ECDHE\_RSA\_WITH\_AES\_256\_GCM\_SHA384
+* TLS\_ECDHE\_RSA\_WITH\_AES\_128\_GCM\_SHA256
+* TLS\_ECDHE\_RSA\_WITH\_AES\_256\_CBC\_SHA384
+* TLS\_ECDHE\_RSA\_WITH\_AES\_128\_CBC\_SHA256
 
 Onderstaande **[voorstel]** beoogt:
 
@@ -354,7 +354,7 @@ Tevens wordt uitgegaan van:
 
 Indien 2 niet acceptabel is dan ontstaat meer linkability naar de mobiele telefoon (tijdelijk) en is er geen digicheck op een ingevoerde tan code ?
 
-![image alt text](images/flow.pdf)
+![image alt text](images/Flow.pdf)
 
 ###### Ruwe tekst t.a.v. flow:
 
