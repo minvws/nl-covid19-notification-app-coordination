@@ -24,6 +24,7 @@ Volgt later
 
 ## Inhoud
 
+1. [Inleiding](## 1. Inleiding)
 
 1.  Inleiding---6
 
@@ -374,7 +375,7 @@ Tevens wordt uitgegaan van:
 
 Indien 2 niet acceptabel is dan ontstaat meer linkability naar de mobiele telefoon (tijdelijk) en is er geen digicheck op een ingevoerde tan code ?
 
-![](media/image3.emf)
+![image alt text](images/flow.pdf)
 
 ###### Ruwe tekst t.a.v. flow:
 
