@@ -1,7 +1,12 @@
 ###### This is WIP - Lennert212
 
 # Covid-19 Exposure Notification Cryptografie raamwerk
-Author: Dienst ICT Uitvoering Ministerie van Economische Zaken
+
+
+
+## Colofon
+
+**Auteur:** Dienst ICT Uitvoering Ministerie van Economische Zaken
 
 **Version:** 0.34
 
@@ -11,11 +16,9 @@ Author: Dienst ICT Uitvoering Ministerie van Economische Zaken
 
 
 
-## Colofon
-
-
-
 ## Samenvatting
+
+Volgt later
 
 
 
@@ -66,55 +69,47 @@ Author: Dienst ICT Uitvoering Ministerie van Economische Zaken
 
 **Versiehistorie**
 
-  -------- ------- -------- --------
-  Versie   Datum   Status   Auteur
+| Versie | Datum | Status | Auteur |
+|--------|-------|--------|--------|
+|        |       |        |        |
+|        |       |        |        |
+|        |       |        |        |
+|
 
-
-
-  -------- ------- -------- --------
 
 **Versie goedkeuring**
 
-  -------- ------- ------ ------------------
-  Versie   Datum   Naam   Functie/afdeling
+| Versie | Datum | Naam | Functie/afdeling |
+|--------|-------|------|------------------|
+|        |       |      |                  |
+|        |       |      |                  |
+|        |       |      |                  |
+|
 
-
-
-  -------- ------- ------ ------------------
 
 **Wijzigingen**
 
-  -------- -------------
-  Versie   Wijzigingen
+| Versie | Wijzigingen |
+|--------|-------------|
+|        |             |
+|        |             |
+|        |             |
+|
 
 
-
-  -------- -------------
 
 **referenties**
 
-+---------------------------------------------+-------------+---+---+
-| document                                    | Auteur      |   |   |
-+---------------------------------------------+-------------+---+---+
-|                                             |             |   |   |
-+---------------------------------------------+-------------+---+---+
-| Exposure Notification Cryptography          | GACT        |   |   |
-| Specification April 2020 v1.2               |             |   |   |
-+---------------------------------------------+-------------+---+---+
-| SECURITY ANALYSIS OF THE COVID-19 CONTACT   | Yaron Gvili |   |   |
-| TRACING SPECIFICATIONS BY APPLE INC. AND    |             |   |   |
-| GOOGLE INC                                  |             |   |   |
-+---------------------------------------------+-------------+---+---+
-| Decentralized Privacy-Preserving            |             |   |   |
-|                                             |             |   |   |
-| Proximity Tracing                           |             |   |   |
-|                                             |             |   |   |
-| Overview of Data Protection and Security.   |             |   |   |
-| Version: 3rd April 2020.                    |             |   |   |
-+---------------------------------------------+-------------+---+---+
+| Document                                                                                                             	| Auteur      	|
+|----------------------------------------------------------------------------------------------------------------------	|-------------	|
+| Exposure Notification Cryptography Specification April 2020 v1.2                                                     	| GACT        	|
+| SECURITY ANALYSIS OF THE COVID-19 CONTACT TRACING SPECIFICATIONS BY APPLE INC. AND GOOGLE INC                        	| Yaron Gvili 	|
+| Decentralized Privacy-Preserving Proximity TracingOverview of Data Protection and Security. Version: 3rd April 2020. 	|             	||                                                                                             
+
+
 
 ## 1. Inleiding
-=========
+
 
 ###### Dit document is in bewerking en ter review.
 ###### Er zijn in deze versie ook nog de rode tekstdelen (H6) die nog te verwerken metadata bevatten.
@@ -122,139 +117,77 @@ Author: Dienst ICT Uitvoering Ministerie van Economische Zaken
 
 ## 1.1 Achtergrond
 
-Binnen het Covid aanvalsprogramma zijn er een aantal werkstromen die
-allemaal bijdragen aan het hoofddoel, Nederland sneller en beter door
-deze crisis krijgen. Relevant in deze context zijn de technische
-werkstromen:
+Binnen het Covid aanvalsprogramma zijn er een aantal werkstromen die allemaal bijdragen aan het hoofddoel, Nederland sneller en beter door deze crisis krijgen. Relevant in deze context zijn de technische werkstromen:
 
 1. De GGD Covid19 notificatieapp - een breed uitgezette mobile app voor het publiek dat versneld informatie verstrekt aan de contacten van een door een laboratorium test besmet gevonden persoon.
 
-Een Thuis Rapportage App \-- een ondersteunden app voor positief geteste
-personen die actief begeleid worden door de GGD.
+1. Een Thuis Rapportage App \-- een ondersteunden app voor positief geteste personen die actief begeleid worden door de GGD.
 
-Een directe ondersteuning van de bestaande B&C opsporingsonderzoeken
-middels een portaal of website die een deel van de huidige
-formulier/telefoon gebaseerde processen automatiseert.
+1. Een directe ondersteuning van de bestaande B&C opsporingsonderzoeken middels een portaal of website die een deel van de huidige formulier/telefoon gebaseerde processen automatiseert.
 
-Een eventuele kleinschalige epidemiologische app die zeer complete en
-accurate input levert voor de RIVM modellen op basis van een kleine
-groep (vergelijkbaar met de Nivel peilstations en Pienter onderzoeken)
+1. Een eventuele kleinschalige epidemiologische app die zeer complete en accurate input levert voor de RIVM modellen op basis van een kleine groep (vergelijkbaar met de Nivel peilstations en Pienter onderzoeken)
 
 Dit document beperkt zich tot optie 1 - "GGD Covid19 notificatieapp".
 
-## 1.2 Doelstelling en uitgangspunten
-------------------------------
 
-Doelstelling van dit document is om uitgaande van het Google Apple
-Exposure Notification (GAEN) raamwerk te komen tot een daarop
-aansluitend cryptosysteem voor de Covid19 notificatieapp ondersteuning
-van de bescherming van de privacy van deelnemende personen en de
-integriteit van de verwerking. Het GAEN raamwerk beoogt anonimiteit van
-deelnemers te waarborgen op basis van een cryptografische oplossing
-waarbij een zogenaamde Temporary Exposure Key (TEK) centraal staat.
-Iedere deelnemer krijgt t.b.v. de anonimiteit een willekeurige
-("random") cryptografische sleutel toegewezen. Het raamwerk moet
-zorgdragen voor behoud van de anonimiteit en de integriteit van die
-sleutel. Het model dat daarbij gehanteerd wordt is de algemeen
-gebruikelijke fasering binnen [het lifecycle management van
-cryptografische sleutels]{.underline}. Voor cryptografische standaarden
+## 1.2 Doelstelling en uitgangspunten
+
+Doelstelling van dit document is om uitgaande van het Google Apple Exposure Notification (GAEN) raamwerk te komen tot een daarop aansluitend cryptosysteem voor de Covid19 notificatieapp ondersteuning van de bescherming van de privacy van deelnemende personen en de integriteit van de verwerking. Het GAEN raamwerk beoogt anonimiteit van deelnemers te waarborgen op basis van een cryptografische oplossing waarbij een zogenaamde Temporary Exposure Key (TEK) centraal staat. Iedere deelnemer krijgt t.b.v. de anonimiteit een willekeurige ("random") cryptografische sleutel toegewezen. Het raamwerk moet zorgdragen voor behoud van de anonimiteit en de integriteit van die sleutel. Het model dat daarbij gehanteerd wordt is de algemeen gebruikelijke fasering binnen [het lifecycle management van cryptografische sleutels]{.underline}. Voor cryptografische standaarden
 worden de standaarden gebruikt van:
 
 1.  COMMISSION RECOMMENDATION (EU) 2020/518 of 8 April 2020
 
-2.  GACT Exposure Notification Cryptography Specification
+1.  GACT Exposure Notification Cryptography Specification
 
-3.  NCSC (NL)
+1.  NCSC (NL)
 
-4.  ENISA-Sogis (EU)
+1.  ENISA-Sogis (EU)
 
-5.  Relevante nationale, internationale en industry de-facto standaarden
-    (met name die waarop het GACT document terugvalt).
+1.  Relevante nationale, internationale en industry de-facto standaarden(met name die waarop het GACT document terugvalt).
 
-De keuze voor de cryptografische oplossingen is tot stand gekomen tegen
-de achtergrond van andere, niet cryptografische beveiligingsmaatregelen
-en het belang van gebruikersvriendelijkheid van de app. Het
-cryptoraamwerk is onderdeel van een breder pakket aan maatregelen en
-dekt niet alle risico's af. Bekende (rest-) risico's worden apart
-benoemd. Deze afwegingen (inclusief de noodzaak van compenserende
-maatregelen en eisen aan de governance) komen samen in het Data
-Protection Impact Assessment (DPIA) document.*\
-*\
-In de eerste versie van dit document wordt een vereenvoudigd model
-gehanteerd van verwerkingslocaties bestaande uit mobiele telefoons (MT)
-, upload server (US) en download server (DS). Naamgeving is verder op
-basis van GAEN en Dp-3T.
+De keuze voor de cryptografische oplossingen is tot stand gekomen tegen de achtergrond van andere, niet cryptografische beveiligingsmaatregelen en het belang van gebruikersvriendelijkheid van de app. Het cryptoraamwerk is onderdeel van een breder pakket aan maatregelen en dekt niet alle risico's af. Bekende (rest-) risico's worden apart benoemd. Deze afwegingen (inclusief de noodzaak van compenserende maatregelen en eisen aan de governance) komen samen in het Data Protection Impact Assessment (DPIA) document.
 
-Overzicht
+In de eerste versie van dit document wordt een vereenvoudigd model gehanteerd van verwerkingslocaties bestaande uit mobiele telefoons (MT), upload server (US) en download server (DS). Naamgeving is verder op basis van GAEN en Dp-3T.
+
+
+## 1.3 Overzicht
 ---------
 
-Bijgewerkt plaatje nog toevoegen; grijpt in op discussie eerst upload of
-eerst positief test resultaat en dan upload.
+###### Bijgewerkt plaatje nog toevoegen; grijpt in op discussie eerst upload of eerst positief test resultaat en dan upload.
 
-Definities
-----------
 
-  ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-  begrip             synoniem                        omschrijving
-  ------------------ ------------------------------- ------------------------------------------------------------------------------------------------------------------------------------------------
-  anoniem                                            Niet herleidbaar tot identiteit van persoon en / of telefoon of daaraan bijdragend in samenhang met andere data.
+## 1.4 Definities
 
-  integriteit                                        Hier beperkt tot controleerbaarheid op niet gewijzigd zijn van echte TEKs.
-
-  identiteit                                         Set van eigenschappen met bepaalde waarde die gebruikt kan worden om een element uit een verzameling (persoon of machine) uniek re selecteren.
-
-  Authenticatie                                      Technisch bewijzen van een identiteit van mens of machine
-
-  Authenticiteit     Echtheid                        Combinatie van integriteit en authenticatie
-
-  MT                                                 Mobiele Telefoon
-
-  TEK                Temporary Exposure Key          Dagelijkse random warde van 128 bit als basis voor afleiding van dagelijkse RPI-Key en AEM-Key
-
-  TEKRollingPeriod   Roll over time                  Max Life Time of TEK, "a day"
-
-  RPI-Key                                            Dagelijkse 128 bit sleutel als basis voor encryptie van een string van vaste en op basis van interval variabele data tot de RPI
-
-  ENIntervalNumber   10 minutes Number               Number of 10 minute periodes elapsed since
-
-  RPI                Rolling Proximity Idenfier      Anonieme "identifier" welke gebroadcast wordt door bluetooth op de MT.
+**begrip**|**synoniem**|**omschrijving**
+-----|-----|-----
+anoniem| |Niet herleidbaar tot identiteit van persoon en / of telefoon of daaraan bijdragend in samenhang met andere data
+integriteit| |Hier beperkt tot controleerbaarheid op niet gewijzigd zijn van echte TEKs
+identiteit| |Set van eigenschappen met bepaalde waarde die gebruikt kan worden om een element uit een verzameling (persoon of machine) uniek re selecteren.
+Authenticatie | |Technisch bewijzen van een identiteit van mens of machine
+Authenticiteit|Echtheid|Combinatie van integriteit en authenticatie
+MT| |Mobiele Telefoon
+TEK|Temporary Exposure Key|Dagelijkse random warde van 128 bit als basis voor afleiding van dagelijkse RPI-Key en AEM-Key
+TEKRollingPeriod|Roll over time|Max Life Time of TEK
+RPI-Key| |Dagelijkse 128 bit sleutel als basis voor encryptie van een string van vaste en op basis van interval variabele data tot de RPI
+ENIntervalNumber|10 minutes Number|Number of 10 minute periodes elapsed since
+RPI|Rolling Proximity Idenfier|Anonieme “identifier” welke gebroadcast wordt door bluetooth op de MT
+AEM-Key| |Dagelijkse 128 bit sleutel als basis voor encryptie van een string van variabele data tot de AEM
+AEM|Associated Encrypted Metadata|Versleutelde metadata welke in combinatie met RPI gebroadcast wordt
+DK|Diagnosed Key Infected Key|
+DS|Diagnose(d) Server Publisher Server Download Server Distribution Server|Centrale server waarvandaan diagnose keys gedownload worden
+CDN|Content Delivery Network|voor verdere propagatie en distributie
+RS|Receiving Server UpLoad Server|Centrale server waarnaartoe diagnose keys ge-upload worden.
+DRS|Distributed RS|Meerdere “locale” front end receivers.
 
 
 
-  AEM-Key                                            Dagelijkse 128 bit sleutel als basis voor encryptie van een string van variabele data tot de AEM
+## 2. TEK life cycle managment
 
-  AEM                Associated Encrypted Metadata   Versleutelde metadata welke in combinatie met RPI gebroadcast wordt.
+Het Cryptoraamwerk wordt opgebouwd rond de lifecycle van de Temporary Exposure Keys (TEKs). De TEK keys van een positief geteste deelnemer worden ook wel Diagnose(d) Keys genoemd.
 
-  DK                 Diagnosed Key\                  
-                     Infected Key                    
+### 2.1 Key generation and derivation
 
-  DS                 Diagnose(d) Server\             Centrale server waarvandaan diagnose keys gedownload worden
-                     Publisher Server\               
-                     Download Server\                
-                     Distribution Server             
-
-  CDN                Content Delivery Network        voor verdere propagatie en distributie
-
-  RS                 Receiving Server\               Centrale server waarnaartoe diagnose keys ge-upload worden.
-                     UpLoad Server                   
-
-  DRS                Distributed RS                  Meerdere "locale" front end receivers.
-  ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-
-TEK life cycle managment
-========================
-
-Het Cryptoraamwerk wordt opgebouwd rond de lifecycle van de Temporary
-Exposure Keys (TEKs). De TEK keys van een positief geteste deelnemer
-worden ook wel Diagnose(d) Keys genoemd.
-
-Key generation and derivation
------------------------------
-
-Het GAEN raamwerk beoogt de privacy van deelnemers te borgen door
-dagelijks een ieder een anonieme identifier toe te kennen op basis van
-een random sleutel, de **TEK** waarvan 2 voor encryptie te gebruiken
-sleutels afgeleid worden, de **RPIK** en **AEMK**, zie tabel.
+Het GAEN raamwerk beoogt de privacy van deelnemers te borgen door dagelijks een ieder een anonieme identifier toe te kennen op basis van een random sleutel, de **TEK** waarvan 2 voor encryptie te gebruiken sleutels afgeleid worden, de **RPIK** en **AEMK**, zie tabel.
 
   **generation**                                                                                                                
   ---------------- ---------- ----------------------------------- -------- ---------------------------------------------------- ------
