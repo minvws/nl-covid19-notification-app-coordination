@@ -24,46 +24,25 @@ Volgt later
 
 ## Inhoud
 
-1. [Inleiding](## 1. Inleiding)
-
-1.  Inleiding---6
-
-    1.1 Achtergrond---6
-
-    1.2 Doelstelling en uitgangspunten---7
-
-    1.3 Overzicht---7
-
-    1.4 Definities---8
-
-1. TEK life cycle managment---9
-
-    2.1 Key generation and derivation---9
-
-    2.2 Key Storage---10
-
-    2.3 Key Usage---11
-
-      2.3.1 Encryptie, generatie van RPI en AEM---11
-
-      2.3.2 Encryptie, generatie van potentially contacted RPIs---11
-
-    2.4 Key Backup---12
-
-    2.5 Key Archival---13
-
-    2.6 Key Destruction---13
-
-    2.7 Key Distributie---14
-
-      2.7.1 Upload van TEKs---14
-
-      2.7.2 Download van TEKs---20
-
-    2.8 Crypto Specs, algorithms, schema's and protocols---22
-
-    2.9 Rest risico's---23
-
+  * [1. Inleiding](#1-inleiding)
+  * [1.1 Achtergrond](#11-achtergrond)
+  * [1.2 Doelstelling en uitgangspunten](#12-doelstelling-en-uitgangspunten)
+  * [1.3 Overzicht](#13-overzicht)
+  * [1.4 Definities](#14-definities)
+  * [2. TEK life cycle managment](#2-tek-life-cycle-managment)
+  * [2.1 Key generation and derivation](#21-key-generation-and-derivation)
+  * [2.2. Key Storage](#22-key-storage)
+  * [2.3 Key Usage](#23-key-usage)
+    + [2.3.1 Encryptie, generatie van RPI en AEM](#231-encryptie--generatie-van-rpi-en-aem)
+    + [2.3.2 Encryptie, generatie van potentially contacted RPIs](#232-encryptie--generatie-van-potentially-contacted-rpis)
+  * [2.4 Key Backup](#24-key-backup)
+  * [2.5 Key Archival](#25-key-archival)
+  * [2.6 Key Destruction](#26-key-destruction)
+  * [2.7 Key Distributie](#27-key-distributie)
+    + [2.7.1 Upload van TEKs](#271-upload-van-teks)
+    + [2.7.2 Download van TEKs](#272-download-van-teks)
+   * [2.8 Crypto Specs, algorithms, schema's and protocols](#28-crypto-specs--algorithms--schema-s-and-protocols)
+  * [2.9 Rest risico's](#29-rest-risico-s)
 
 
 **Documentbeheer**
@@ -133,8 +112,7 @@ Dit document beperkt zich tot optie 1 - "GGD Covid19 notificatieapp".
 
 ## 1.2 Doelstelling en uitgangspunten
 
-Doelstelling van dit document is om uitgaande van het Google Apple Exposure Notification (GAEN) raamwerk te komen tot een daarop aansluitend cryptosysteem voor de Covid19 notificatieapp ondersteuning van de bescherming van de privacy van deelnemende personen en de integriteit van de verwerking. Het GAEN raamwerk beoogt anonimiteit van deelnemers te waarborgen op basis van een cryptografische oplossing waarbij een zogenaamde Temporary Exposure Key (TEK) centraal staat. Iedere deelnemer krijgt t.b.v. de anonimiteit een willekeurige ("random") cryptografische sleutel toegewezen. Het raamwerk moet zorgdragen voor behoud van de anonimiteit en de integriteit van die sleutel. Het model dat daarbij gehanteerd wordt is de algemeen gebruikelijke fasering binnen [het lifecycle management van cryptografische sleutels]{.underline}. Voor cryptografische standaarden
-worden de standaarden gebruikt van:
+Doelstelling van dit document is om uitgaande van het Google Apple Exposure Notification (GAEN) raamwerk te komen tot een daarop aansluitend cryptosysteem voor de Covid19 notificatieapp ondersteuning van de bescherming van de privacy van deelnemende personen en de integriteit van de verwerking. Het GAEN raamwerk beoogt anonimiteit van deelnemers te waarborgen op basis van een cryptografische oplossing waarbij een zogenaamde Temporary Exposure Key (TEK) centraal staat. Iedere deelnemer krijgt t.b.v. de anonimiteit een willekeurige ("random") cryptografische sleutel toegewezen. Het raamwerk moet zorgdragen voor behoud van de anonimiteit en de integriteit van die sleutel. Het model dat daarbij gehanteerd wordt is de algemeen gebruikelijke fasering binnen [het lifecycle management van cryptografische sleutels]{.underline}. Voor cryptografische standaarden worden de standaarden gebruikt van:
 
 1.  COMMISSION RECOMMENDATION (EU) 2020/518 of 8 April 2020
 
