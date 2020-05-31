@@ -435,6 +435,7 @@ AVG technisch is er dan nog het ip-adres. Bij een upload is er een ip adres dat 
 
 4.  Authenticiteit van config files
 
+Details:
 
 1.  **Authenticiteit van de diagnosed keys:**
     Twee sporen:
