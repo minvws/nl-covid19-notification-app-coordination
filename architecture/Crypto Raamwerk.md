@@ -1,6 +1,8 @@
 # Covid-19 Exposure Notification Cryptografie raamwerk
 
-
+> Disclaimer: This is a translation/alternative version of the original document (link where possible): original_document_name.ext, version x.x.
+> The original document is the authoritative version of this document and might include changes that are not reflected in this alternative version.
+> For the most up to date / accurate information, please refer to the original document.
 
 ## Colofon
 
