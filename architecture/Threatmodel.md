@@ -61,6 +61,8 @@ Ander voorbeeld extra traceer code is aanwezig binnen de telefoon (buiten de cor
 Voorbeeld: De  GGD gaat in de toekomst de corona app ook gebruiken voor andere besmettelijke zieken zoals griep. Terwijl dit niet is waar de gebruikers toestemming voor hebben gegeven. 
 Voorbeeld: Terwijl de app makers claimen het veilige google/apple protocol te gebruiken wordt in werkelijkheid een ander protocol gebruikt dat niet veilig is.  
 Open source kan een gedeelte van deze zorg wegnemen maar als men wilt controleren of de gebruikte source code overeenkomt met de gepubliceerde vereist het gebruik van reproducible builds. 
+Bij de server ligt het lastiger omdat de beheerders volledige toegang tot het systeem hebben en altijd de configuratie en programmatuur kunnen aanpassen en de server iets anders laten doen dan de broncode aangeeft. 
+
 3. Gebruik van de app voor het traceren van niet zijnde COVID-19 patienten door andere overige overheid en niet overheid instanties.  
 Voorbeeld:
 
@@ -78,8 +80,7 @@ Aangenomen wordt dat alleen een proces op de server(s) de nieuwe bestanden met d
 ### Non Repudiation 
 Niet van Toepassing 
 ###  Information Disclosure
-Hierbij kunnen andere clients dan de officiele app ook de Temporary exposure keys downloaden.  Om dit te vermijden dienen er maatregelen genomen worden zodat de informatie alleen beschikbaar is voor de app. 
-Ook dient de verbinding tussen de App en de centrale server beveiligd te zijn, zodat deze niet ontsleuteld kan worden door tussenliggende partijen. TLS met daarbij Certificate pinning wordt aangeraden. 
+De verbinding tussen de App en de centrale server beveiligd te zijn, zodat deze niet ontsleuteld kan worden door tussenliggende partijen. TLS met daarbij Certificate pinning wordt aangeraden.  
 De server dient ook beschermt te zijn tegen ongeauthorizeerde toegang via andere kanalen dan de download faciliteit die de app gebruikt. De gebruikelijke OS permissie, OS hardening, software update en authenticatie maatregelen dienen genomen te worden. 
 ### Denial of Service
 Omdat elke App de bestanden download kan men eenvoudig de adressen van de servers achterhalen door de netwerk activiteit van de app te observeren. Dus het is een risico dat deze servers blootgesteld worden aan Denial of Service Attacks. 
@@ -92,7 +93,7 @@ De test en uitslagen worden verwerkt via een web applicatie. TLS encryptie dient
 ### Tampering
 Toegang tot de databases waarin tests worden opgelagen dient goed te worden geregeld. Daarnaast dient het systeem van de TAN code's ook cryptografisch geanalyseerd te worden. 
 ### Non Repudiation 
-Gebruikers kunnen een behoorlijk belang hebben bij een negatieve test uitslag omdat een postieve verplicht tot quarantaine. Indien er feedback 
+Gebruikers kunnen een behoorlijk belang hebben bij een negatieve test uitslag omdat een postieve uitslag verplicht tot quarantaine van niet alleen de persoon zelf maar ook van recente contacten. Dit kan bijvoorbeeld negatieve gevolgen hebben voor het werk. 
 ### Information Disclosure
 Informatie over de test uitslag is privacy gevoelig en dient te worden afgeschermd. 
 ### Denial of Service
@@ -104,25 +105,26 @@ Het stuk waarin informatie wordt opgeslagen dient gebruikers te authoriseren en 
 Informatie over de installatie van uit de App Store/ PlayStore is bekend bij Apple/Google en statistieken zijn hierover te verkrijgen.
 ### Non Repudiation 
 Een druk om de app te installeren in bepaalde iets meer riskante bijeenkomsten (denk aan horeca, sport of OV)  is te verwachten.  
-  ### Denial of Service
-Niet van toepassing, dit licht vooral bij App Store/ Playstore beheerders. 
+### Denial of Service
+Niet van toepassing, bescherming tegen een denial of service attack (dus dat je de app niet meer kan installeren)  ligt vooral bij App Store/ Playstore beheerders. 
 ### Elevation of Privilege
-De APP moet niet meer privileges gebruiken dan nodig. De privileges waar toestemming voor gevraagd wordt, moeten worden uitgelegd.   
+De App moet niet meer privileges gebruiken dan nodig. De privileges waar toestemming voor gevraagd wordt, moeten worden uitgelegd.   
 ## 5. Overige app/ gebruiker interacties. 
 Dit is afhanklijk van de invulling van deze interacties. Te denken valt aan een test modus, extra informatie over Corona die getoond wordt aan de gebruiken.
 ## Tegenstanders 
 ### Script Kiddies. 
-Te denken valt aan jongeren die gebruiken maken van standaard programmatuur om zwakheden te ontdekken. Ze zijn meestal uit Nederland, vaak nog minderjarig. Een bekende klasse aanvallen die gebruikt worden zijn Denial of Service Attacks. Dit om de service te verstoren. Een voorbeeld hiervan zijn DDOS aanvallen op de internet betaal sites van de banken in 2018. 
+Te denken valt aan jongeren die gebruiken maken van standaard programmatuur om zwakheden te ontdekken. Ze zijn vaak(maar niet altijd) afkomstig uit Nederland, en zijn vaak nog minderjarig. Een bekende klasse aanvallen die gebruikt worden zijn Denial of Service Attacks. Dit om de service te verstoren. Een voorbeeld hiervan zijn DDOS aanvallen op de internet betaal sites van de banken in 2018. 
 ### Cyber criminelen 
-Dit zijn meestal in het buitenland operende criminelen die via computer hacks en afpersing geld proberen te verdienen. Het zijn de geprofessionaliseerde en gecriminaliseerde script kiddies. Ransomware aanvallen zijn de meest gebruikte gereedschappen voor dit soort criminelen. Vooral de centrale servers maar ook de code repository kunnen doelwit zijn van een afpersings zaak waar de  gegevens worden versleuteld of op een andere manier ontoegankelijk worden gemaakt, en alleen tegen betaling worden ontsleuteld.   
+Dit zijn meestal in het buitenland operende criminelen die via computer hacks en afpersing geld proberen te verdienen. Je kan het zien als de geprofessionaliseerde en gecriminaliseerde script kiddies. Om vervolging moeilijker werken ze internationaal.  Ransomware aanvallen zijn  de meest gebruikte gereedschappen voor dit soort criminelen. Vooral de centrale servers maar ook de code repository kunnen doelwit zijn van een afpersings zaak waar de  gegevens worden versleuteld of op een andere manier ontoegankelijk worden gemaakt, en alleen tegen betaling worden ontsleuteld.   
 ### Buitenlandse mogendheden.
-Een contacten traceer app geeft ongekende mogelijkheden om mensen te volgen en om groepen (clusters) te ontdekken. In vele gevallen worden al mobiele telefoons in het buitenland bij grenspassage onderzocht. 
+Een contacten traceer app geeft ongekende mogelijkheden om mensen te volgen en om groepen (clusters) van mensen te ontdekken. In vele gevallen worden al mobiele telefoons in het buitenland bij grenspassage onderzocht. 
 ### Corrupte medewerkers 
 Medewerkers kunnen rechten misbruiken en/ of informatie (bijvoorbeeld wachtwoorden) doorspelen naar derden en hierdoor gevoelige informatie lekken. Ook is het denkbaar dat bepaalde configuraties of code moedwillig wordt aangepast  om informatie te lekken.  
 ### Politieke druk 
-Het huidige systeem is behoorlijk anoniem. Vanuit justitie (opsporing authoriteiten) kan er een druk verwacht worden om vooral in ernstige zaken toch de anonimiteit maatregelen op te heffen. Vergelijkbaar is bijvoorbeeld de discussie rond de whatsapp encryptie. Als dat eenmaal in een zaak is gedaan is de techniek van het doorbreken van de maatregelen bekend en ontstaat er een geleidende schaal van ernst van zaken, en zou het binnen enkele jaren gebruikt kunnen worden voor relatief lichte vergrijpen. Het is van groot belang voor de volksgezondheid dat een zo groot mogelijk aantal Nederlanders meedoet. Bij het gebruiken van contacten informatie voor andere doeleinden gaan de groepen die zich zorgen maken over de privacy de app niet meer gebruiken of gebruikmaken van tegen maatregelen zoals stoorzenders of elektromagnetische afscherming van ruimtes die ook vele andere nadelen hebben.  
- ### Profiterende Programmeurs 
-De COVID-19 notificatie app is opensource. Andere programmeurs zouden in de verleiding kunnen komen om andere versies van de COVID-19 app te maken gebaseerd op de open source code met een aantal veranderingen. Hierdoor zou de privacy niet meer gewaarborgd worden of de AVG niet meer gevolgd bijvoorbeeld door een versie die advertenties laat zien. 
+Het huidige systeem is behoorlijk anoniem. Vanuit justitie (opsporing authoriteiten) kan er een druk verwacht worden om vooral in ernstige zaken toch de anonimiteit maatregelen op te heffen. Vergelijkbaar is bijvoorbeeld de discussie rond de whatsapp encryptie. Als dat eenmaal in een zaak is gedaan is de techniek van het doorbreken van de maatregelen bekend en ontstaat er een gldende schaal van ernst van zaken, en zou het binnen enkele jaren gebruikt kunnen worden voor relatief lichte vergrijpen. Het is van groot belang voor de volksgezondheid dat een zo groot mogelijk aantal Nederlanders meedoet. Bij het gebruiken van contacten informatie voor andere doeleinden gaan de groepen die zich zorgen maken over de privacy de app niet meer gebruiken of gebruikmaken van tegen maatregelen zoals stoorzenders of elektromagnetische afscherming van ruimtes die ook vele andere nadelen hebben.  
+### Profiterende Programmeurs 
+De COVID-19 notificatie app is opensource. Andere programmeurs zouden in de verleiding kunnen komen om een andere versies van de COVID-19 app te maken gebaseerd op de open source code met een aantal veranderingen bijvoorbeeld een versie die advertenties laat zien. Het tonen van advertenties geeft natuurlijk allerlei extra risco's qua privacy en geeft een extra partij voor de AVG. 
+
 ## Vervolg 
 In het verdere verloop als ook de architectuur van de app meer bekend is kan een gedetailleerder beeld gegeven worden van elk van de 6 punten van elk deel systeem. 
 Daarnaast is een ander handvat om te gaan zoeken naar vergelijkbare analyses en beveiliging problemen van andere vergelijkbare mobiele apps.
