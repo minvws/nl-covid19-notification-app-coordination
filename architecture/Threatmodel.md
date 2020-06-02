@@ -36,17 +36,19 @@ Tampering 	Involves the malicious modification of data. Examples include unautho
 Repudiation 	Associated with users who deny performing an action without other parties having any way to prove otherwise—for example, a user performs an illegal operation in a system that lacks the ability to trace the prohibited operations. Non-Repudiation refers to the ability of a system to counter repudiation threats. For example, a user who purchases an item might have to sign for the item upon receipt. The vendor can then use the signed receipt as evidence that the user did receive the package
 Information Disclosure 	Involves the exposure of information to individuals who are not supposed to have access to it—for example, the ability of users to read a file that they were not granted access to, or the ability of an intruder to read data in transit between two computers
 Denial of Service 	Denial of service (DoS) attacks deny service to valid users—for example, by making a Web server temporarily unavailable or unusable. You must protect against certain types of DoS threats simply to improve system availability and reliability
-Elevation of Privilege 	An unprivileged user gains privileged access and thereby has sufficient access to compromise or destroy the entire system. Elevation of privilege threats include those situations in which an attacker has effectively penetrated all system defenses and become part of the trusted system itself, a dangerous situation indeed
+Elevation of Privilege 	An unprivileged user gains privileged access and thereby has sufficient access to compromise or destroy the entire system. Elevation of privilege threats include those situations in which an attacker has effectively penetrated all system defenses and become part of the trusted system itself, a dangerous situation indeed. 
 ## Matrix
-    1   2   3  4  5   
-S   n   y   y  n   n
-T   y   y   y  n   n
-R   n   n   y    n  n
-I   y   n   y    n  y
-D   y   y   y    n  n
-E   n   n   y  y y  n
+<table
+<tr><th> </th><th>   1</th><th>   2</th><th>   3</th><th>    4</th><th>  5<th></tr>
+<tr><td>S</td><td>   n</td><td>   n</td><td>   y</td><td>    y</td><td>  n</td></tr>
+<tr><td>T</td><td>   y</td><td>   y</td><td>   y</td><td>    n</td><td>  n</td></tr>
+<tr><td>R</td><td>   n</td><td>   n</td><td>   y</td><td>    n</td><td>  n</td></tr>
+<tr><td>I</td><td>   y</td><td>   n</td><td>   y</td><td>    n</td><td>  y</td></tr>
+<tr><td>D</td><td>   y</td><td>   y</td><td>   y</td><td>    n</td><td>  n</td></tr>
+<tr><td>E</td><td>   n</td><td>   n</td><td>   y</td><td>    y</td><td>  n</td></tr>
+</table>
 
-Conclusie deel is het meest relevante stuk, waarin bijna alle categorien van het STRIDE model van toepassing zijn. 
+Conclusie deel 4 is het meest relevante stuk, waarin bijna alle categorien van het STRIDE model van toepassing zijn. 
 ## Specifieke gevaren buiten de bovenstaande : 
 1. Privacy Schendingen 
 Bijvoorbeeld de anonimisatie. Men probeert de identiteit van personen de contacten te achterhalen en daarmee extra persoons gegevens te krijgen van de contacten. 
@@ -79,7 +81,7 @@ De COVID-19 notificatie app is opensource. Andere programmeurs zouden in de verl
 ##  Contact informatie bepalen Risico’s 
 Hiervoor wordt verwezen naar het document Crypto Raamwerk in https://github.com/minvws/nl-covid19-notification-app-coordination/tree/master/architecture
 Een kleine opmerking valt wel te maken over de test optie van het GAEN protocol. Deze is noodzakelijk om een snelle feedback te krijgen tijdens de test van de programmatuur, maar is niet wenselijk tijdens productie. De vraag is hoe toegang tot een systeemtest in de App wordt geregeld.
-## Informatie over besmette contacten verkrijgen. 
+## Informatie over besmette contacten verkrijgen Risco's 
 De app moet regelmatig informatie van een centrale server ophalen met daarin de Temporary Exposure keys van besmette personen. 
 ### Spoofing: 
 Niet van toepassing. 
@@ -89,13 +91,27 @@ Aangenomen wordt dat alleen een proces op de server(s) de nieuwe bestanden met d
 Niet van Toepassing 
 ###  Information Disclosure
 Hierbij kunnen andere clients dan de officiele app ook de Temporary exposure keys downloaden.  Om dit te vermijden dienen er maatregelen genomen worden zodat de informatie alleen beschikbaar is voor de app. 
-Ook dient de verbinding tussen de App en de centrale server beveiligd te zijn, zodat deze niet ontsleuteld kan worden door tussenliggende partijen. Certificate pinning wordt aangeraden. 
+Ook dient de verbinding tussen de App en de centrale server beveiligd te zijn, zodat deze niet ontsleuteld kan worden door tussenliggende partijen. TLS met daarbij Certificate pinning wordt aangeraden. 
 De server dient ook beschermt te zijn tegen ongeauthorizeerde toegang via andere kanalen dan de download faciliteit die de app gebruikt. De gebruikelijke OS permissie, OS hardening, software update en authenticatie maatregelen dienen genomen te worden. 
 ### Denial of Service
 Omdat elke App de bestanden download kan men eenvoudig de adressen van de servers achterhalen door de netwerk activiteit van de app te observeren. Dus het is een risico dat deze servers blootgesteld worden aan Denial of Service Attacks. 
 ### Elevation of Privilege
-Niet van toepassing privileges/authenticatie worden in dit proces zoals nu bekend niet gebruikt.  
-## Installatie en onboarding. 
+Niet van toepassing privileges/authenticatie worden in dit proces zoals nu bekend niet gebruikt.
+
+## Het uitvoeren van een test en het doorgeven van een positieve test uitslag.
+### Spoofing
+De test en uitslagen worden verwerkt via een web applicatie. TLS encryptie dient te worden uitgevoerd. De OWASP richtlijnen voor veilige web applicaties, om risico's zoals sql injection, cross site scripting en dergelijke uit te sluiten.   
+### Tampering
+Toegang tot de databases waarin tests worden opgelagen dient goed te worden geregeld. Daarnaast dient het systeem van de TAN code's ook cryptografisch geanalyseerd te worden. 
+### Non Repudiation 
+Gebruikers kunnen een behoorlijk belang hebben bij een negatieve test uitslag omdat een postieve verplicht tot quarantaine. Indien er feedback 
+### Information Disclosure
+Informatie over de test uitslag is privacy gevoelig en dient te worden afgeschermd. 
+### Denial of Service
+Het doen van de test en dan het weer doorgeven van een positieve test gebruiken ook een webapplicatie. Een denial of serive attack zou hier mogelijk kunnen zijn. 
+### Elevation of Privilege 
+Het stuk waarin informatie wordt opgeslagen dient gebruikers te authoriseren en kent mogelijk meerde privileges. Ook een functionaliteit om mogelijk een fout-positieve of fout-negatieve test later weer te corrigeren is een stuk van de applicatie waarin risico's worden gelopen. Er kan druk worden uitgeoefend om test resultaten later onterecht van uitslag te veranderen.  
+## Installatie en onboarding Risco's 
 ###  Information Disclosure
 Informatie over de installatie van uit de App Store/ PlayStore is bekend bij Apple/Google en statistieken zijn hierover te verkrijgen.
 ### Non Repudiation 
