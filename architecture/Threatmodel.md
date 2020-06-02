@@ -48,7 +48,8 @@ Elevation of Privilege 	An unprivileged user gains privileged access and thereby
 <tr><td>E</td><td>   n</td><td>   n</td><td>   y</td><td>    y</td><td>  n</td></tr>
 </table>
 
-Conclusie deel 4 is het meest relevante stuk, waarin bijna alle categorien van het STRIDE model van toepassing zijn. 
+Conclusie deel 3 is het meest relevante stuk, waarin bijna alle categorien van het STRIDE model van toepassing zijn.
+Omdat dit stuk nog in ontwerp en hier nauwelijks gebruik gemaakt wordt van de GAEN programmatuur maar van eigen code, is de analyse nog niet compleet. 
 ## Specifieke gevaren buiten de bovenstaande : 
 1. Privacy Schendingen 
 Bijvoorbeeld de anonimisatie. Men probeert de identiteit van personen de contacten te achterhalen en daarmee extra persoons gegevens te krijgen van de contacten. 
@@ -65,23 +66,10 @@ Voorbeeld:
 
 De politie gebruikt de corona app om een alibi te controleren. De andere persoon waarbij de verdachte claimt te zijn geweest ten tijde van het misdrijf, wordt gevraagd zich als corona besmet op te geven. Als de verdachte dan geen 'corona alert' haalt dit zijn alibi onderuit. 
 Voorbeeld:  Een geheime dienst ontdekt een zwakheid in het google/apple protocol, houden dit geheim en gebruikt dit om spionnen te traceren maar de technologie die dit kan lekt uit en wordt daarna op grote schaal door prive detectives gebruikt, met een groot schandaal als gevolg.   
-## Tegenstanders 
-### Script Kiddies. 
-Te denken valt aan jongeren die gebruiken maken van standaard programmatuur om zwakheden te ontdekken. Ze zijn meestal uit Nederland, vaak nog minderjarig. Een bekende klasse aanvallen die gebruikt worden zijn Denial of Service Attacks. Dit om de service te verstoren. Een voorbeeld hiervan zijn DDOS aanvallen op de internet betaal sites van de banken in 2018. 
-### Cyber criminelen 
-Dit zijn meestal in het buitenland operende criminelen die via computer hacks en afpersing geld proberen te verdienen. Het zijn de geprofessionaliseerde en gecriminaliseerde script kiddies. Ransomware aanvallen zijn de meest gebruikte gereedschappen voor dit soort criminelen. Vooral de centrale servers maar ook de code repository kunnen doelwit zijn van een afpersings zaak waar de  gegevens worden versleuteld of op een andere manier ontoegankelijk worden gemaakt, en alleen tegen betaling worden ontsleuteld.   
-### Buitenlandse mogendheden.
-Een contacten traceer app geeft ongekende mogelijkheden om mensen te volgen en om groepen (clusters) te ontdekken. In vele gevallen worden al mobiele telefoons in het buitenland bij grenspassage onderzocht. 
-### Corrupte medewerkers 
-Medewerkers kunnen rechten misbruiken en/ of informatie (bijvoorbeeld wachtwoorden) doorspelen naar derden en hierdoor gevoelige informatie lekken. Ook is het denkbaar dat bepaalde configuraties of code moedwillig wordt aangepast  om informatie te lekken.  
-### Politieke druk 
-Het huidige systeem is behoorlijk anoniem. Vanuit justitie (opsporing authoriteiten) kan er een druk verwacht worden om vooral in ernstige zaken toch de anonimiteit maatregelen op te heffen. Vergelijkbaar is bijvoorbeeld de discussie rond de whatsapp encryptie. Als dat eenmaal in een zaak is gedaan is de techniek van het doorbreken van de maatregelen bekend en ontstaat er een geleidende schaal van ernst van zaken, en zou het binnen enkele jaren gebruikt kunnen worden voor relatief lichte vergrijpen. Het is van groot belang voor de volksgezondheid dat een zo groot mogelijk aantal Nederlanders meedoet. Bij het gebruiken van contacten informatie voor andere doeleinden gaan de groepen die zich zorgen maken over de privacy de app niet meer gebruiken of gebruikmaken van tegen maatregelen zoals stoorzenders of elektromagnetische afscherming van ruimtes die ook vele andere nadelen hebben.  
- ### Profiterende Programmeurs 
-De COVID-19 notificatie app is opensource. Andere programmeurs zouden in de verleiding kunnen komen om andere versies van de COVID-19 app te maken gebaseerd op de open source code met een aantal veranderingen. Hierdoor zou de privacy niet meer gewaarborgd worden of de AVG niet meer gevolgd bijvoorbeeld door een versie die advertenties laat zien. 
-##  Contact informatie bepalen Risico’s 
+## 1. Contact informatie bepalen Risico’s 
 Hiervoor wordt verwezen naar het document Crypto Raamwerk in https://github.com/minvws/nl-covid19-notification-app-coordination/tree/master/architecture
 Een kleine opmerking valt wel te maken over de test optie van het GAEN protocol. Deze is noodzakelijk om een snelle feedback te krijgen tijdens de test van de programmatuur, maar is niet wenselijk tijdens productie. De vraag is hoe toegang tot een systeemtest in de App wordt geregeld.
-## Informatie over besmette contacten verkrijgen Risco's 
+## 2. Informatie over besmette contacten verkrijgen Risco's 
 De app moet regelmatig informatie van een centrale server ophalen met daarin de Temporary Exposure keys van besmette personen. 
 ### Spoofing: 
 Niet van toepassing. 
@@ -98,7 +86,7 @@ Omdat elke App de bestanden download kan men eenvoudig de adressen van de server
 ### Elevation of Privilege
 Niet van toepassing privileges/authenticatie worden in dit proces zoals nu bekend niet gebruikt.
 
-## Het uitvoeren van een test en het doorgeven van een positieve test uitslag.
+## 3. Het uitvoeren van een test en het doorgeven van een positieve test uitslag.
 ### Spoofing
 De test en uitslagen worden verwerkt via een web applicatie. TLS encryptie dient te worden uitgevoerd. De OWASP richtlijnen voor veilige web applicaties, om risico's zoals sql injection, cross site scripting en dergelijke uit te sluiten.   
 ### Tampering
@@ -111,7 +99,7 @@ Informatie over de test uitslag is privacy gevoelig en dient te worden afgescher
 Het doen van de test en dan het weer doorgeven van een positieve test gebruiken ook een webapplicatie. Een denial of serive attack zou hier mogelijk kunnen zijn. 
 ### Elevation of Privilege 
 Het stuk waarin informatie wordt opgeslagen dient gebruikers te authoriseren en kent mogelijk meerde privileges. Ook een functionaliteit om mogelijk een fout-positieve of fout-negatieve test later weer te corrigeren is een stuk van de applicatie waarin risico's worden gelopen. Er kan druk worden uitgeoefend om test resultaten later onterecht van uitslag te veranderen.  
-## Installatie en onboarding Risco's 
+## 4. Installatie en onboarding Risco's 
 ###  Information Disclosure
 Informatie over de installatie van uit de App Store/ PlayStore is bekend bij Apple/Google en statistieken zijn hierover te verkrijgen.
 ### Non Repudiation 
@@ -120,8 +108,21 @@ Een druk om de app te installeren in bepaalde iets meer riskante bijeenkomsten (
 Niet van toepassing, dit licht vooral bij App Store/ Playstore beheerders. 
 ### Elevation of Privilege
 De APP moet niet meer privileges gebruiken dan nodig. De privileges waar toestemming voor gevraagd wordt, moeten worden uitgelegd.   
-## Overige app/ gebruiker interacties. 
-Dit is afhanklijk van de invulling van deze interacties. Te denken valt aan een test modus, extra informatie over Corona die getoond wordt aan de gebruiken. 
+## 5. Overige app/ gebruiker interacties. 
+Dit is afhanklijk van de invulling van deze interacties. Te denken valt aan een test modus, extra informatie over Corona die getoond wordt aan de gebruiken.
+## Tegenstanders 
+### Script Kiddies. 
+Te denken valt aan jongeren die gebruiken maken van standaard programmatuur om zwakheden te ontdekken. Ze zijn meestal uit Nederland, vaak nog minderjarig. Een bekende klasse aanvallen die gebruikt worden zijn Denial of Service Attacks. Dit om de service te verstoren. Een voorbeeld hiervan zijn DDOS aanvallen op de internet betaal sites van de banken in 2018. 
+### Cyber criminelen 
+Dit zijn meestal in het buitenland operende criminelen die via computer hacks en afpersing geld proberen te verdienen. Het zijn de geprofessionaliseerde en gecriminaliseerde script kiddies. Ransomware aanvallen zijn de meest gebruikte gereedschappen voor dit soort criminelen. Vooral de centrale servers maar ook de code repository kunnen doelwit zijn van een afpersings zaak waar de  gegevens worden versleuteld of op een andere manier ontoegankelijk worden gemaakt, en alleen tegen betaling worden ontsleuteld.   
+### Buitenlandse mogendheden.
+Een contacten traceer app geeft ongekende mogelijkheden om mensen te volgen en om groepen (clusters) te ontdekken. In vele gevallen worden al mobiele telefoons in het buitenland bij grenspassage onderzocht. 
+### Corrupte medewerkers 
+Medewerkers kunnen rechten misbruiken en/ of informatie (bijvoorbeeld wachtwoorden) doorspelen naar derden en hierdoor gevoelige informatie lekken. Ook is het denkbaar dat bepaalde configuraties of code moedwillig wordt aangepast  om informatie te lekken.  
+### Politieke druk 
+Het huidige systeem is behoorlijk anoniem. Vanuit justitie (opsporing authoriteiten) kan er een druk verwacht worden om vooral in ernstige zaken toch de anonimiteit maatregelen op te heffen. Vergelijkbaar is bijvoorbeeld de discussie rond de whatsapp encryptie. Als dat eenmaal in een zaak is gedaan is de techniek van het doorbreken van de maatregelen bekend en ontstaat er een geleidende schaal van ernst van zaken, en zou het binnen enkele jaren gebruikt kunnen worden voor relatief lichte vergrijpen. Het is van groot belang voor de volksgezondheid dat een zo groot mogelijk aantal Nederlanders meedoet. Bij het gebruiken van contacten informatie voor andere doeleinden gaan de groepen die zich zorgen maken over de privacy de app niet meer gebruiken of gebruikmaken van tegen maatregelen zoals stoorzenders of elektromagnetische afscherming van ruimtes die ook vele andere nadelen hebben.  
+ ### Profiterende Programmeurs 
+De COVID-19 notificatie app is opensource. Andere programmeurs zouden in de verleiding kunnen komen om andere versies van de COVID-19 app te maken gebaseerd op de open source code met een aantal veranderingen. Hierdoor zou de privacy niet meer gewaarborgd worden of de AVG niet meer gevolgd bijvoorbeeld door een versie die advertenties laat zien. 
 ## Vervolg 
 In het verdere verloop als ook de architectuur van de app meer bekend is kan een gedetailleerder beeld gegeven worden van elk van de 6 punten van elk deel systeem. 
 Daarnaast is een ander handvat om te gaan zoeken naar vergelijkbare analyses en beveiliging problemen van andere vergelijkbare mobiele apps.
