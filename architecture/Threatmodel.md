@@ -63,7 +63,11 @@ Voorbeeld: Terwijl de app makers claimen het veilige google/apple protocol te ge
 Open source kan een gedeelte van deze zorg wegnemen maar als men wilt controleren of de gebruikte source code overeenkomt met de gepubliceerde vereist het gebruik van reproducible builds. 
 Bij de server ligt het lastiger omdat de beheerders volledige toegang tot het systeem hebben en altijd de configuratie en programmatuur kunnen aanpassen en de server iets anders laten doen dan de broncode aangeeft. 
 
-3. Gebruik van de app voor het traceren van niet zijnde COVID-19 patienten door andere overige overheid en niet overheid instanties.  
+3. Scam Messages. 
+Het proces van contact traceren vraagt veel persoonlijke gegevens. Scammers kunnen deze persoonlijke gegevens misbruiken. Het risico bestaat dat via phishing, een app die lijkt op de officiele Covid-19 notificatie app deze gegevens te verkrijgen. Ook andere methoden zijn denkbaar zoals email of inbound telefoongesprekken. De Italiaanse Immuni-App bevat de volgende waarschuwing "Watch out for scam messages Immuni will only ever communicate with  you via the app and corresponding notifications. Be wary of any text, phone call, email or other kind of alert that appears to be from Immuni, especially if it asks you for personal information." 
+Oplichting via de telefoon gebeurt al in de UK, zie https://www.theregister.com/2020/06/02/contact_tracing_spoofable/ . 
+
+4. Gebruik van de app voor het traceren van niet zijnde COVID-19 patienten door andere overige overheid en niet overheid instanties.  
 Voorbeeld:
 
 De politie gebruikt de corona app om een alibi te controleren. De andere persoon waarbij de verdachte claimt te zijn geweest ten tijde van het misdrijf, wordt gevraagd zich als corona besmet op te geven. Als de verdachte dan geen 'corona alert' haalt dit zijn alibi onderuit. 
