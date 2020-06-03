@@ -37,7 +37,7 @@ Repudiation 	Associated with users who deny performing an action without other p
 Information Disclosure 	Involves the exposure of information to individuals who are not supposed to have access to it—for example, the ability of users to read a file that they were not granted access to, or the ability of an intruder to read data in transit between two computers
 Denial of Service 	Denial of service (DoS) attacks deny service to valid users—for example, by making a Web server temporarily unavailable or unusable. You must protect against certain types of DoS threats simply to improve system availability and reliability
 Elevation of Privilege 	An unprivileged user gains privileged access and thereby has sufficient access to compromise or destroy the entire system. Elevation of privilege threats include those situations in which an attacker has effectively penetrated all system defenses and become part of the trusted system itself, a dangerous situation indeed. 
-## Matrix
+### STRIDE Matrix
 <table
 <tr><th> </th><th>   1</th><th>   2</th><th>   3</th><th>    4</th><th>  5<th></tr>
 <tr><td>S</td><td>   n</td><td>   n</td><td>   y</td><td>    y</td><td>  n</td></tr>
@@ -50,13 +50,14 @@ Elevation of Privilege 	An unprivileged user gains privileged access and thereby
 
 Conclusie deel 3 is het meest relevante stuk, waarin bijna alle categorien van het STRIDE model van toepassing zijn.
 Omdat dit stuk nog in ontwerp en hier nauwelijks gebruik gemaakt wordt van de GAEN programmatuur maar van eigen code, is de analyse nog niet compleet. 
-## Specifieke gevaren buiten de bovenstaande : 
+## Specifieke gevaren 
 1. Privacy Schendingen 
-Bijvoorbeeld de anonimisatie. Men probeert de identiteit van personen de contacten te achterhalen en daarmee extra persoons gegevens te krijgen van de contacten. 
-Dit kan richting de app zelf, waarin de status van de gebruiker wordt bepaald. Met voldoende extra data kan de identiteit van gebruikers worden bepaald.  
+Bijvoorbeeld deanonimisatie. Men probeert de identiteit van de contacten te achterhalen en daarmee de lijst te krijgen van de personen waarmee iemand omgaat. Dit kan richting de app zelf, waarin de status van de gebruiker wordt bepaald. Met voldoende extra data kan de identiteit van gebruikers worden bepaald.  
 Voorbeeld: Camera's registreren beelden van gebruikers van de corona app terwijl ze ook de bluetooth signalen opvangen. 
-Hierdoor kan men in het tijds interval dat de signalen het zelfde zijn de gebruikers verder volgen en koppelen aan plaatje van de gebruiker. 
+Hierdoor kan men in het tijds interval dat de signalen het zelfde zijn de gebruikers verder volgen en koppelen aan het plaatje van de gebruiker. 
 Ander voorbeeld extra traceer code is aanwezig binnen de telefoon (buiten de corona app) bijvoorbeeld als malware, die probeert de data van de corona app met de contacten gegevenste achterhalen en te koppelen aan gebruikers informatie zoals mobiele telefoon nummers en email adressen.   
+Voorbeeld:  Een geheime dienst ontdekt een zwakheid in het google/apple protocol, houden dit geheim en gebruikt dit om spionnen te traceren maar de technologie die dit kan lekt uit en wordt daarna op grote schaal door prive detectives gebruikt, met een groot schandaal als gevolg.  
+
 2. Misbruik van de app door de makers / beheerders van de app en de gezondheids authoriteiten. Dat is het gebruiken van de app voor andere toepassingen dan waar de gebruikers toestemming hebben gegeven en wettelijk is toegestaan. 
 Voorbeeld: De  GGD gaat in de toekomst de corona app ook gebruiken voor andere besmettelijke zieken zoals griep. Terwijl dit niet is waar de gebruikers toestemming voor hebben gegeven. 
 Voorbeeld: Terwijl de app makers claimen het veilige google/apple protocol te gebruiken wordt in werkelijkheid een ander protocol gebruikt dat niet veilig is.  
@@ -67,11 +68,11 @@ Bij de server ligt het lastiger omdat de beheerders volledige toegang tot het sy
 Het proces van contact traceren vraagt veel persoonlijke gegevens. Scammers kunnen deze persoonlijke gegevens misbruiken. Het risico bestaat dat via phishing, een app die lijkt op de officiele Covid-19 notificatie app deze gegevens te verkrijgen. Ook andere methoden zijn denkbaar zoals email of inbound telefoongesprekken. De Italiaanse Immuni-App bevat de volgende waarschuwing "Watch out for scam messages Immuni will only ever communicate with  you via the app and corresponding notifications. Be wary of any text, phone call, email or other kind of alert that appears to be from Immuni, especially if it asks you for personal information." 
 Oplichting via de telefoon gebeurt al in de UK, zie https://www.theregister.com/2020/06/02/contact_tracing_spoofable/ . 
 
-4. Gebruik van de app voor het traceren van niet zijnde COVID-19 patienten door andere overige overheid en niet overheid instanties.  
+4. Scope creep 
+Gebruik van de app voor het traceren van niet zijnde COVID-19 patienten door andere overige overheid en niet overheid instanties.  
 Voorbeeld:
-
 De politie gebruikt de corona app om een alibi te controleren. De andere persoon waarbij de verdachte claimt te zijn geweest ten tijde van het misdrijf, wordt gevraagd zich als corona besmet op te geven. Als de verdachte dan geen 'corona alert' haalt dit zijn alibi onderuit. 
-Voorbeeld:  Een geheime dienst ontdekt een zwakheid in het google/apple protocol, houden dit geheim en gebruikt dit om spionnen te traceren maar de technologie die dit kan lekt uit en wordt daarna op grote schaal door prive detectives gebruikt, met een groot schandaal als gevolg.   
+ 
 ## 1. Contact informatie bepalen Risico’s 
 Hiervoor wordt verwezen naar het document Crypto Raamwerk in https://github.com/minvws/nl-covid19-notification-app-coordination/tree/master/architecture
 Een kleine opmerking valt wel te maken over de test optie van het GAEN protocol. Deze is noodzakelijk om een snelle feedback te krijgen tijdens de test van de programmatuur, maar is niet wenselijk tijdens productie. De vraag is hoe toegang tot een systeemtest in de App wordt geregeld.
