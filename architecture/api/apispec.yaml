@@ -1,0 +1,114 @@
+swagger: "2.0"
+info:
+  description: "This specification describes the interface between the Dutch exposure notification app and the backend service."
+  version: "0.1.0"
+  title: "Dutch Exposure Notification API"
+  contact:
+    name: "Ministerie van Volksgezondheid Welzijn en Sport backend repository"
+    url: "https://github.com/minvws/nl-covid19-notification-app-backend"
+  license:
+    name: "European Union Public License v. 1.2"
+    url: "https://github.com/minvws/nl-covid19-notification-app-backend/blob/master/LICENSE.txt"
+host: "tbd.example.com"
+basePath: "/v1"
+tags:
+- name: "CDN"
+  description: "Content retrieved via CDN. Note that the Swagger file doesn't let us specify a separate base url for the CDN content as the other calls. TODO: Maybe split it into two Swagger files?"
+- name: "Enrollment"
+  description: "Methods that deal with key/secret/id exchanges"
+- name: "Uploading keys"
+  description: "Methods that deal with the upload of TEK keys"
+
+schemes:
+- "https"
+- "http"
+paths:
+  /manifest:
+    get:
+      tags:
+      - "CDN"
+      summary: "Get the manifest containing pointers/info about the other content on the CDN."
+      description: "The manifest file should be periodically retrieved and provides the app with details about content that can be downloaded/updated."
+      operationId: "getManifest"
+      produces:
+      - "application/json"
+      responses:
+        "200":
+          description: "Manifest retrieved succesfully"
+          schema:
+              $ref: "#/definitions/Manifest"
+  /config:
+    get:
+      tags:
+      - "CDN"
+      summary: "Get the configuration for the app"
+      description: "The configuration contains all configuration items relevant to the app. This call should only be fetched if the manifest indicates that configVersion is higher than the version of the last retrieved config."
+      operationId: "getConfig"
+      produces:
+      - "application/json"
+      responses:
+        "200":
+          description: "Config retrieved succesfully"
+          schema:
+              $ref: "#/definitions/Configuration"
+  /bundle:
+    get:
+      tags:
+      - "CDN"
+      summary: "Get a bundle of I18N strings (zipped)"
+      description: "The resource bundle contains a number of I18N strings that we can update without updating the entire app. The bundle should only be fetched if the manifest indicates that bundleVersion is higher than the version of the last retrieved bundle. Note that there's only one bundle containing all languages we support; we don't want a network sniffer to be able to derive any fingerprintable information from the download, such as the language of a user. TODO: should we just provide a json bundle and rely on gzip, or does it make sense to publish this as a zip?"
+      operationId: "getBundle"
+      produces:
+      - "application/zip"
+      responses:
+        "200":
+          description: "Bundle retrieved succesfully"
+          schema:
+              $ref: "#/definitions/Bundle"
+  /{country}/keys/{hash}.zip:
+    get:
+      tags:
+      - "CDN"
+      summary: "Get a batch of TEK keys"
+      description: "TEK keys are indexed by country (reserved for future use; international operatibility) and identified by a hash. The manifest provides a list of all the currently relevant batch files. Clients should only download batches that they haven't already retrieved. Batches are immutable (TODO check with Key file spec by Google/Apple: are they indeed supposed to be immutable?), so a file, once retrieved, should never be retrieved again."
+      operationId: "getBatch"
+      produces:
+      - "application/zip"
+      responses:
+        "200":
+          description: "Key batchfile retrieved succesfully"
+          schema:
+              $ref: "#/definitions/Keyfile"
+            
+   
+definitions:
+  Manifest:
+    type: "object"
+    properties:
+      index:
+        type: "object"
+        properties: 
+          nl:
+            type: "array"
+            items: 
+              type: "string"
+              example: 
+                - "ABBAABBA"
+                - "BABABABA"
+              
+  Config:
+    type: "object"
+    properties:
+      version:
+        type: "integer"
+        format: "int64"
+  Bundle:
+    type: "object"
+    properties:
+      version:
+        type: "integer"
+        format: "int64"
+  Keyfile:
+     type: "object"
+     properties:
+     
