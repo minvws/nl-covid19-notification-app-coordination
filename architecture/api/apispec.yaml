@@ -1,163 +1,181 @@
-swagger: "2.0"
+openapi: 3.0.1
 info:
-  description: "This specification describes the interface between the Dutch exposure notification app and the backend service."
-  version: "0.1.0"
-  title: "Dutch Exposure Notification API"
+  title: Dutch Exposure Notification API
+  description: This specification describes the interface between the Dutch exposure
+    notification app and the backend service.
   contact:
-    name: "Ministerie van Volksgezondheid Welzijn en Sport backend repository"
-    url: "https://github.com/minvws/nl-covid19-notification-app-backend"
+    name: Ministerie van Volksgezondheid Welzijn en Sport backend repository
+    url: https://github.com/minvws/nl-covid19-notification-app-backend
   license:
-    name: "European Union Public License v. 1.2"
-    url: "https://github.com/minvws/nl-covid19-notification-app-backend/blob/master/LICENSE.txt"
-host: "tbd.example.com"
-basePath: "/v1"
+    name: European Union Public License v. 1.2
+    url: https://github.com/minvws/nl-covid19-notification-app-backend/blob/master/LICENSE.txt
+  version: 0.1.0
+servers:
+- url: https://tbd.example.com/v1
 tags:
-- name: "CDN"
-  description: >
-    Content retrieved via CDN. Note that the Swagger file doesn't let us specify a separate base url
-    for the CDN content as the other calls. TODO: Maybe split it into two Swagger files?"
-- name: "Enrollment"
-  description: "Methods that deal with key/secret/id exchanges"
-- name: "Uploading keys"
-  description: "Methods that deal with the upload of TEK keys"
-
-schemes:
-- "https"
-- "http"
+- name: CDN
+  description: |
+    Content retrieved via CDN. Note that the Swagger file doesn't let us specify a separate base url for the CDN content as the other calls. TODO: Maybe split it into two Swagger files?"
+- name: Enrollment
+  description: |
+    Methods that deal with key/secret/id exchanges
+- name: Uploading keys
+  description: |
+    Methods that deal with the upload of TEK keys
+- name: Lab Confirmation
+  description: |
+    Methods that deal with the confirmation of a positive test by the lab/health authority
 paths:
   /manifest:
     get:
       tags:
-      - "CDN"
-      summary: "Get the manifest containing pointers/info about the other content on the CDN."
-      description: >
-        The manifest file should be periodically retrieved and provides the app with details 
-        about content that can be downloaded/updated.
-      operationId: "getManifest"
-      produces:
-      - "application/json"
+      - CDN
+      summary: Get the manifest containing pointers/info about the other content on
+        the CDN.
+      description: |
+        The manifest file should be periodically retrieved and provides the app with details  about content that can be downloaded/updated.
+      operationId: getManifest
       responses:
-        "200":
-          description: "Manifest retrieved succesfully"
-          schema:
-              $ref: "#/definitions/Manifest"
-          examples:
-            { "ExposureKeySets": [],
-              "ResourceBundle": "uD/0yqeg2ZxludkqxKtizQJy0GhE7CZHnAikGUHsHcrr7zQBu9dl5WSD7+SVInvXK/xWXmfw9eI4dm7L9BQXUw==",
-              "RiskCalculationParameters": "EtHGg0fFDTWsdAcv/oHyzDIEs8TUu4Aj5O3NWgALYeLdRYg+WZTbsx0CQLeINXuU13UZtUW912TDo17+N4sM7A=="
-            }
-
+        200:
+          description: Manifest retrieved succesfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Manifest'
+            exposureKeySets:
+              example: []
+            resourceBundle:
+              example: uD/0yqeg2ZxludkqxKtizQJy0GhE7CZHnAikGUHsHcrr7zQBu9dl5WSD7+SVInvXK/xWXmfw9eI4dm7L9BQXUw==
+            riskCalculationParameters:
+              example: EtHGg0fFDTWsdAcv/oHyzDIEs8TUu4Aj5O3NWgALYeLdRYg+WZTbsx0CQLeINXuU13UZtUW912TDo17+N4sM7A==
   /exposurekeyset/{id}:
     get:
       tags:
-      - "CDN"
-      summary: "Get a batch of TEK keys"
-      description: >
-        TEK keys are indexed by country (reserved for future use; international operatibility) and identified by a hash. 
-        The manifest provides a list of all currently relevant batch files. Clients should only download batches that 
-        they haven't already retrieved. Batches are immutable (TODO check with Key file spec by Google/Apple: 
-        are they indeed supposed to be immutable?), so a file, once retrieved, should never be retrieved again.
+      - CDN
+      summary: Get a batch of TEK keys
+      description: |
+        TEK keys are indexed by country (reserved for future use; international operatibility) and identified by a hash.  The manifest provides a list of all currently relevant batch files. Clients should only download batches that  they haven't already retrieved. Batches are immutable (TODO check with Key file spec by Google/Apple:  are they indeed supposed to be immutable?), so a file, once retrieved, should never be retrieved again.
       parameters:
-        - in: path
-          required: true
-          name: "id"
+      - name: id
+        in: path
+        description: id from manifest ExposureKeySets
+        required: true
+        schema:
           type: string
-          description: "id from manifest ExposureKeySets" 
-      produces:
-      - "application/zip"
       responses:
-        "200":
-          description: "Key batchfile retrieved succesfully"
-          schema:
-            externalDocs:
-              url: https://static.googleusercontent.com/media/www.google.com/pt-BR//covid19/exposurenotifications/pdfs/Exposure-Key-File-Format-and-Verification.pdf
-      
+        200:
+          description: Key batchfile retrieved succesfully
+          content:
+            application/zip:
+              schema:
+                type: object
   /resourcebundle/{id}:
     get:
       tags:
-      - "CDN"
+      - CDN
+      summary: Get a bundle of I18N strings (zipped)
+      description: 'The resource bundle contains a number of I18N strings that we
+        can update without updating the entire app. The bundle should only be fetched
+        if the manifest indicates that bundleVersion is higher than the version of
+        the last retrieved bundle. Note that there''s only one bundle containing all
+        languages we support; we don''t want a network sniffer to be able to derive
+        any fingerprintable information from the download, such as the language of
+        a user. TODO: should we just provide a json bundle and rely on gzip, or does
+        it make sense to publish this as a zip?'
       parameters:
-        - in: path
-          required: true
-          name: "id"
+      - name: id
+        in: path
+        description: id from manifest ResourceBundle
+        required: true
+        schema:
           type: string
-          description: "id from manifest ResourceBundle" 
-      summary: "Get a bundle of I18N strings (zipped)"
-      description: "The resource bundle contains a number of I18N strings that we can update without updating the entire app. The bundle should only be fetched if the manifest indicates that bundleVersion is higher than the version of the last retrieved bundle. Note that there's only one bundle containing all languages we support; we don't want a network sniffer to be able to derive any fingerprintable information from the download, such as the language of a user. TODO: should we just provide a json bundle and rely on gzip, or does it make sense to publish this as a zip?"
-      produces:
-      - "application/zip"
       responses:
-        "200":
-          description: "Bundle retrieved succesfully"
-          schema:
-              $ref: "#/definitions/Bundle"
-
-  #/riskcalculationparameters/{id}:
-  #  TODO
-
+        200:
+          description: Bundle retrieved succesfully
+          content:
+            application/zip:
+              schema:
+                $ref: '#/components/schemas/Bundle'
   /mobileappconfig/{id}:
     get:
       tags:
-      - "CDN"
-      summary: "Get the configuration for the app"
-      description: >
-        The configuration contains all configuration items relevant to the app. 
-        This resource should be fetched if the app does not have this version in its cache.
+      - CDN
+      summary: Get the configuration for the app
+      description: |
+        The configuration contains all configuration items relevant to the app.  This resource should be fetched if the app does not have this version in its cache.
       parameters:
-        - in: path
-          required: true
-          name: "id"
+      - name: id
+        in: path
+        description: id from manifest MobileAppConfig
+        required: true
+        schema:
           type: string
-          description: "id from manifest MobileAppConfig" 
-      produces:
-      - "application/json"
       responses:
-        "200":
-          description: "Config retrieved succesfully"
-          schema:
-              $ref: "#/definitions/MobileAppConfig"
-
-definitions:
-  Manifest:
-    type: "object"
-    properties:
-      ExposureKeySets:
-        type: "array"
-        items: 
-          type: "string"
-          example: 
-                      description: "the id's of the files to download from endpoint /exposurekeyset/{id}"
-      ResourceBundle:
-        type: "string"
-        description: "ResourceBundle to fetch from endpoint TODO"
-        example: "uD/0yqeg2ZxludkqxKtizQJy0GhE7CZHnAikGUHsHcrr7zQBu9dl5WSD7+SVInvXK/xWXmfw9eI4dm7L9BQXUw=="
-      RiskCalculationParameters:
-        type: "string"
-        description: "ResourceBundle to fetch from endpoint TODO"
-        example: "EtHGg0fFDTWsdAcv/oHyzDIEs8TUu4Aj5O3NWgALYeLdRYg+WZTbsx0CQLeINXuU13UZtUW912TDo17+N4sM7A=="
-      MobileAppConfig:
-        type: "string"
-        description: "Mobile app config to fetch from endpoint TODO"
-        example: "FtHGg0fFDTWsdAcv/oHyzDIEs8TUu4Aj5O3NWgALYeLdRYg+WZTbsx0CQLeINXuU13UZtUW912TDo17+N4sM7A=="
-
-  MobileAppConfig:
-    type: "object"
-    properties:
-      version:
-        type: "integer"
-        format: "int64"
-        description: >
-          the minimum version of the app. The app has a hardcoded version number that is increased by 1 
-          on each app release. Whenever the app downloads the manifest, it must compare its hardcoded version 
-          number with that of the manifest. If the hardcoded version number is less than the manifest value, 
-          the user will be asked to upgrade the app from the app store. 
-          See https://github.com/minvws/nl-covid19-notification-app-coordination/blob/master/architecture/Solution%20Architecture.md#lifecycle-management. 
-          TODO: this must be discussed with the Design team.
-        example: 123
-  Bundle:
-    type: "object"
-    properties:
-      version:
-        type: "integer"
-        format: "int64"
-     
+        200:
+          description: Config retrieved succesfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MobileAppConfig'
+  /labconfirm:
+    post:
+      tags:
+      - Lab Confirmation
+      summary: Confirm a positive test result based on a LabConfirmationID
+      description: |
+        This method confirms that a specific LabConfirmationID is associated with a positive COVID19 test result. The method is either called by: * the lab/health authority's backend system * the Infection Confirmation Code system in absence of a HA backend
+          
+          TODO: Should we require a JWT instead of a 'simple' call? Connections are over internal network? Would add signing to the mix, but requires secret to be shared with backends that call this.  
+          TODO: If not JWS, should we use a body with json containing the lab confirmation id instead of a request param?\n"
+      requestBody:
+        content:
+          application/json: 
+            schema: 
+              $ref: '#/components/schemas/LabConfirmation'
+        required: true
+      responses:
+        200:
+          description: Labresult Processed Correctly
+          content: {}
+components:
+  schemas:
+    Manifest:
+      type: object
+      properties:
+        exposureKeySets:
+          type: array
+          items:
+            type: string
+            example: ""
+        resourceBundle:
+          type: string
+          description: ResourceBundle to fetch from endpoint TODO
+          example: uD/0yqeg2ZxludkqxKtizQJy0GhE7CZHnAikGUHsHcrr7zQBu9dl5WSD7+SVInvXK/xWXmfw9eI4dm7L9BQXUw==
+        riskCalculationParameters:
+          type: string
+          description: ResourceBundle to fetch from endpoint TODO
+          example: EtHGg0fFDTWsdAcv/oHyzDIEs8TUu4Aj5O3NWgALYeLdRYg+WZTbsx0CQLeINXuU13UZtUW912TDo17+N4sM7A==
+        mobileAppConfig:
+          type: string
+          description: Mobile app config to fetch from endpoint TODO
+          example: FtHGg0fFDTWsdAcv/oHyzDIEs8TUu4Aj5O3NWgALYeLdRYg+WZTbsx0CQLeINXuU13UZtUW912TDo17+N4sM7A==
+    MobileAppConfig:
+      type: object
+      properties:
+        version:
+          type: integer
+          description: |
+            the minimum version of the app. The app has a hardcoded version number that is increased by 1  on each app release. Whenever the app downloads the manifest, it must compare its hardcoded version  number with that of the manifest. If the hardcoded version number is less than the manifest value,  the user will be asked to upgrade the app from the app store.  See https://github.com/minvws/nl-covid19-notification-app-coordination/blob/master/architecture/Solution%20Architecture.md#lifecycle-management.  TODO: this must be discussed with the Design team.
+          format: int64
+          example: 123
+    Bundle:
+      type: object
+      properties:
+        version:
+          type: string
+    LabConfirmation:
+      type: object
+      properties:
+        labConfirmationID:
+          type: string
+          description: The labConfirmationID identifies the result in the app ecosystem. For patients who are enrolled via the test facility (QR Scan), the labConfirmationID is known to the Lab/HA system. For patiens who are enrolled directly during a result confirmation call (fallback flow), the labConfirmationID is handed out via the out of band phone conversation and entered by the operator. 
