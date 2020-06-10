@@ -1,9 +1,11 @@
 openapi: 3.0.1
 info:
   title: Dutch Exposure Notification API
-  description:
+  description: |
     This specification describes the interface between the Dutch exposure
     notification app and the backend service.
+    
+    TODO: Add signatures to manifest, riskcalculationparameters and appconfig
   contact:
     name: Ministerie van Volksgezondheid Welzijn en Sport backend repository
     url: https://github.com/minvws/nl-covid19-notification-app-backend
@@ -28,7 +30,7 @@ tags:
     description: |
       Methods that deal with the confirmation of a positive test by the lab/health authority
 paths:
-  /manifest:
+  /manifest.json:
     get:
       tags:
         - CDN
@@ -37,7 +39,7 @@ paths:
       description: |
         The manifest file should be periodically retrieved and provides the app with detailsabout content that can be downloaded/updated. 
         
-        The frequency of retrieving the manifest should be defined based on the value manifestFrequency in the MobileAppConfig, with a certain randomness
+        The frequency of retrieving the manifest should be defined based on the value manifestFrequency in the AppConfig, with a certain randomness
         
           TODO: Define randomness formula for retrieving the manifest request.
       operationId: getManifest
@@ -99,7 +101,7 @@ paths:
             application/zip:
               schema:
                 $ref: '#/components/schemas/Bundle'
-  /riskcalculationparameters/{id}:
+  /riskcalculationparameters/{id}.json:
     get:
       tags:
         - CDN
@@ -110,7 +112,7 @@ paths:
       parameters:
         - name: id
           in: path
-          description: id from manifest riskCalculationParameters
+          description: The riskCalculationParameters value from the manifest 
           required: true
           schema:
             type: string
@@ -121,7 +123,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/RiskCalculationParameters"
-  /mobileappconfig/{id}:
+  /appconfig/{id}.json:
     get:
       tags:
         - CDN
@@ -132,7 +134,7 @@ paths:
       parameters:
         - name: id
           in: path
-          description: id from manifest MobileAppConfig
+          description: The appConfig value from the manifest
           required: true
           schema:
             type: string
@@ -142,16 +144,16 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/MobileAppConfig'
+                $ref: '#/components/schemas/AppConfig'
   /labconfirm:
     post:
       tags:
         - Lab Confirmation
       summary: Confirm a positive test result based on a LabConfirmationID
       description: |
-        This method confirms that a specific LabConfirmationID is associated with a positive COVID19 test result. 
-		
-		The method is either called by: 
+        This method confirms that a specific LabConfirmationID is associated with a positive COVID19 test result.
+        
+        The method is either called by: 
         
           * the lab/health authority's backend system 
           * the Infection Confirmation Code system in absence of a HA backend
@@ -229,7 +231,7 @@ paths:
         This method is used by a device to upload one or more decoy keys, to create decoys for real uploads. 
         The keys in the request should be fake random numbers of the same size as regular keys. 
         
-        The frequency of sending decoys should be derived from the MobileAppConfig value decoyProbability.
+        The frequency of sending decoys should be derived from the AppConfig value decoyProbability.
         
         This method implements observer protection. 
         
@@ -258,15 +260,15 @@ components:
         resourceBundle:
           type: string
           description: Current resource bundle to fetch from endpoint (TODO). 
-          example: c26cf8a
+          example: c26cf8af
         riskCalculationParameters:
           type: string
-          description: ResourceBundle to fetch from endpoint TODO
-          example: EtHGg0fFDTWsdAcv/oHyzDIEs8TUu4Aj5O3NWgALYeLdRYg+WZTbsx0CQLeINXuU13UZtUW912TDo17+N4sM7A==
-        mobileAppConfig:
+          description: ResourceBundle to fetch from endpoint (TODO).
+          example: bbe32fcb
+        appConfig:
           type: string
-          description: Mobile app config to fetch from endpoint TODO
-          example: FtHGg0fFDTWsdAcv/oHyzDIEs8TUu4Aj5O3NWgALYeLdRYg+WZTbsx0CQLeINXuU13UZtUW912TDo17+N4sM7A==
+          description: Mobile app config to fetch from endpoint (TODO). 
+          example: aae34fcb
     RiskCalculationParameters:
       type: object
       properties:
@@ -307,7 +309,7 @@ components:
             format: int32
           nullable: true
       additionalProperties: false
-    MobileAppConfig:
+    AppConfig:
       type: object
       properties:
         version:
