@@ -13,7 +13,9 @@ host: "tbd.example.com"
 basePath: "/v1"
 tags:
 - name: "CDN"
-  description: "Content retrieved via CDN. Note that the Swagger file doesn't let us specify a separate base url for the CDN content as the other calls. TODO: Maybe split it into two Swagger files?"
+  description: >
+    Content retrieved via CDN. Note that the Swagger file doesn't let us specify a separate base url
+    for the CDN content as the other calls. TODO: Maybe split it into two Swagger files?"
 - name: "Enrollment"
   description: "Methods that deal with key/secret/id exchanges"
 - name: "Uploading keys"
@@ -28,7 +30,9 @@ paths:
       tags:
       - "CDN"
       summary: "Get the manifest containing pointers/info about the other content on the CDN."
-      description: "The manifest file should be periodically retrieved and provides the app with details about content that can be downloaded/updated."
+      description: >
+        The manifest file should be periodically retrieved and provides the app with details 
+        about content that can be downloaded/updated.
       operationId: "getManifest"
       produces:
       - "application/json"
@@ -37,27 +41,49 @@ paths:
           description: "Manifest retrieved succesfully"
           schema:
               $ref: "#/definitions/Manifest"
-  /config:
+          examples:
+            { "ExposureKeySets": [],
+              "ResourceBundle": "uD/0yqeg2ZxludkqxKtizQJy0GhE7CZHnAikGUHsHcrr7zQBu9dl5WSD7+SVInvXK/xWXmfw9eI4dm7L9BQXUw==",
+              "RiskCalculationParameters": "EtHGg0fFDTWsdAcv/oHyzDIEs8TUu4Aj5O3NWgALYeLdRYg+WZTbsx0CQLeINXuU13UZtUW912TDo17+N4sM7A=="
+            }
+
+  /exposurekeyset/{id}:
     get:
       tags:
       - "CDN"
-      summary: "Get the configuration for the app"
-      description: "The configuration contains all configuration items relevant to the app. This call should only be fetched if the manifest indicates that configVersion is higher than the version of the last retrieved config."
-      operationId: "getConfig"
+      summary: "Get a batch of TEK keys"
+      description: >
+        TEK keys are indexed by country (reserved for future use; international operatibility) and identified by a hash. 
+        The manifest provides a list of all currently relevant batch files. Clients should only download batches that 
+        they haven't already retrieved. Batches are immutable (TODO check with Key file spec by Google/Apple: 
+        are they indeed supposed to be immutable?), so a file, once retrieved, should never be retrieved again.
+      parameters:
+        - in: path
+          required: true
+          name: "id"
+          type: string
+          description: "id from manifest ExposureKeySets" 
       produces:
-      - "application/json"
+      - "application/zip"
       responses:
         "200":
-          description: "Config retrieved succesfully"
+          description: "Key batchfile retrieved succesfully"
           schema:
-              $ref: "#/definitions/Configuration"
-  /bundle:
+            externalDocs:
+              url: https://static.googleusercontent.com/media/www.google.com/pt-BR//covid19/exposurenotifications/pdfs/Exposure-Key-File-Format-and-Verification.pdf
+      
+  /resourcebundle/{id}:
     get:
       tags:
       - "CDN"
+      parameters:
+        - in: path
+          required: true
+          name: "id"
+          type: string
+          description: "id from manifest ResourceBundle" 
       summary: "Get a bundle of I18N strings (zipped)"
       description: "The resource bundle contains a number of I18N strings that we can update without updating the entire app. The bundle should only be fetched if the manifest indicates that bundleVersion is higher than the version of the last retrieved bundle. Note that there's only one bundle containing all languages we support; we don't want a network sniffer to be able to derive any fingerprintable information from the download, such as the language of a user. TODO: should we just provide a json bundle and rely on gzip, or does it make sense to publish this as a zip?"
-      operationId: "getBundle"
       produces:
       - "application/zip"
       responses:
@@ -65,44 +91,68 @@ paths:
           description: "Bundle retrieved succesfully"
           schema:
               $ref: "#/definitions/Bundle"
-  /{country}/keys/{name}.zip:
+
+  #/riskcalculationparameters/{id}:
+  #  TODO
+
+  /mobileappconfig/{id}:
     get:
       tags:
       - "CDN"
-      summary: "Get a batch of TEK keys"
-      description: "TEK keys are indexed by country (reserved for future use; international operatibility) and identified by a hash. The manifest provides a list of all the currently relevant batch files. Clients should only download batches that they haven't already retrieved. Batches are immutable (TODO check with Key file spec by Google/Apple: are they indeed supposed to be immutable?), so a file, once retrieved, should never be retrieved again."
-      operationId: "getBatch"
+      summary: "Get the configuration for the app"
+      description: >
+        The configuration contains all configuration items relevant to the app. 
+        This resource should be fetched if the app does not have this version in its cache.
+      parameters:
+        - in: path
+          required: true
+          name: "id"
+          type: string
+          description: "id from manifest MobileAppConfig" 
       produces:
-      - "application/zip"
+      - "application/json"
       responses:
         "200":
-          description: "Key batchfile retrieved succesfully"
+          description: "Config retrieved succesfully"
           schema:
-              $ref: "#/definitions/Keyfile"
-            
+              $ref: "#/definitions/MobileAppConfig"
+
 definitions:
   Manifest:
     type: "object"
     properties:
-      index:
-        type: "object"
-        properties: 
-          nl:
-            type: "array"
-            items: 
-              type: "string"
-              example: 
-                - "ABBAABBA"
-                - "BABABABA"
-              description: "the names of the files to download from the /{country}/keys/{name}.zip endpoint"
+      ExposureKeySets:
+        type: "array"
+        items: 
+          type: "string"
+          example: 
+                      description: "the id's of the files to download from endpoint /exposurekeyset/{id}"
+      ResourceBundle:
+        type: "string"
+        description: "ResourceBundle to fetch from endpoint TODO"
+        example: "uD/0yqeg2ZxludkqxKtizQJy0GhE7CZHnAikGUHsHcrr7zQBu9dl5WSD7+SVInvXK/xWXmfw9eI4dm7L9BQXUw=="
+      RiskCalculationParameters:
+        type: "string"
+        description: "ResourceBundle to fetch from endpoint TODO"
+        example: "EtHGg0fFDTWsdAcv/oHyzDIEs8TUu4Aj5O3NWgALYeLdRYg+WZTbsx0CQLeINXuU13UZtUW912TDo17+N4sM7A=="
+      MobileAppConfig:
+        type: "string"
+        description: "Mobile app config to fetch from endpoint TODO"
+        example: "FtHGg0fFDTWsdAcv/oHyzDIEs8TUu4Aj5O3NWgALYeLdRYg+WZTbsx0CQLeINXuU13UZtUW912TDo17+N4sM7A=="
 
-  Configuration:
+  MobileAppConfig:
     type: "object"
     properties:
       version:
         type: "integer"
         format: "int64"
-        description: "the minimum version of the app. The app has a hardcoded version number that is increased by 1 on each app release. Whenever the app downloads the manifest, it must compare its hardcoded version number with that of the manifest. If the hardcoded version number is less than the manifest value, the user will be asked to upgrade the app from the app store. See https://github.com/minvws/nl-covid19-notification-app-coordination/blob/master/architecture/Solution%20Architecture.md#lifecycle-management. TODO: this must be discussed with the Design team. "
+        description: >
+          the minimum version of the app. The app has a hardcoded version number that is increased by 1 
+          on each app release. Whenever the app downloads the manifest, it must compare its hardcoded version 
+          number with that of the manifest. If the hardcoded version number is less than the manifest value, 
+          the user will be asked to upgrade the app from the app store. 
+          See https://github.com/minvws/nl-covid19-notification-app-coordination/blob/master/architecture/Solution%20Architecture.md#lifecycle-management. 
+          TODO: this must be discussed with the Design team.
         example: 123
   Bundle:
     type: "object"
@@ -110,7 +160,4 @@ definitions:
       version:
         type: "integer"
         format: "int64"
-  Keyfile:
-     type: "object"
-     properties:
      
