@@ -1,7 +1,8 @@
 openapi: 3.0.1
 info:
   title: Dutch Exposure Notification API
-  description: This specification describes the interface between the Dutch exposure
+  description:
+    This specification describes the interface between the Dutch exposure
     notification app and the backend service.
   contact:
     name: Ministerie van Volksgezondheid Welzijn en Sport backend repository
@@ -11,25 +12,26 @@ info:
     url: https://github.com/minvws/nl-covid19-notification-app-backend/blob/master/LICENSE.txt
   version: 0.1.0
 servers:
-- url: https://tbd.example.com/v1
+  - url: https://tbd.example.com/v1
 tags:
-- name: CDN
-  description: |
-    Content retrieved via CDN. Note that the Swagger file doesn't let us specify a separate base url for the CDN content as the other calls. TODO: Maybe split it into two Swagger files?"
-- name: Enrollment
-  description: |
-    Methods that deal with key/secret/id exchanges
-- name: Uploading keys
-  description: |
-    Methods that deal with the upload of TEK keys
-- name: Lab Confirmation
-  description: |
-    Methods that deal with the confirmation of a positive test by the lab/health authority
+  - name: CDN
+    description: |
+      Content retrieved via CDN. Note that the Swagger file doesn't let us specify a separate base url for the CDN content as the other calls. 
+      TODO: Maybe split it into two Swagger files?"
+  - name: Enrollment
+    description: |
+      Methods that deal with key/secret/id exchanges
+  - name: Uploading keys
+    description: |
+      Methods that deal with the upload of TEK keys
+  - name: Lab Confirmation
+    description: |
+      Methods that deal with the confirmation of a positive test by the lab/health authority
 paths:
   /manifest:
     get:
       tags:
-      - CDN
+        - CDN
       summary: Get the manifest containing pointers/info about the other content on
         the CDN.
       description: |
@@ -51,17 +53,20 @@ paths:
   /exposurekeyset/{id}:
     get:
       tags:
-      - CDN
+        - CDN
       summary: Get a batch of TEK keys
       description: |
-        TEK keys are indexed by country (reserved for future use; international operatibility) and identified by a hash.  The manifest provides a list of all currently relevant batch files. Clients should only download batches that  they haven't already retrieved. Batches are immutable (TODO check with Key file spec by Google/Apple:  are they indeed supposed to be immutable?), so a file, once retrieved, should never be retrieved again.
+        TEK keys are indexed by country (reserved for future use; international operatibility) and identified by a hash.  
+        The manifest provides a list of all currently relevant batch files. Clients should only download batches that  
+        they haven't already retrieved. Batches are immutable (TODO check with Key file spec by Google/Apple:  
+        are they indeed supposed to be immutable?), so a file, once retrieved, should never be retrieved again.
       parameters:
-      - name: id
-        in: path
-        description: id from manifest ExposureKeySets
-        required: true
-        schema:
-          type: string
+        - name: id
+          in: path
+          description: id from manifest ExposureKeySets
+          required: true
+          schema:
+            type: string
       responses:
         200:
           description: Key batchfile retrieved succesfully
@@ -72,7 +77,7 @@ paths:
   /resourcebundle/{id}:
     get:
       tags:
-      - CDN
+        - CDN
       summary: Get a bundle of I18N strings (zipped)
       description: 'The resource bundle contains a number of I18N strings that we
         can update without updating the entire app. The bundle should only be fetched
@@ -83,12 +88,12 @@ paths:
         a user. TODO: should we just provide a json bundle and rely on gzip, or does
         it make sense to publish this as a zip?'
       parameters:
-      - name: id
-        in: path
-        description: id from manifest ResourceBundle
-        required: true
-        schema:
-          type: string
+        - name: id
+          in: path
+          description: id from manifest ResourceBundle
+          required: true
+          schema:
+            type: string
       responses:
         200:
           description: Bundle retrieved succesfully
@@ -96,20 +101,43 @@ paths:
             application/zip:
               schema:
                 $ref: '#/components/schemas/Bundle'
+  /riskcalculationparameters/{id}:
+    get:
+      tags:
+        - CDN
+      summary: Get the configuration for the app
+      description: |
+        The configuration contains all configuration items relevant to the app.  
+        This resource should be fetched if the app does not have this version in its cache.
+      parameters:
+        - name: id
+          in: path
+          description: id from manifest riskCalculationParameters
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: retrieved succesfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RiskCalculationParameters"
   /mobileappconfig/{id}:
     get:
       tags:
-      - CDN
+        - CDN
       summary: Get the configuration for the app
       description: |
-        The configuration contains all configuration items relevant to the app.  This resource should be fetched if the app does not have this version in its cache.
+        The configuration contains all configuration items relevant to the app.  
+        This resource should be fetched if the app does not have this version in its cache.
       parameters:
-      - name: id
-        in: path
-        description: id from manifest MobileAppConfig
-        required: true
-        schema:
-          type: string
+        - name: id
+          in: path
+          description: id from manifest MobileAppConfig
+          required: true
+          schema:
+            type: string
       responses:
         200:
           description: Config retrieved succesfully
@@ -120,17 +148,20 @@ paths:
   /labconfirm:
     post:
       tags:
-      - Lab Confirmation
+        - Lab Confirmation
       summary: Confirm a positive test result based on a LabConfirmationID
       description: |
-        This method confirms that a specific LabConfirmationID is associated with a positive COVID19 test result. The method is either called by: * the lab/health authority's backend system * the Infection Confirmation Code system in absence of a HA backend
+        This method confirms that a specific LabConfirmationID is associated with a positive COVID19 test result. 
+        The method is either called by: 
+        * the lab/health authority's backend system 
+        * the Infection Confirmation Code system in absence of a HA backend
           
           TODO: Should we require a JWT instead of a 'simple' call? Connections are over internal network? Would add signing to the mix, but requires secret to be shared with backends that call this.  
           TODO: If not JWS, should we use a body with json containing the lab confirmation id instead of a request param?\n"
       requestBody:
         content:
-          application/json: 
-            schema: 
+          application/json:
+            schema:
               $ref: '#/components/schemas/LabConfirmation'
         required: true
       responses:
@@ -159,6 +190,46 @@ components:
           type: string
           description: Mobile app config to fetch from endpoint TODO
           example: FtHGg0fFDTWsdAcv/oHyzDIEs8TUu4Aj5O3NWgALYeLdRYg+WZTbsx0CQLeINXuU13UZtUW912TDo17+N4sM7A==
+    RiskCalculationParameters:
+      type: object
+      properties:
+        release:
+          type: string
+          format: date-time
+        minimumRiskScore:
+          type: integer
+          format: int32
+        attenuationScores:
+          type: array
+          items:
+            type: integer
+            format: int32
+          nullable: true
+        daysSinceLastExposureScores:
+          type: array
+          items:
+            type: integer
+            format: int32
+          nullable: true
+        durationScores:
+          type: array
+          items:
+            type: integer
+            format: int32
+          nullable: true
+        transmissionRiskScores:
+          type: array
+          items:
+            type: integer
+            format: int32
+          nullable: true
+        durationAtAttenuationThresholds:
+          type: array
+          items:
+            type: integer
+            format: int32
+          nullable: true
+      additionalProperties: false
     MobileAppConfig:
       type: object
       properties:
@@ -178,4 +249,4 @@ components:
       properties:
         labConfirmationID:
           type: string
-          description: The labConfirmationID identifies the result in the app ecosystem. For patients who are enrolled via the test facility (QR Scan), the labConfirmationID is known to the Lab/HA system. For patiens who are enrolled directly during a result confirmation call (fallback flow), the labConfirmationID is handed out via the out of band phone conversation and entered by the operator. 
+          description: The labConfirmationID identifies the result in the app ecosystem. For patients who are enrolled via the test facility (QR Scan), the labConfirmationID is known to the Lab/HA system. For patiens who are enrolled directly during a result confirmation call (fallback flow), the labConfirmationID is handed out via the out of band phone conversation and entered by the operator.
