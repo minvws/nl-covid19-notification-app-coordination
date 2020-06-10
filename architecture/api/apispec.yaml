@@ -33,7 +33,11 @@ paths:
       summary: Get the manifest containing pointers/info about the other content on
         the CDN.
       description: |
-        The manifest file should be periodically retrieved and provides the app with details  about content that can be downloaded/updated.
+        The manifest file should be periodically retrieved and provides the app with detailsabout content that can be downloaded/updated. 
+        
+        The frequency of retrieving the manifest should be defined based on the value manifestFrequency in the MobileAppConfig, with a certain randomness
+        
+          TODO: Define randomness formula for retrieving the manifest request.
       operationId: getManifest
       responses:
         200:
@@ -42,12 +46,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Manifest'
-            exposureKeySets:
-              example: []
-            resourceBundle:
-              example: uD/0yqeg2ZxludkqxKtizQJy0GhE7CZHnAikGUHsHcrr7zQBu9dl5WSD7+SVInvXK/xWXmfw9eI4dm7L9BQXUw==
-            riskCalculationParameters:
-              example: EtHGg0fFDTWsdAcv/oHyzDIEs8TUu4Aj5O3NWgALYeLdRYg+WZTbsx0CQLeINXuU13UZtUW912TDo17+N4sM7A==
   /exposurekeyset/{id}:
     get:
       tags:
@@ -123,19 +121,99 @@ paths:
       - Lab Confirmation
       summary: Confirm a positive test result based on a LabConfirmationID
       description: |
-        This method confirms that a specific LabConfirmationID is associated with a positive COVID19 test result. The method is either called by: * the lab/health authority's backend system * the Infection Confirmation Code system in absence of a HA backend
+        This method confirms that a specific LabConfirmationID is associated with a positive COVID19 test result. The method is either called by: 
+        
+          * the lab/health authority's backend system 
+          * the Infection Confirmation Code system in absence of a HA backend
           
           TODO: Should we require a JWT instead of a 'simple' call? Connections are over internal network? Would add signing to the mix, but requires secret to be shared with backends that call this.  
-          TODO: If not JWS, should we use a body with json containing the lab confirmation id instead of a request param?\n"
+          TODO: If not JWS, should we use a body with json containing the lab confirmation id instead of a request param?
+          TODO: Add auth info. 
       requestBody:
         content:
           application/json: 
             schema: 
-              $ref: '#/components/schemas/LabConfirmation'
+              $ref: '#/components/schemas/LabConfirmationRequest'
         required: true
       responses:
         200:
           description: Labresult Processed Correctly
+          content: {}
+  /register:
+    post:
+      tags:
+      - Enrollment
+      summary: Exchange a secret with the server so we can sign our keys
+      description: |
+        This method is called by a device to exchange a secret, in the fallback flow (in case a secret wasn't yet exchanged in the test facility). The secret becomes part of an anonymous bucket where later the keys will be dropped. The method will return a LabConfirmationID that the user must read to the operator, and that the operator will use to confirm a positive lab result. 
+        
+        This method implements observer protection. 
+
+          TODO: Add reference to observer protection documentation in architecture        
+          TODO: Add reference to the lab flow in the architecture.
+      requestBody:
+        content:
+          application/json: 
+            schema: 
+              $ref: '#/components/schemas/EnrollmentRequest'
+        required: true
+      responses:
+        200:
+          description: Registration processed correctly
+          content: 
+            application/json: 
+              schema:
+                $ref: '#/components/schemas/EnrollmentResponse'
+  /postkeys:
+    post:
+      tags:
+      - Uploading Keys
+      summary: Upload diagnosis keys (TEKs) to the server
+      description: |
+        This method is used by a device to upload one or more TEK keys to the server. 
+        
+        This method implements observer protection. 
+        
+        Notes: the phone will never know whether a test result was positive, for privacy reasons. This means that a user might upload keys using this method by using the 'I've been tested positive' flow even though there isn't a positive test result. This is OK, since without the positive test result, the keys won't be processed. It also creates a decoy in itself: seeing keys being uploaded does not consitute a sign of infection. 
+
+          TODO: Add reference to observer protection documentation in architecture        
+          TODO: Add reference to the lab flow in the architecture.
+          
+          Discussion: we are aware that adding the HTTP verb ('post') to the method is not a good practice. For observer protection we want to homogenize all methods under protection to a name of 8 characters and this simply made sense in describing what the method does.
+      requestBody:
+        content:
+          application/json: 
+            schema: 
+              $ref: '#/components/schemas/KeysRequest'
+        required: true
+      responses:
+        200:
+          description: Keys processed correctly
+          content: {}
+  /stopkeys:
+    post:
+      tags:
+      - Uploading Keys
+      summary: Upload decoy keys to the server
+      description: |
+        This method is used by a device to upload one or more decoy keys, to create decoys for real uploads. 
+        The keys in the request should be fake random numbers of the same size as regular keys. 
+        
+        The frequency of sending decoys should be derived from the MobileAppConfig value decoyProbability.
+        
+        This method implements observer protection. 
+        
+        NOTE: The name is a clear reference to postkeys, but these keys are stopped. 
+        
+      requestBody:
+        content:
+          application/json: 
+            schema: 
+              $ref: '#/components/schemas/KeysRequest'
+        required: true
+      responses:
+        200:
+          description: Decoy keys processed correctly
           content: {}
 components:
   schemas:
@@ -149,8 +227,8 @@ components:
             example: ""
         resourceBundle:
           type: string
-          description: ResourceBundle to fetch from endpoint TODO
-          example: uD/0yqeg2ZxludkqxKtizQJy0GhE7CZHnAikGUHsHcrr7zQBu9dl5WSD7+SVInvXK/xWXmfw9eI4dm7L9BQXUw==
+          description: Current resource bundle to fetch from endpoint (TODO). 
+          example: c26cf8a
         riskCalculationParameters:
           type: string
           description: ResourceBundle to fetch from endpoint TODO
@@ -165,17 +243,87 @@ components:
         version:
           type: integer
           description: |
-            the minimum version of the app. The app has a hardcoded version number that is increased by 1  on each app release. Whenever the app downloads the manifest, it must compare its hardcoded version  number with that of the manifest. If the hardcoded version number is less than the manifest value,  the user will be asked to upgrade the app from the app store.  See https://github.com/minvws/nl-covid19-notification-app-coordination/blob/master/architecture/Solution%20Architecture.md#lifecycle-management.  TODO: this must be discussed with the Design team.
+            the minimum version of the app. The app has a hardcoded version number that is increased by 1  on each app release. Whenever the app downloads the manifest, it must compare its hardcoded version  number with that of the manifest. If the hardcoded version number is less than the manifest value,  the user will be asked to upgrade the app from the app store.  See https://github.com/minvws/nl-covid19-notification-app-coordination/blob/master/architecture/Solution%20Architecture.md#lifecycle-management.  
+            
+              TODO: this must be discussed with the Design team.
           format: int64
           example: 123
+        manifestFrequency:
+          type: integer
+          description: This defines the frequency of retrieving the manifest, in minutes. 
+          example: 360
+        decoyProbability:
+          type: integer
+          description: |
+            This defines the probability of sending decoys. This is configurable so we can tune the probability to server load if necessary. 
+            
+            TODO: Define formula for calculating the actual frequency.
     Bundle:
       type: object
       properties:
         version:
           type: string
-    LabConfirmation:
+    LabConfirmationRequest:
       type: object
       properties:
         labConfirmationID:
           type: string
           description: The labConfirmationID identifies the result in the app ecosystem. For patients who are enrolled via the test facility (QR Scan), the labConfirmationID is known to the Lab/HA system. For patiens who are enrolled directly during a result confirmation call (fallback flow), the labConfirmationID is handed out via the out of band phone conversation and entered by the operator. 
+    EnrollmentRequest:
+      type: object
+      properties:
+        confirmationKey:
+          type: string
+          description: Base64 representation of a 128-bit key that will be used to sign TEKs upon upload. The device should generate this key using a secure random number generator.
+        padding:
+          type: string
+          description: |
+              The request should add padding for observer protection, so that the length of a request does not reveal that this is an enrollment. The size of the padding should be randomized in such a way that the entire payload is at least. 
+              
+              TODO: define how big.
+    EnrollmentResponse:
+      type: object
+      properties:
+        labConfirmationID:
+          type: string
+          description: Confirmation code that the phone must display so the user can read it to an operator.
+        BucketID: 
+          type: string
+          description: Random generated number that will later in the upload process associate the keys with the correct signature
+    KeysRequest:
+      type: object
+      properties:
+        keys:
+          type: array
+          items:
+            $ref: '#/components/schemas/TEK'
+          description: Base64 representation of a 128-bit key that will be used to sign TEKs upon upload. The device should generate this key using a secure random number generator.
+        padding:
+          type: string
+          description: |
+            The request should add padding for observer protection, so that the length of a request does not reveal that this is an upload of keys. The size of the padding should be randomized in such a way that the entire payload is at least
+            
+            TODO: define how big.
+    TEK:
+      type: "object"
+      required:
+      - "keyData"
+      - "rollingStartNumber"
+      - "rollingPeriod"
+      properties:
+        keyData:
+          type: "string"
+          example: "aWYgeW91IHJlYWQgdGhpcyBzYXkgaGVsbG8gaW4gI25vdGlmaWNhdGllLWFwcCBvbiBjb2RlZm9ybmwgc2xhY2s="
+        rollingStartNumber:
+          type: integer
+          minimum: 0
+          example: 2648160
+        rollingPeriod:
+          type: integer
+          minimum: 0
+          example: 144
+        regionsOfInterest:
+           type: array
+           items: 
+             type: string
+           description: "Reserved for future use. A traveler may want to indicate that the key from this day is relevant in certain countries. TODO: enhance/change based on interoperability requirements"
