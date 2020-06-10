@@ -37,7 +37,7 @@ paths:
       summary: Get the manifest containing pointers/info about the other content on
         the CDN.
       description: |
-        The manifest file should be periodically retrieved and provides the app with detailsabout content that can be downloaded/updated. 
+        The manifest file should be periodically retrieved and provides the app with details about content that can be downloaded/updated. 
         
         The frequency of retrieving the manifest should be defined based on the value manifestFrequency in the AppConfig, with a certain randomness
         
