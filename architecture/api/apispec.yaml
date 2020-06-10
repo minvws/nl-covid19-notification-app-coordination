@@ -18,11 +18,14 @@ tags:
   description: "Methods that deal with key/secret/id exchanges"
 - name: "Uploading keys"
   description: "Methods that deal with the upload of TEK keys"
+- name: "Lab Confirmation"
+  description: "Methods that deal with the confirmation of a positive test by the lab/health authority"
 
 schemes:
 - "https"
 - "http"
 paths:
+
   /manifest:
     get:
       tags:
@@ -79,7 +82,30 @@ paths:
           description: "Key batchfile retrieved succesfully"
           schema:
               $ref: "#/definitions/Keyfile"
-            
+  /labconfirm:
+    post:
+      tags:
+      - "Lab Confirmation"
+      summary: "Confirm a positive test result based on a LabConfirmationID"
+      description: | 
+         This method confirms that a specific LabConfirmationID is associated with a positive COVID19 test result. The method is either called by:
+         
+           * the lab/health authority's backend system 
+           * the Infection Confirmation Code system in absence of a HA backend
+           
+           TODO: Should we require a JWT instead of a 'simple' call? Connections are over internal network? Would add signing to the mix, but requires secret to be shared with backends that call this.
+           TODO: If not JWS, should we use a body with json containing the lab confirmation id instead of a request param?
+      operationId: "postLabConfirm"
+      parameters:
+        - name: labConfirmationID
+          in: body
+          type: "string"
+          description: "The labConfirmationID identifies the result in the app ecosystem. For patients who are enrolled via the test facility (QR Scan), the labConfirmationID is known to the Lab/HA system. For patiens who are enrolled directly during a result confirmation call (fallback flow), the labConfirmationID is handed out via the out of band phone conversation and entered by the operator."
+          example: "FACE21AB"
+      responses:
+        "200":
+          description: "Labresult Processed Correctly"
+          
 definitions:
   Manifest:
     type: "object"
