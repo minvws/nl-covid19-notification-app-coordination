@@ -124,7 +124,7 @@ This chapter describes the core flow that we are following, which is partially d
 
 As described in the GAEN document set - the users’ mobile phones are able to record ephemeral IDs of other phones they meet. These are generated from a daily seed key (Temporary Exposure Key, TEK). Details about this can be found in the GAEN documentation (See Cryptography Specification: [Apple](https://www.apple.com/covid19/contacttracing), [Google](https://www.google.com/covid19/exposurenotifications/)), but it boils down to the following:
 
-![image alt text](images/image_0.png)
+![Bob and Alice exchange RPIs during an encounter](images/flow_step1.png)
 
 From the daily keys a set of Rolling Proximity Identifiers (RPI) is generated that are exchanged between phones over Bluetooth Low Energy and get recorded on the recipient's device. The device records the ‘attenuation’ of the encounter. This is a representation of how near the devices were, but is not an exact representation of distance. It can later be used to calculate the probability that this encounter was risky.
 
@@ -134,7 +134,7 @@ At some point a person carrying the app on their phone may get tested at a test 
 
 It is expected that at this point the TEKs of that person are captured and sent to a central server:
 
-![image alt text](images/image_1.png)
+![Bob tests positive and uploads his keys](images/flow_step2.png)
 
 This upload should be validated / authorised by a health authority, so that people cannot upload their keys without a validated positive test result. (As per the requirements, we will not support self-assessment at this point). The keys are not shared (i.e. uploaded to the central server) until after the infected person has been informed of the test result and has provided consent to share the keys.
 
@@ -146,7 +146,7 @@ The infected keys are, at regular intervals, batched, signed and pushed out to a
 
 Once the keys are available on the CDN, clients can download the sets of infected keys and use these to verify if they have encountered an infected person.
 
-![image alt text](images/image_2.png)
+![Alice downloads infected keys and checks if she has a match](images/flow_step3.png)
 
 This match takes place entirely on the user’s phone. By deriving the set of RPIs from the infected TEK that a user received, it can compare these to the RPIs it has recorded. If there is a match, it can use its previous recordings to determine the approximate duration of the encounter.
 
@@ -154,7 +154,7 @@ This match takes place entirely on the user’s phone. By deriving the set of RP
 
 Once the device has determined that it has seen the phone of an infected user, the next step is to calculate the risk that the phone’s owner could be infected. This assessment is performed on the phone.
 
-![image alt text](images/image_3.png)
+![Alices phone calculates the risk of the encounter](images/flow_step4.png)
 
 The following parameters are available to the calculation:
 
@@ -176,7 +176,7 @@ For an understanding of how these buckets and parameters work, we have made avai
 
 The final step in the flow is to notify the user of an exposure if the risk calculation exceeds a certain threshold. 
 
-![image alt text](images/image_4.png)
+![Finally, Alice is notified that she had a risky encounter](images/flow_step5.png)
 
 Note: the diagram indicates a calculated risk level of 1-8, but after the weights were removed from the latest version of the GAEN protocol, this level is now a number between 0 and 4096 (or 255; parts of the GAEN documentation mention a cap at 255)
 
@@ -186,7 +186,7 @@ If the level exceeds a threshold to be defined by experts, the app can provide t
 
 The following diagram provides an overview of all the above steps, in a single picture:
 
-![image alt text](images/image_5.png)
+![An overview of the entire process flow](images/flow_overview.png)
 
 Key elements to be built
 
@@ -212,7 +212,7 @@ The details surrounding the security and privacy implementation of the Proof of 
 
 **NOTE:** Some items, such as the orange items, dotted items and items with question marks are currently under consideration or to be investigated, so this is not a complete picture yet. It will be updated alongside progress in the Cryptografie Raamwerk.
 
-![image alt text](images/image_6.png)
+![Security overview](images/security.png)
 
 Each part of the diagram tries to address a number of key aspects:
 
@@ -254,7 +254,7 @@ The flow is designed to:
 
 * The low tech nature also allows to use channels such as a phone call to exchange tans.
 
-![image alt text](images/image_7.png)
+![Lab result flow](images/lab_flow.png)
 
 TODO: Add offline scenario.
 
@@ -264,7 +264,7 @@ TODO: Add offline scenario.
 
 The following diagram illustrates the required backend components to be able to satisfy the requirements:
 
-![image alt text](images/image_8.png)
+![High level backend overview](images/backend_overview.png)
 
 ## Infrastructure
 
