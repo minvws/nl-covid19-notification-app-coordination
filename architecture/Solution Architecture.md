@@ -238,27 +238,60 @@ To ensure that an eavesdropper in or on the network can not derive any contamina
 
 TODO: Establish the frequency of decoy calls to provide sufficient blinding.
 
-## Lab result validation flow
+# Lab result validation flow
 
-To ensure that only keys are uploaded that belong to positive test results, the following process can be followed. (TODO: This is currently being validated to see if this can be matched with the logistical processes surrounding the test / this is seen from a security / privacy perspective, which is why it is in this chapter, and will be moved do an appropriate chapter once it has been validated)
+To ensure that only keys are uploaded that belong to positive test results, we have 2 types of flows. One 'low tech, works everywhere' flow for situations where we can't integrate with the health authority system but the user still needs to be able to use the app. One more advanced flow that integrates with the health authority system. The low tech flow works with one-time 'Infection Confirmation Codes'. 
 
 The flow is designed to:
 
 * Minimize the effort for users and professionals
-
 * Maximize privacy
-
-* Move the exchange of codes to a place in the process where there’s less chance of error (less stress)
-
 * Be applicable with ‘low tech’ (adding conveniences such as a QR are ‘on top’ of the basic low tech flow and not a requirement).
-
 * The low tech nature also allows to use channels such as a phone call to exchange tans.
 
-![Lab result flow](images/lab_flow.png)
 
-TODO: Add offline scenario.
+## Variant 1: Infection Confirmation Codes
 
-# Backend Considerations
+### Phase 1: Distributing Infection Confirmation Codes
+
+The key ingredient of Variant 1 is the use of one-time Infection Confirmation Codes. Because there is no link to the health authority system for patients that are in this flow, the responsibility is with the callcenter staff that calls the patient. They check positive status in their respective systems and using a web portal, they confirm an infection for this patient. Note that this is an extremely privacy friendly flow because the app backend has zero ties to any real lab result or personal data. There simply is no personal patient data anywhere in the lab backend (privacy by design).
+
+The following data flow diagram depicts how one time ICC codes are generated in batches and distributed to health authority call centers. The person distributing the codes can be the local call center manager, or the central authorities, in the case where the patients aren't called by health authority callcenters but by their own physician/hospital (this case is rare).
+
+![Phase 1: Distributing Infection Confirmation Codes to health authority callcenters](images/variant1_step1_iccdistribution.png)
+
+### Phase 2, step A: Calling the patient and exchanging a key
+
+When the patient is called, a token is exchanged for a 128 bit key. The shorter token is useful to communicate over the phone, but we want to exchange it for a 128-bit key because there's some time between the first key upload and the last key upload (which apple and google only release after midnight) and we want to have protection against brute force attacks on the key exchange. (the infrastructure will also mitigate these attacks but our policy is that the data should be secure regardless of the infrastructure quality). We call the process an 'enrollment' because it equips the phone with a key.
+
+Note that although the process has many steps, for the user this is just the part where the caller ask the user for a code. 
+
+Note 2: we have chosen to have the user read a code to the operator instead of the other way round, to avoid mistakes. The app should help the user read the correct code. 
+
+![Phase 2: Step A key exchange](images/variant1_step2A_enrollment.png)
+
+### Phase 2, step B: Asking the patient to upload keys
+
+Once the user has read the key to the operator, the operator asks the user to upload his keys. The user presses a button in the app, gives final consent (by way of the popup that Apple/Google present) and the keys get uploaded. The following diagram depicts this process:
+
+![Phase 2: Step B key upload](images/variant1_step2B_uploadkeys.png)
+
+Note that this only stores the keys in our database, and doesn't yet publish them. We need a final step to get the keys published, which is covered in the next paragraph.
+
+Note 2: A privacy feature of this approach is that the phone never has any clue if the user has received a positive test. Although we read the keys from the apple/google api and upload them, this doesn't guarantee to the phone itself that a user is positive. In fact, a user might choose to simply upload his keys even though there's no test. This helps blind the actual keys uploads. Keys that get uploaded like this never get published because the positive lab indication will be missing. So only if both conditions are true (user has uploaded their keys with consent AND a lab result confirmed a positive test), the exposure keys get distributed. Keys or lab results that don't have matching conditions, get cleaned up and deleted after a timeout period.
+
+### Phase 3: Publishing the keys
+
+At regular intervals, all keys that are confirmed with a positive result get packaged, signed and distributed via our CDN. The data flow diagram for this final step is this:
+
+![Phase 3: publish the keys to the CDN](images/variant1_step3_publishingkeys.png)
+
+Note that while we use the keys from the previous phase as an example in the diagram, this process is not specific to one set of keys. All keys that have been added since the previous batch, get packaged together.
+
+
+## Variant 2: Integration with Health Authority systems
+
+# Backend Considerations 
 
 ## Backend overview
 
