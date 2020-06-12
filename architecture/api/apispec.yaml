@@ -344,24 +344,25 @@ components:
     EnrollmentRequest:
       type: object
       properties:
-        confirmationKey:
+        labConfirmationID:
           type: string
-          description: Base64 representation of a 128-bit key that will be used to sign TEKs upon upload. The device should generate this key using a secure random number generator.
+          description: Confirmation code that the phone generates and displays so the phone owner can read it to an operator.
         padding:
           type: string
           description: |
-              The request should add padding for observer protection, so that the length of a request does not reveal that this is an enrollment. The size of the padding should be randomized in such a way that the entire payload is at least. 
-              
+              The request should add padding for observer protection, so that the length of a request does not reveal that this is an enrollment. 
+              The size of the padding should be randomized in such a way that the entire payload is at least. 
               TODO: define how big.
     EnrollmentResponse:
       type: object
       properties:
-        labConfirmationID:
-          type: string
-          description: Confirmation code that the phone must display so the user can read it to an operator.
         BucketID: 
           type: string
           description: Random generated number that will later in the upload process associate the keys with the correct signature
+        confirmationKey:
+          type: string
+          description: |
+            Base64 representation of a 256-bit key that will be used to sign TEKs upon upload. 
     KeysRequest:
       type: object
       properties:
