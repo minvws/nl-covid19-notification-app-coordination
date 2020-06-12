@@ -38,7 +38,7 @@ The requirements document received from the Dutch health authority GGD are leadi
 - [Security & Privacy](#security--privacy)
   * [Overview](#overview)
   * [Blinding](#blinding)
-  * [Lab result validation flow](#lab-result-validation-flow)
+- [Lab result validation flow](#lab-result-validation-flow)
 - [Backend Considerations](#backend-considerations)
   * [Backend overview](#backend-overview)
   * [Infrastructure](#infrastructure)
@@ -284,7 +284,7 @@ Note 2: A privacy feature of this approach is that the phone never has any clue 
 
 At regular intervals, all keys that are confirmed with a positive result get packaged, signed and distributed via our CDN. The data flow diagram for this final step is this:
 
-![Phase 3: publish the keys to the CDN](images/variant1_step3_publishingkeys.png)
+![Phase 3: publish the keys to the CDN](images/variant1_step3_publishkeys.png)
 
 Note that while we use the keys from the previous phase as an example in the diagram, this process is not specific to one set of keys. All keys that have been added since the previous batch, get packaged together.
 
