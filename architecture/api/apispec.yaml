@@ -177,7 +177,13 @@ paths:
       - Enrollment
       summary: Exchange a secret with the server so we can sign our keys
       description: |
-        This method is called by a device to exchange a secret, in the fallback flow (in case a secret wasn't yet exchanged in the test facility). The secret becomes part of an anonymous bucket where later the keys will be dropped. The method will return a LabConfirmationID that the user must read to the operator, and that the operator will use to confirm a positive lab result. 
+        This method is called by a device to exchange a secret, in the fallback flow (in case a secret wasn't yet 
+        exchanged in the test facility). 
+        The secret is stored in an anonymous bucket on the server where later the TEK keys will be dropped.
+        The device sends a labConfirmationID in the request that will also be stored in the bucket.
+        This labConfirmationID is generated on the device and read by the device owner to the operator who submits
+        the key to the server out-of-band.
+        The method returns a confirmationKey  
         
         This method implements observer protection. 
 
@@ -344,24 +350,25 @@ components:
     EnrollmentRequest:
       type: object
       properties:
-        confirmationKey:
+        labConfirmationID:
           type: string
-          description: Base64 representation of a 128-bit key that will be used to sign TEKs upon upload. The device should generate this key using a secure random number generator.
+          description: Confirmation code that the phone generates and displays so the phone owner can read it to an operator.
         padding:
           type: string
           description: |
-              The request should add padding for observer protection, so that the length of a request does not reveal that this is an enrollment. The size of the padding should be randomized in such a way that the entire payload is at least. 
-              
+              The request should add padding for observer protection, so that the length of a request does not reveal that this is an enrollment. 
+              The size of the padding should be randomized in such a way that the entire payload is at least. 
               TODO: define how big.
     EnrollmentResponse:
       type: object
       properties:
-        labConfirmationID:
-          type: string
-          description: Confirmation code that the phone must display so the user can read it to an operator.
         BucketID: 
           type: string
           description: Random generated number that will later in the upload process associate the keys with the correct signature
+        confirmationKey:
+          type: string
+          description: |
+            Base64 representation of a 256-bit key that will be used to sign TEKs upon upload. 
     KeysRequest:
       type: object
       properties:
