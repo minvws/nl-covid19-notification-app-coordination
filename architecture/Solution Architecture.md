@@ -262,7 +262,7 @@ The following data flow diagram depicts how one time ICC codes are generated in 
 
 ### Phase 2, step A: Calling the patient and exchanging a key
 
-When the patient is called, a token is exchanged for a 128 bit key. The shorter token is useful to communicate over the phone, but we want to exchange it for a 128-bit key because there's some time between the first key upload and the last key upload (which apple and google only release after midnight) and we want to have protection against brute force attacks on the key exchange. (the infrastructure will also mitigate these attacks but our policy is that the data should be secure regardless of the infrastructure quality). We call the process an 'enrollment' because it equips the phone with a key.
+When the patient is called, a token is exchanged for a 256 bit key. The shorter token is useful to communicate over the phone, but we want to exchange it for a 256-bit key because there's some time between the first key upload and the last key upload (which apple and google only release after midnight) and we want to have protection against brute force attacks on the key exchange. (the infrastructure will also mitigate these attacks but our policy is that the data should be secure regardless of the infrastructure quality). We call the process an 'enrollment' because it equips the phone with a key.
 
 Note that although the process has many steps, for the user this is just the part where the caller ask the user for a code. 
 
