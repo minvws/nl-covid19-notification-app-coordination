@@ -38,7 +38,7 @@ The requirements document received from the Dutch health authority GGD are leadi
 - [Security & Privacy](#security--privacy)
   * [Overview](#overview)
   * [Blinding](#blinding)
-  * [Lab result validation flow](#lab-result-validation-flow)
+- [Lab result validation flow](#lab-result-validation-flow)
 - [Backend Considerations](#backend-considerations)
   * [Backend overview](#backend-overview)
   * [Infrastructure](#infrastructure)
@@ -124,7 +124,7 @@ This chapter describes the core flow that we are following, which is partially d
 
 As described in the GAEN document set - the users’ mobile phones are able to record ephemeral IDs of other phones they meet. These are generated from a daily seed key (Temporary Exposure Key, TEK). Details about this can be found in the GAEN documentation (See Cryptography Specification: [Apple](https://www.apple.com/covid19/contacttracing), [Google](https://www.google.com/covid19/exposurenotifications/)), but it boils down to the following:
 
-![image alt text](images/image_0.png)
+![Bob and Alice exchange RPIs during an encounter](images/flow_step1.png)
 
 From the daily keys a set of Rolling Proximity Identifiers (RPI) is generated that are exchanged between phones over Bluetooth Low Energy and get recorded on the recipient's device. The device records the ‘attenuation’ of the encounter. This is a representation of how near the devices were, but is not an exact representation of distance. It can later be used to calculate the probability that this encounter was risky.
 
@@ -134,7 +134,7 @@ At some point a person carrying the app on their phone may get tested at a test 
 
 It is expected that at this point the TEKs of that person are captured and sent to a central server:
 
-![image alt text](images/image_1.png)
+![Bob tests positive and uploads his keys](images/flow_step2.png)
 
 This upload should be validated / authorised by a health authority, so that people cannot upload their keys without a validated positive test result. (As per the requirements, we will not support self-assessment at this point). The keys are not shared (i.e. uploaded to the central server) until after the infected person has been informed of the test result and has provided consent to share the keys.
 
@@ -146,7 +146,7 @@ The infected keys are, at regular intervals, batched, signed and pushed out to a
 
 Once the keys are available on the CDN, clients can download the sets of infected keys and use these to verify if they have encountered an infected person.
 
-![image alt text](images/image_2.png)
+![Alice downloads infected keys and checks if she has a match](images/flow_step3.png)
 
 This match takes place entirely on the user’s phone. By deriving the set of RPIs from the infected TEK that a user received, it can compare these to the RPIs it has recorded. If there is a match, it can use its previous recordings to determine the approximate duration of the encounter.
 
@@ -154,7 +154,7 @@ This match takes place entirely on the user’s phone. By deriving the set of RP
 
 Once the device has determined that it has seen the phone of an infected user, the next step is to calculate the risk that the phone’s owner could be infected. This assessment is performed on the phone.
 
-![image alt text](images/image_3.png)
+![Alices phone calculates the risk of the encounter](images/flow_step4.png)
 
 The following parameters are available to the calculation:
 
@@ -176,7 +176,7 @@ For an understanding of how these buckets and parameters work, we have made avai
 
 The final step in the flow is to notify the user of an exposure if the risk calculation exceeds a certain threshold. 
 
-![image alt text](images/image_4.png)
+![Finally, Alice is notified that she had a risky encounter](images/flow_step5.png)
 
 Note: the diagram indicates a calculated risk level of 1-8, but after the weights were removed from the latest version of the GAEN protocol, this level is now a number between 0 and 4096 (or 255; parts of the GAEN documentation mention a cap at 255)
 
@@ -186,7 +186,7 @@ If the level exceeds a threshold to be defined by experts, the app can provide t
 
 The following diagram provides an overview of all the above steps, in a single picture:
 
-![image alt text](images/image_5.png)
+![An overview of the entire process flow](images/flow_overview.png)
 
 Key elements to be built
 
@@ -212,7 +212,7 @@ The details surrounding the security and privacy implementation of the Proof of 
 
 **NOTE:** Some items, such as the orange items, dotted items and items with question marks are currently under consideration or to be investigated, so this is not a complete picture yet. It will be updated alongside progress in the Cryptografie Raamwerk.
 
-![image alt text](images/image_6.png)
+![Security overview](images/security.png)
 
 Each part of the diagram tries to address a number of key aspects:
 
@@ -238,33 +238,66 @@ To ensure that an eavesdropper in or on the network can not derive any contamina
 
 TODO: Establish the frequency of decoy calls to provide sufficient blinding.
 
-## Lab result validation flow
+# Lab result validation flow
 
-To ensure that only keys are uploaded that belong to positive test results, the following process can be followed. (TODO: This is currently being validated to see if this can be matched with the logistical processes surrounding the test / this is seen from a security / privacy perspective, which is why it is in this chapter, and will be moved do an appropriate chapter once it has been validated)
+To ensure that only keys are uploaded that belong to positive test results, we have 2 types of flows. One 'low tech, works everywhere' flow for situations where we can't integrate with the health authority system but the user still needs to be able to use the app. One more advanced flow that integrates with the health authority system. The low tech flow works with one-time 'Infection Confirmation Codes'. 
 
 The flow is designed to:
 
 * Minimize the effort for users and professionals
-
 * Maximize privacy
-
-* Move the exchange of codes to a place in the process where there’s less chance of error (less stress)
-
 * Be applicable with ‘low tech’ (adding conveniences such as a QR are ‘on top’ of the basic low tech flow and not a requirement).
-
 * The low tech nature also allows to use channels such as a phone call to exchange tans.
 
-![image alt text](images/image_7.png)
 
-TODO: Add offline scenario.
+## Variant 1: Infection Confirmation Codes
 
-# Backend Considerations
+### Phase 1: Distributing Infection Confirmation Codes
+
+The key ingredient of Variant 1 is the use of one-time Infection Confirmation Codes. Because there is no link to the health authority system for patients that are in this flow, the responsibility is with the callcenter staff that calls the patient. They check positive status in their respective systems and using a web portal, they confirm an infection for this patient. Note that this is an extremely privacy friendly flow because the app backend has zero ties to any real lab result or personal data. There simply is no personal patient data anywhere in the lab backend (privacy by design).
+
+The following data flow diagram depicts how one time ICC codes are generated in batches and distributed to health authority call centers. The person distributing the codes can be the local call center manager, or the central authorities, in the case where the patients aren't called by health authority callcenters but by their own physician/hospital (this case is rare).
+
+![Phase 1: Distributing Infection Confirmation Codes to health authority callcenters](images/variant1_step1_iccdistribution.png)
+
+### Phase 2, step A: Calling the patient and exchanging a key
+
+When the patient is called, a token is exchanged for a 256 bit key. The shorter token is useful to communicate over the phone, but we want to exchange it for a 256-bit key because there's some time between the first key upload and the last key upload (which apple and google only release after midnight) and we want to have protection against brute force attacks on the key exchange. (the infrastructure will also mitigate these attacks but our policy is that the data should be secure regardless of the infrastructure quality). We call the process an 'enrollment' because it equips the phone with a key.
+
+Note that although the process has many steps, for the user this is just the part where the caller ask the user for a code. 
+
+Note 2: we have chosen to have the user read a code to the operator instead of the other way round, to avoid mistakes. The app should help the user read the correct code. 
+
+![Phase 2: Step A key exchange](images/variant1_step2A_enrollment.png)
+
+### Phase 2, step B: Asking the patient to upload keys
+
+Once the user has read the key to the operator, the operator asks the user to upload his keys. The user presses a button in the app, gives final consent (by way of the popup that Apple/Google present) and the keys get uploaded. The following diagram depicts this process:
+
+![Phase 2: Step B key upload](images/variant1_step2B_uploadkeys.png)
+
+Note that this only stores the keys in our database, and doesn't yet publish them. We need a final step to get the keys published, which is covered in the next paragraph.
+
+Note 2: A privacy feature of this approach is that the phone never has any clue if the user has received a positive test. Although we read the keys from the apple/google api and upload them, this doesn't guarantee to the phone itself that a user is positive. In fact, a user might choose to simply upload his keys even though there's no test. This helps blind the actual keys uploads. Keys that get uploaded like this never get published because the positive lab indication will be missing. So only if both conditions are true (user has uploaded their keys with consent AND a lab result confirmed a positive test), the exposure keys get distributed. Keys or lab results that don't have matching conditions, get cleaned up and deleted after a timeout period.
+
+### Phase 3: Publishing the keys
+
+At regular intervals, all keys that are confirmed with a positive result get packaged, signed and distributed via our CDN. The data flow diagram for this final step is this:
+
+![Phase 3: publish the keys to the CDN](images/variant1_step3_publishkeys.png)
+
+Note that while we use the keys from the previous phase as an example in the diagram, this process is not specific to one set of keys. All keys that have been added since the previous batch, get packaged together.
+
+
+## Variant 2: Integration with Health Authority systems
+
+# Backend Considerations 
 
 ## Backend overview
 
 The following diagram illustrates the required backend components to be able to satisfy the requirements:
 
-![image alt text](images/image_8.png)
+![High level backend overview](images/backend_overview.png)
 
 ## Infrastructure
 
