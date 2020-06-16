@@ -266,7 +266,7 @@ When the patient is called, a token is exchanged for a 256 bit key. The shorter 
 
 Note that although the process has many steps, for the user this is just the part where the caller ask the user for a code. 
 
-Note 2: we have chosen to have the user read a code to the operator instead of the other way round, to avoid mistakes. The app should help the user read the correct code. 
+Note 2: we have chosen to have the user read a code to the operator instead of the other way round, to a) avoid mistakes and b) not give the app 'proof' that the user is infected. The app should help the user read the correct code. 
 
 ![Phase 2: Step A key exchange](images/variant1_step2A_enrollment.png)
 
