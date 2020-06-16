@@ -1,1 +1,2 @@
-Tip; load the apispc.yaml file in https://editor.swagger.io for a realtime view of the API documentation while editing the yaml file.
+**Tip:** use [Swagger UI](https://petstore.swagger.io/?url=https://raw.githubusercontent.com/minvws/nl-covid19-notification-app-coordination/master/architecture/api/apispec.yaml) or [ReDoc](https://redocly.github.io/redoc/?url=https://raw.githubusercontent.com/minvws/nl-covid19-notification-app-coordination/master/architecture/api/apispec.yaml) to view the apispc.yaml file, [Swagger Editor](https://editor.swagger.io/?url=https://raw.githubusercontent.com/minvws/nl-covid19-notification-app-coordination/master/architecture/api/apispec.yaml) can be used  for a realtime view of the API documentation while editing the yaml file.
+
