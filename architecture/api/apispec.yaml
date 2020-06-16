@@ -377,6 +377,14 @@ components:
           items:
             $ref: '#/components/schemas/TEK'
           description: Base64 representation of a 128-bit key that will be used to sign TEKs upon upload. The device should generate this key using a secure random number generator.
+        bucketID:
+          type: string
+          description: identification of 'bucket' that contains the confirmationKey. See 'signature' field below.
+        signature:
+          type: string
+          description: |
+            The KeysRequest payload is signed with the confirmationKey using HMAC_SHA256.
+            TODO specify how to serialize KeysRequest payload for signing.
         padding:
           type: string
           description: |
