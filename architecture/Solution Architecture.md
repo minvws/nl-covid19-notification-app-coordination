@@ -230,7 +230,7 @@ To ensure that an eavesdropper in or on the network can not derive any contamina
 
 1. The upload should use TLS to protect the contents of a request
 
-2. Apps should randomly execute ‘decoy’ requests that can’t be distinguished (from the outside) from a real request, so that the fact that a request is made, does not reveal anything about the user. Since TLS will protect the URL of the request, we can use explicit decoy names such as ‘/decoys’ instead of /upload’, so that such requests can be dropped early in the infrastructure and don’t reach the actual application.
+2. Apps should randomly execute ‘decoy’ requests that can’t be distinguished (from the outside) from a real request, so that the fact that a request is made, does not reveal anything about the user. Since TLS will protect the URL of the request, we can use explicit decoy names such as ‘/stopkeys’ instead of /postkeys’, so that such requests can be dropped early in the infrastructure and don’t reach the actual application.
 
 3. The request signatures and payload for POST/PUT requests such as the upload of keys, should be exactly equal so that an eavesdropper is not able to derive from the length or signature of a request that a user is uploading fake keys. (If necessary the payload should be padded)
 
