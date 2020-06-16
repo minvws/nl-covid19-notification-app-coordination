@@ -30,7 +30,7 @@ tags:
     description: |
       Methods that deal with the confirmation of a positive test by the lab/health authority
 paths:
-  /manifest.json:
+  /manifest:
     get:
       tags:
         - CDN
@@ -101,7 +101,7 @@ paths:
             application/zip:
               schema:
                 $ref: '#/components/schemas/Bundle'
-  /riskcalculationparameters/{id}.json:
+  /riskcalculationparameters/{id}:
     get:
       tags:
         - CDN
@@ -123,7 +123,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/RiskCalculationParameters"
-  /appconfig/{id}.json:
+  /appconfig/{id}:
     get:
       tags:
         - CDN
