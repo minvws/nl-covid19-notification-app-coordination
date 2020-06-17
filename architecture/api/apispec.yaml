@@ -370,10 +370,10 @@ components:
           type: string
           description: |
             Confirmation code that the phone should display so the phone owner can read it to an operator.
-        validUntil:
-          type: string
-          format: date-time
-          description: The returned key is valid until this moment in time. The device should re-register if this date is reached. Typically the validUntil will be 4am the next day so it's valid long enough to be able to upload the 14th key at a random time past midnight.
+        validity:
+          type: integer
+          format: int64
+          description: The returned key is valid for this number of seconds after it was retrieved. The device should re-register if this time is elapsed. Typically the validUntil will be the number of seconds until 4am the next day so it's valid long enough to be able to upload the 14th key at a random time past midnight.
     KeysRequest:
       type: object
       properties:
