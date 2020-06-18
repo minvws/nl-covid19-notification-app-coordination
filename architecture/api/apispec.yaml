@@ -346,7 +346,7 @@ components:
       properties:
         labConfirmationID:
           type: string
-          description: The labConfirmationID identifies the result in the app ecosystem. For patients who are enrolled via the test facility (QR Scan), the labConfirmationID is known to the Lab/HA system. For patiens who are enrolled directly during a result confirmation call (fallback flow), the labConfirmationID is handed out via the out of band phone conversation and entered by the operator. 
+          description: The labConfirmationID identifies the result in the app ecosystem. For patients who are enrolled via the test facility (QR Scan), the labConfirmationID is known to the Lab/HA system. For patients who are enrolled directly during a result confirmation call (fallback flow), the labConfirmationID is handed out via the out of band phone conversation and entered by the operator. 
     EnrollmentRequest:
       type: object
       properties:
@@ -369,7 +369,7 @@ components:
         labConfirmationID:
           type: string
           description: |
-            Confirmation code that the phone should display so the phone owner can read it to an operator.
+            Confirmation code that the phone should display so the phone owner can read it to an operator. The value may include dashes to denote separators, e.g. AB8-B7F should be rendered as two sets of characters.
         validity:
           type: integer
           format: int64
