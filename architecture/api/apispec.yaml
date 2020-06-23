@@ -169,7 +169,7 @@ paths:
         required: true
       responses:
         200:
-          description: Labresult Processed Correctly
+          description: Lab confirmation processed Correctly
           content: {}
   /register:
     post:
