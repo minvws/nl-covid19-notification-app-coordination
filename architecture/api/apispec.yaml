@@ -347,6 +347,10 @@ components:
         labConfirmationID:
           type: string
           description: The labConfirmationID identifies the result in the app ecosystem. For patients who are enrolled via the test facility (QR Scan), the labConfirmationID is known to the Lab/HA system. For patients who are enrolled directly during a result confirmation call (fallback flow), the labConfirmationID is handed out via the out of band phone conversation and entered by the operator. 
+        dateOfSymptomsOnset:
+          type: string
+          format: date
+          description: The day that the patient's symptoms started. This is usually < 14 days ago. However, we impose no constraint on it.
     EnrollmentRequest:
       type: object
       properties:
