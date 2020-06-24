@@ -230,7 +230,7 @@ To ensure that an eavesdropper in or on the network can not derive any contamina
 
 1. The upload should use TLS to protect the contents of a request
 
-2. Apps should randomly execute ‘decoy’ requests that can’t be distinguished (from the outside) from a real request, so that the fact that a request is made, does not reveal anything about the user. Since TLS will protect the URL of the request, we can use explicit decoy names such as ‘/decoys’ instead of /upload’, so that such requests can be dropped early in the infrastructure and don’t reach the actual application.
+2. Apps should randomly execute ‘decoy’ requests that can’t be distinguished (from the outside) from a real request, so that the fact that a request is made, does not reveal anything about the user. Since TLS will protect the URL of the request, we can use explicit decoy names such as ‘/stopkeys’ instead of /postkeys’, so that such requests can be dropped early in the infrastructure and don’t reach the actual application.
 
 3. The request signatures and payload for POST/PUT requests such as the upload of keys, should be exactly equal so that an eavesdropper is not able to derive from the length or signature of a request that a user is uploading fake keys. (If necessary the payload should be padded)
 
@@ -256,7 +256,7 @@ The flow is designed to:
 
 The key ingredient of Variant 1 is the use of one-time Infection Confirmation Codes. Because there is no link to the health authority system for patients that are in this flow, the responsibility is with the callcenter staff that calls the patient. They check positive status in their respective systems and using a web portal, they confirm an infection for this patient. Note that this is an extremely privacy friendly flow because the app backend has zero ties to any real lab result or personal data. There simply is no personal patient data anywhere in the lab backend (privacy by design).
 
-The following data flow diagram depicts how one time ICC codes are generated in batches and distributed to health authority call centers. The person distributing the codes can be the local call center manager, or the central authorities, in the case where the patients aren't called by health authority callcenters but by their own physician/hospital (this case is rare).
+The following data flow diagram depicts how one time ICC codes are generated in batches and distributed to health authority call centers. The person distributing the codes can be the local call center manager, or the central authorities, in the case where the patients aren't called by health authority callcenters but by their own physician/hospital (this case is rare). Authentication to the portal will happen through an existing Identity Hub at GGD.
 
 ![Phase 1: Distributing Infection Confirmation Codes to health authority callcenters](images/variant1_step1_iccdistribution.png)
 
@@ -266,7 +266,7 @@ When the patient is called, a token is exchanged for a 256 bit key. The shorter 
 
 Note that although the process has many steps, for the user this is just the part where the caller ask the user for a code. 
 
-Note 2: we have chosen to have the user read a code to the operator instead of the other way round, to avoid mistakes. The app should help the user read the correct code. 
+Note 2: we have chosen to have the user read a code to the operator instead of the other way round, to a) avoid mistakes and b) not give the app 'proof' that the user is infected. The app should help the user read the correct code. 
 
 ![Phase 2: Step A key exchange](images/variant1_step2A_enrollment.png)
 
