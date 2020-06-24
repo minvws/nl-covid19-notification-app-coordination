@@ -30,7 +30,7 @@ tags:
     description: |
       Methods that deal with the confirmation of a positive test by the lab/health authority
 paths:
-  /manifest.json:
+  /manifest:
     get:
       tags:
         - CDN
@@ -101,7 +101,7 @@ paths:
             application/zip:
               schema:
                 $ref: '#/components/schemas/Bundle'
-  /riskcalculationparameters/{id}.json:
+  /riskcalculationparameters/{id}:
     get:
       tags:
         - CDN
@@ -123,7 +123,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/RiskCalculationParameters"
-  /appconfig/{id}.json:
+  /appconfig/{id}:
     get:
       tags:
         - CDN
@@ -169,7 +169,7 @@ paths:
         required: true
       responses:
         200:
-          description: Labresult Processed Correctly
+          description: Lab confirmation processed Correctly
           content: {}
   /register:
     post:
@@ -346,13 +346,10 @@ components:
       properties:
         labConfirmationID:
           type: string
-          description: The labConfirmationID identifies the result in the app ecosystem. For patients who are enrolled via the test facility (QR Scan), the labConfirmationID is known to the Lab/HA system. For patiens who are enrolled directly during a result confirmation call (fallback flow), the labConfirmationID is handed out via the out of band phone conversation and entered by the operator. 
+          description: The labConfirmationID identifies the result in the app ecosystem. For patients who are enrolled via the test facility (QR Scan), the labConfirmationID is known to the Lab/HA system. For patients who are enrolled directly during a result confirmation call (fallback flow), the labConfirmationID is handed out via the out of band phone conversation and entered by the operator. 
     EnrollmentRequest:
       type: object
       properties:
-        labConfirmationID:
-          type: string
-          description: Confirmation code that the phone generates and displays so the phone owner can read it to an operator.
         padding:
           type: string
           description: |
@@ -369,6 +366,14 @@ components:
           type: string
           description: |
             Base64 representation of a 256-bit key that will be used to sign TEKs upon upload. 
+        labConfirmationID:
+          type: string
+          description: |
+            Confirmation code that the phone should display so the phone owner can read it to an operator. The value may include dashes to denote separators, e.g. AB8-B7F should be rendered as two sets of characters.
+        validity:
+          type: integer
+          format: int64
+          description: The returned key is valid for this number of seconds after it was retrieved. The device should re-register if this time is elapsed. Typically the validUntil will be the number of seconds until 4am the next day so it's valid long enough to be able to upload the 14th key at a random time past midnight.
     KeysRequest:
       type: object
       properties:
@@ -377,6 +382,14 @@ components:
           items:
             $ref: '#/components/schemas/TEK'
           description: Base64 representation of a 128-bit key that will be used to sign TEKs upon upload. The device should generate this key using a secure random number generator.
+        bucketID:
+          type: string
+          description: identification of 'bucket' that contains the confirmationKey. See 'signature' field below.
+        signature:
+          type: string
+          description: |
+            The KeysRequest payload is signed with the confirmationKey using HMAC_SHA256.
+            TODO specify how to serialize KeysRequest payload for signing.        
         padding:
           type: string
           description: |
