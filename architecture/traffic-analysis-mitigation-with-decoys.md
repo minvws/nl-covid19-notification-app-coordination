@@ -246,7 +246,7 @@ Note: we do not take into account Sundays and holidays that may have lower genui
 
 Each decoy TEK upload sequence must behave as follows:
 
-1. The decoy TEK upload sequence mimics the decoy traffic sequence as described in the previous paragraph, including the 14th TEK upload the following day..
+1. The decoy TEK upload sequence mimics the decoy traffic sequence as described in the previous paragraph, including the 14th TEK upload the following day.
 
 2. The app maintains a counter DECOYCOUNTER of decoy traffic sent during the day by the scheduled decoy TEK upload sequence. This counter is set to 0 at the start of each decoy TEK upload sequence. Each time a decoy message is sent, the counter is increased by 1.
 
