@@ -1,4 +1,5 @@
-Traffic analysis mitigation (decoy traffic)
+Traffic analysis mitigation with decoy traffic
+==============================================
 
 # Introduction
 
