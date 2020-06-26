@@ -28,7 +28,7 @@ In between the first two calls, the user reads the labConfirmationID to the heal
 
 There’s a few hours of delay in between the second and third call, until just after Midnight when the framework allows retrieval of the 14th key.
 
-The following table plots this observable network traffic on a timeline. An example delay of 20 seconds is used between the first and the second call, and an example 8000 seconds between the second and the third call.
+The following table plots this observable network traffic on a timeline. For this example, a delay of 20 seconds is used between the first and second call, and a delay of 8000 seconds is used between the second and third call.
 
 <table>
   <tr>
