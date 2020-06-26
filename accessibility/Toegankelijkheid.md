@@ -1,6 +1,6 @@
 ## Toegankelijkheid
 
-Een van de uitgangspunten bij het ontwikkelen van deze app is digitale toegankelijheid. IN dit document wordt dit uitgangspunt uitgewerkt tot concrete richtlijnen en handvatten voor zowel de ontwerpers, ontwikkelaars en testers. Het document wordt aangevuld op basis van vragen en feedback vanuit het team en de community.
+Een van de uitgangspunten bij het ontwikkelen van deze app is digitale toegankelijkheid. IN dit document wordt dit uitgangspunt uitgewerkt tot concrete richtlijnen en handvatten voor zowel de ontwerpers, ontwikkelaars en testers. Het document wordt aangevuld op basis van vragen en feedback vanuit het team en de community.
 
 Net als bijvoorbeeld privacy en beveiliging is toegankelijkheid iets dat gedurende het hele traject aandacht verdiend. Iets achteraf toegankelijk proberen te maken is veel werk en levert vaak geen optimaal resultaat. Zeker gezien de korte doorlooptijd van dit proces is het van belang om toegankelijkheid in één keer zo goed mogelijk te doen.
 
