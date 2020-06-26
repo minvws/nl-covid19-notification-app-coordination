@@ -217,7 +217,7 @@ Let us calculate how much this 20x decoy traffic will be on average.
 
 The daily infection numbers of the pandemic over the course of March to June 2020 is shown in the following graph (retrieved 22 Jun 2020 from [https://www.rivm.nl/coronavirus-covid-19/grafieken](https://www.rivm.nl/coronavirus-covid-19/grafieken)).
 
-![image alt text](image_0.png)
+![Graph Dutch daily infection numbers march-june 2020](images/image_0.png)
 
 So for the calculation of the required decoy traffic volume let us take a number of daily infections of 1000. 
 
