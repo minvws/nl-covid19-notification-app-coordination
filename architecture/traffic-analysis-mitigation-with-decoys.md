@@ -223,7 +223,7 @@ The daily infection numbers of the pandemic over the course of March to June 202
 
 So for the calculation of the required decoy traffic volume let us take a number of daily infections of 1000. 
 
-And let us assume (optimistically) that half of these infected persons use the app and are willing to do the key upload. That would mean 500 genuine uploads per day. And that would mean 20x 500 = 10000 decoy uploads per day.
+And let us assume (optimistically) that half of these infected persons use the app and are willing to perform the key upload. That would mean 500 genuine uploads per day. And that would mean 20x 500 = 10000 decoy uploads per day.
 
 From our assumption that half of the infected persons use the app it follows that about half of the Dutch population has the app, which is about 8M app users.
 
