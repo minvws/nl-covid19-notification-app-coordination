@@ -26,7 +26,7 @@ Genuine TEK uploads are a sequence of 3 calls from app to server:
 
 In between the first two calls, the user reads the labConfirmationID to the health care worker over the phone. This will take some time, typically from 5 to 60 seconds (this is an estimation; not a result from a user test).
 
-In between the second and the third call is a number of hours until a little after Midnight, when the framework allows retrieval of the 14th key.
+There’s a few hours of delay in between the second and third call, until just after Midnight when the framework allows retrieval of the 14th key.
 
 The following table plots this observable network traffic on a timeline. An example delay of 20 seconds is used between the first and the second call, and an example 8000 seconds between the second and the third call.
 
