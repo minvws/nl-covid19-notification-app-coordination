@@ -13,7 +13,6 @@ Persons or entities that can listen in on network traffic include:
 
 * If user is on a home Wifi network, any housemates can monitor the network traffic.
 
-This document describes how to mitigate network traffic analysis by systematically sending ‘decoy’ traffic that is indistinguishable from real TEK uploads.
 
 # TEK upload sequence
 
