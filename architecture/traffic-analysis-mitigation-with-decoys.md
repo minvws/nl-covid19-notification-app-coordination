@@ -3,7 +3,9 @@ Traffic analysis mitigation with decoy traffic
 
 # Introduction
 
-The COVID-19 notification app allows a user who has been tested positive to upload TEKs (Temporary Exchange Keys) to the app´s back end servers. Anybody who can monitor the network traffic of the user’s device (smartphone) could potentially derive from the upload traffic that the user has a COVID-19 infection. This is a major privacy concern. Persons or entities that can listen in on network traffic include:
+The COVID-19 notification app allows a user who has been tested positive to upload TEKs (Temporary Exchange Keys) to the app’s back end servers. Anybody who can monitor the network traffic of the user’s device (smartphone) could potentially derive from the upload traffic that the user has a COVID-19 infection. This is a major privacy concern. This document describes how to mitigate network traffic analysis by systematically sending ‘decoy’ traffic that is indistinguishable from real TEK uploads.
+
+Persons or entities that can listen in on network traffic include:
 
 * If user is on a public wifi hotspot, anybody on the same public Wifi hotspot can monitor network traffic.
 
