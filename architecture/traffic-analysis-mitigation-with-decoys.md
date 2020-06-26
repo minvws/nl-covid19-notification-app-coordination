@@ -7,7 +7,7 @@ The COVID-19 notification app allows a user who has been tested positive to uplo
 
 Persons or entities that can listen in on network traffic include:
 
-* If user is on a public wifi hotspot, anybody on the same public Wifi hotspot can monitor network traffic.
+* If user is on a public Wifi hotspot, anybody on the same public Wifi hotspot can monitor network traffic.
 
 * If user uses a corporate VPN, the corporate employer can continuously monitor the VPN network traffic to detect possible infections among employees.
 
