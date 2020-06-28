@@ -17,7 +17,7 @@
 
 ## Samenvatting
 
-<!-- TOC titleSize:2 tabSpaces:2 depthFrom:1 depthTo:3 withLinks:1 updateOnSave:1 orderedList:0 skip:4 title:1 charForUnorderedList:* -->
+<!-- TOC titleSize:2 tabSpaces:2 depthFrom:1 depthTo:4 withLinks:1 updateOnSave:1 orderedList:0 skip:4 title:1 charForUnorderedList:* -->
 ## Table of Contents
 * [1.1 Achtergrond](#11-achtergrond)
 * [1.2 Doelstelling en uitgangspunten](#12-doelstelling-en-uitgangspunten)
@@ -25,7 +25,7 @@
 * [1.4 Dreigingen, aanvallen en beschermende maatregelen op basis van cryptografie](#14-dreigingen-aanvallen-en-beschermende-maatregelen-op-basis-van-cryptografie)
 * [1.5 Definities](#15-definities)
 * [2. TEK life cycle managment](#2-tek-life-cycle-managment)
-  * [2.1 Key generation and derivation](#21-key-generation-and-derivation)
+* [2.1 Key generation and derivation](#21-key-generation-and-derivation)
 * [2.2. Key Storage](#22-key-storage)
 * [2.3 Key Usage](#23-key-usage)
   * [2.3.1 Encryptie, generatie van RPI en AEM](#231-encryptie-generatie-van-rpi-en-aem)
@@ -101,11 +101,10 @@
 ## 1. Inleiding
 
 
-###### Dit document is in bewerking en ter review.
-###### Er zijn in deze versie ook nog de rode tekstdelen (H6) die nog te verwerken metadata bevatten.
+###### Dit document is in bewerking en ter review. Er zijn in deze versie ook nog de rode tekstdelen (H6) die nog te verwerken metadata bevatten.
 
 
-## 1.1 Achtergrond
+### 1.1 Achtergrond
 
 Binnen het Covid aanvalsprogramma zijn er een aantal werkstromen die allemaal bijdragen aan het hoofddoel, Nederland sneller en beter door deze crisis krijgen. Relevant in deze context zijn de technische werkstromen:
 
@@ -120,9 +119,9 @@ Binnen het Covid aanvalsprogramma zijn er een aantal werkstromen die allemaal bi
 Dit document beperkt zich tot optie 1 - "GGD Covid19 notificatieapp".
 
 
-## 1.2 Doelstelling en uitgangspunten
+### 1.2 Doelstelling en uitgangspunten
 
-Doelstelling van dit document is om uitgaande van het Google Apple Exposure Notification (GAEN) raamwerk te komen tot een daarop aansluitend cryptosysteem voor de Covid19 notificatieapp ondersteuning van de bescherming van de privacy van deelnemende personen en de integriteit van de verwerking. Het GAEN raamwerk beoogt anonimiteit van deelnemers te waarborgen op basis van een cryptografische oplossing waarbij een zogenaamde Temporary Exposure Key (TEK) centraal staat. Iedere deelnemer krijgt t.b.v. de anonimiteit een willekeurige ("random") cryptografische sleutel toegewezen. Het raamwerk moet zorgdragen voor behoud van de anonimiteit en de integriteit van die sleutel. Het model dat daarbij gehanteerd wordt is de algemeen gebruikelijke fasering binnen [het lifecycle management van cryptografische sleutels]{.underline}. Voor cryptografische standaarden worden de standaarden gebruikt van:
+Doelstelling van dit document is om uitgaande van het Google Apple Exposure Notification (GAEN) raamwerk te komen tot een daarop aansluitend cryptosysteem voor de Covid19 notificatieapp ondersteuning van de bescherming van de privacy van deelnemende personen en de integriteit van de verwerking. Het GAEN raamwerk beoogt anonimiteit van deelnemers te waarborgen op basis van een cryptografische oplossing waarbij een zogenaamde Temporary Exposure Key (TEK) centraal staat. Iedere deelnemer krijgt t.b.v. de anonimiteit een willekeurige ("random") cryptografische sleutel toegewezen. Het raamwerk moet zorgdragen voor behoud van de anonimiteit en de integriteit van die sleutel. Het model dat daarbij gehanteerd wordt is de algemeen gebruikelijke fasering binnen _het lifecycle management van cryptografische sleutels_ Voor cryptografische standaarden worden de standaarden gebruikt van:
 
 1.  COMMISSION RECOMMENDATION (EU) 2020/518 of 8 April 2020
 
@@ -139,14 +138,13 @@ De keuze voor de cryptografische oplossingen is tot stand gekomen tegen de achte
 In de eerste versie van dit document wordt een vereenvoudigd model gehanteerd van verwerkingslocaties bestaande uit mobiele telefoons (MT), upload server (US) en download server (DS). Naamgeving is verder op basis van GAEN en Dp-3T.
 
 
-## 1.3 Overzicht
+### 1.3 Overzicht
 
-
-<https://github.com/minvws/nl-covid19-notification-app-coordination/tree/master/architecture/images/kernoplossing.png>
+![Kernoplossing](https://github.com/minvws/nl-covid19-notification-app-coordination/tree/master/architecture/images/kernoplossing.png)
 
 Verdere detaillering en toelichting is terug te vinden in het infra architectuur document: Exposure Notificatie Infrastructuur Overview.ppt.
 
-## 1.4 Dreigingen, aanvallen en beschermende maatregelen op basis van cryptografie
+### 1.4 Dreigingen, aanvallen en beschermende maatregelen op basis van cryptografie
 
 Het cryptoraamwerk beschermt tegen een subset van dreigingen en of aanvallen op
 - de authenticiteit van de TEKs
@@ -159,7 +157,7 @@ Het raamwerk biedt beveiliging tegen de volgende dreigingen:
 
 Voor overige dreigingen zie [Bijlage A Dreigingsoverzicht](#bijlage-a-dreigingsoverzicht)
 
-## 1.5 Definities
+### 1.5 Definities
 
 **begrip**|**synoniem**|**omschrijving**
 -----|-----|-----
@@ -206,41 +204,41 @@ Afleiding van de 2 encryptie sleutels is deterministisch en zonder toevoeging va
 
 Apple geeft aan te werken op basis van
 
-1.  A True random number generator als bron.
+1.  A True random number generator als bron.  
 _The /dev/random generator is **a true random number generator** that obtains entropy from interrupts generated by the devices and sensors attached to the system and maintains an entropy pool. **The NDRNG provides 128-bits of entropy.**_
 
-2.  _The **NDRNG** feeds entropy from the pool into the DRBG on demand. A FIPS 140-2 approved deterministic random bit generator based on a block cipher as specified in NIST SP 800-90A is used._
+2.  _The **NDRNG** feeds entropy from the pool into the DRBG on demand. A FIPS 140-2 approved deterministic random bit generator based on a block cipher as specified in NIST SP 800-90A is used._  
 Deze tweede functie heeft de non predictability eigenschap niet meer maar door de 128 bits input (=output) blijft de 128 bits entropie gehandhaafd.
 
-Google geeft aan dat: 
+Google geeft aan dat:   
 _Android's SecureRandom is backed by BoringSSL, BoringSSL provides much more than just TLS but also most of the crypto primitives on Android. Under the hood the SecureRandom is backed directly by calls to BoringSSL's RAND_bytes, which provides cryptographically secure random numbers and is itself backed by urandom on Android._
 
 
-## 2.2. Key Storage
+### 2.2. Key Storage
 
 De TEKs en afgeleide RPIK en AEMK keys zijn eigendom van de gebruiker en liften mee op out of the box aanwezige beveiligingsmaatregelen op de mobiele telefoons.
 
 De TEKs en hun afgeleiden zijn in combinatie met de telefoon en dus de identiteit van de gebruiker een medisch gegeven. TEKs en alle afgeleiden moeten der halve  versleuteld worden om toegang buiten de bedoelde functie van de app te voorkomen.
 
-Google geeft aan dat: 
+Google geeft aan dat:   
 _TEKs are protected by the application sandbox and Android's disk encryption. Practically this means that only Google Play Services can access this data, no other application or the OS itself can access the data. Google Play Service alone controls access._
 
 Daarnaast is er generieke / platform beveiliging als beschreven in:
 
 - https://source.android.com/security
 
-Apple geeft aan dat:
-_We state it’s stored securely but I do not have additional details. (vraag 67 nog open) Only EN apps have access to TEKs and only with prior content by the user (permission dialog shown by getDiagnosisKeys())_
+Apple geeft aan dat:  
+_We state it’s stored securely but I do not have additional details. (vraag 67 nog open)   
+Only EN apps have access to TEKs and only with prior content by the user (permission dialog shown by getDiagnosisKeys())_
 
 - https://www.apple.com/business/docs/site/AAW_Platform_Security.pdf
-
 - https://www.apple.com/business/docs/resources/Managing_Devices_and_Corporate_Data_on_iOS.pdf
 
 
 
-## 2.3 Key Usage
+### 2.3 Key Usage
 
-### 2.3.1 Encryptie, generatie van RPI en AEM
+#### 2.3.1 Encryptie, generatie van RPI en AEM
 
 De RPIK en AEMK (beiden afgeleid van de TEK) worden iedere interval (10-20 minuten) gebruikt voor encryptie waarbij een voor het interval unieke Rolling Poximity Identifier (RPI) en versleutelde metadata, Associated Encrypted Metadata (AEM) ontstaan. Beide worden gezamenlijk met Bluetooth gebroadcast. Er is vanuit GAEN afstemming op de eveneens gebroadcaste temporary mac adressen ter voorkoming van linking van de diverse PRIs. Dit gebeurt overigens niet 'in' de app; maar in een proprietary library die onderdeel uitmaakt van het operating system van de mobile telefoon leverancier. Deze informatie is dus niet beschikbaar voor de App (voor het besmet&consent moment).
 
@@ -254,16 +252,16 @@ De huidige versie van het GAEN raamwerk kent nog wel de incorporatie van datum t
 | 10 m      | **AEM**  | Associated Encrypted Metadata | 32 -> 128  | AES128−CTR(AEMK, RPI, Metadata) |
 
 
-### 2.3.2 Encryptie, generatie van potentially contacted RPIs
+#### 2.3.2 Encryptie, generatie van potentially contacted RPIs
 
 Na ontvangst van de diagnose keys wordt het voor de eigen RPI gebruikte proces van key derivation en 10-min-interval encryption hiermee herhaald ten einde een match te kunnen maken met opgeslagen RPIs waarmee een contact geweest is. De app heeft ook hier geen toegang tot deze data - ze wordt beheert door een bibliotheek/Operating Systeem.
 
 
-## 2.4 Key Backup
+### 2.4 Key Backup
 
 Ad 1, vanaf de mobiele telefoon.
 
-Google geeft aan dat:
+Google geeft aan dat:  
 _Nothing is shared into the cloud; There are no backups._
 
 ###### Apple nog geen antwoord (vraag 64, 65)
@@ -271,7 +269,7 @@ _Nothing is shared into the cloud; There are no backups._
 1. How is encryption of mobile phone back done (into the cloud) , i.e. encryption algoritm and especially key management.
 1. Is the provider able to get access to the unencrypted data of the backup (Covid-19 related data), by means of decryption or otherwise.
 
-######De keys worden encrypted gebackupt bij Apple of Google en blijven eigendom van en onder controle van de gebruiker / eigenaar. Backup en retentie van de backup zijn afhankelijk van instellingen als gezet door de eigenaar.???
+###### De keys worden encrypted gebackupt bij Apple of Google en blijven eigendom van en onder controle van de gebruiker / eigenaar. Backup en retentie van de backup zijn afhankelijk van instellingen als gezet door de eigenaar.???
 
 Ad 2, op de receiving server
 
@@ -282,11 +280,11 @@ Uploaded keys op HA storage. Diagnosed Keys worden z.s.m. gepubliceerd, de set v
 De positief geteste keys (diagnosed keys) worden in the clear gepubliceerd. Backups dienen versleuteld gemaakt te worden met een retentieschema dat correspondeert met de vernietiging van de diagnosed keys na 14 (?) dagen. Er is geen greep op het bewaren van de keys in het publieke domein (na download). ). De gepubliceerde sleutels worden wel voorzien van een digitale handtekening (die de app verifieerd).
 
 
-## 2.5 Key Archival
+### 2.5 Key Archival
 
 Key archival is niet van toepassing voor de Corona App. Key Archival in het publieke domein is niet onder controle van de app. Archival bestaat wel rond voor auditing relevante handelingen rond de positief geteste keys maar dat is out of scope voor dit document.
 
-## 2.6 Key Destruction
+### 2.6 Key Destruction
 
 
 De app verwijdert TEKs ouder dan 14 dagen van de telefoon.
@@ -300,9 +298,9 @@ Deze twee processen worden uitgevoerd door een bibliotheek/operating system. De 
 <https://docs.google.com/document/d/1UKJzUu5odxoPWJr1demi6eyZnjBkrOSnNezJrXbOVeY/edit#heading=h.lnmhpqex9cif>
 
 
-## 2.7 Key Transport, upload van TEKS
+### 2.7 Key Transport, upload van TEKS
 
-### 2.7.1 Requirements
+#### 2.7.1 Requirements
 
 1.  Privacy Preserving
 
@@ -334,21 +332,22 @@ Flow 2:
 https://docs.google.com/document/d/1JZYEL4zpX02dE1Qi09LXZho4bRfi84k30hsbfTqOI-c/edit?ts=5eddf2e0#heading=h.pss2ecxwcpvp
 
 
-### 2.7.2 Functioneel flow
+#### 2.7.2 Functioneel flow
 
 Op hoofdlijnen bestaat de upload bij Flow1 één uit de volgende stappen: 
 
-1. Uitwisseling authenticators / keys:
- De App op de mobiele telefoon maakt verbinding over TLS met de backend en ontvangt een gebruikersvriendelijke LabConfirmationCode (LCC) en 256 bits shared secret (ConfirmationKey, CK)  van de backend. LCC en CK zijn nu op 2 plekken. 
+1. Uitwisseling authenticators / keys:  
+ De App op de mobiele telefoon maakt verbinding over TLS met de backend en ontvangt een gebruikersvriendelijke LabConfirmationCode (LCC) en 256 bits shared secret (ConfirmationKey, CK)  van de backend. LCC en CK zijn nu op 2 plekken.   
 Een GGD operator beschikt over een userid en wachtwoord en een lijst van OTPs/ICCs, zie verder.
-1. Initiatie van Upload: 
-De positief geteste persoon vertelt de LCC aan een operator. De operator zet, bij een positieve test, de CK op groen voor gebruik m.b.v. de opleesbare LCC. Hiervoor is een over het internet bereikbare portal (beheerpagina) waar de operator met “2-factor” authenticeert. Hij zij logt aan met userid en wachtwoord en gebruikt een One Time Password (OTP, ook wel Infection Confirmation Code, ICC) code voor de invoer van de LCC.  
-1. Beveiligde upload: 
+1. Initiatie van Upload:   
+De positief geteste persoon vertelt de LCC aan een operator. De operator zet, bij een positieve test, de CK op groen voor gebruik m.b.v. de opleesbare LCC.  
+Hiervoor is een over het internet bereikbare portal (beheerpagina) waar de operator met “2-factor” authenticeert. Hij zij logt aan met userid en wachtwoord en gebruikt een One Time Password (OTP, ook wel Infection Confirmation Code, ICC) code voor de invoer van de LCC.  
+1. Beveiligde upload:   
 De uploaded TECs worden door de mobiele telefoon voorzien van een MAC (HMAC) op basis  van de CK; de backend verifieert.
-1. Verwijderen van de authenticators en keys:
+1. Verwijderen van de authenticators en keys:  
  Nadat alle TEKs uploaded zijn (2 batches) of zoveel eerder als mogelijk worden alle authenticators (LCC, CK, OTP etc) verwijderd.
 
-### 2.7.3 Privacy preserving
+#### 2.7.3 Privacy preserving
 
 1. Beperking rond ip logging. Logs zo kort mogelijk bewaren en toegang beperken tot need-to-know.
 1. Z.s.m. na upload en verificatie van de diagnosed keys verwijderen van gebruikte codes en keys (LCC,CK,OTP/ICC) en cryptografische sleutels, zowel op het mobiel als in het centrale systeem om linkability naar de gebruiker te doorbreken.
@@ -356,23 +355,24 @@ De uploaded TECs worden door de mobiele telefoon voorzien van een MAC (HMAC) op 
 1. Bij zeer lage aantallen (weinig positief geteste personen) worden fake keys toegevoegd aan de distributie server om herleiden van TEKs tot positief geteste persoon te verhinderen.
 
 
-### 2.7.4 Voorkom brute force uploads
+#### 2.7.4 Voorkom brute force uploads
 
 1. SOC / Firewall oplossing ter voorkoming brute force attack. Afweging hierbij is dat het aantal uploads relatief laag is (in theorie de testcapaciteit) en dat telefoons maar zelden contact maken. Dit maakt brute-force “DoS” mitigatie makkelijk en het dus mogelijk de cryptografische oplossing minder zwaar te maken ten einde de gebruikersvriendelijkheid tegemoet te komen.
 
-### 2.7.5 Authenticiteit van de uploaded TEKs (alleen echte TEKs)
+#### 2.7.5 Authenticiteit van de uploaded TEKs (alleen echte TEKs)
 
 1. HMAC-SHA256 op basis van CK (shared secret) t.b.v. de authenticiteit van de diagnosed keys. Hiermee is de oorsprong van de TEKs gegarandeerd (die éne telefoon), kunnen keys niet aangepast of tijdens transport toegevoegd worden en veilig in meerdere batches (2) verstuurd worden. Het laatste punt is onmogelijk bij alleen meesturen van b.v. de LCC, daarbij  zou een herbruikbare authenticator over het netwerk verstuurd worden.
 
 
-### 2.7.6 Gebruiksvriendelijk en veilig
+#### 2.7.6 Gebruiksvriendelijk en veilig
 
-1. De authenticiteit van de TEKs (alleen echte TEKs) is gebaseerd op de HMAC functie op basis van de CK. De CK wordt geactiveerd aan de hand van de LCC die door de patiënt opgelezen moet kunnen worden van af de telefoon en door de GGD operator ingevoerd moet kunnen worden. De GGD operator activeert de LCC op een internet gebaseerd portal met een OTP/ICC (strictly one time use). Beide moeten gebruikersvriendelijk zijn. Veiligheid kan daarom niet gebaseerd zijn op een cryptografisch afdoende sterkte van de combinatie van LCC en OTP.
+1. De authenticiteit van de TEKs (alleen echte TEKs) is gebaseerd op de HMAC functie op basis van de CK. De CK wordt geactiveerd aan de hand van de LCC die door de patiënt opgelezen moet kunnen worden van af de telefoon en door de GGD operator ingevoerd moet kunnen worden. De GGD operator activeert de LCC op een internet gebaseerd portal met een OTP/ICC (strictly one time use).  
+Beide moeten gebruikersvriendelijk zijn. Veiligheid kan daarom niet gebaseerd zijn op een cryptografisch afdoende sterkte van de combinatie van LCC en OTP.
 1. Het activatie portal is tevens een aan het internet gekoppelde beheerpagina. De beveiliging komt dan tot stand door voor de GGD operator authenticatie in te regelen op basis van functioneel 2-factor: Userid en Wachtwoord en bij invoer van de LCC het OTP / ICC. Daarmee blijft het veilig en gebruikersvriendelijk.
- In die context kan de LCC en OTP beperkt blijven. 
+ In die context kan de LCC en OTP beperkt blijven.   
 Keuze uit 23 letters/cijfers (alfabet minus op elkaar lijkende getallen) en dat 6 keer als in XXX-YYY. Dat geeft 150.000.000 mogelijkheden en daarmee een kans van slechts 1 op 10.000 van raden bij 15.000 openstaande LCCs.
 
-### 2.7.7 Authenticiteit van de receiving server
+#### 2.7.7 Authenticiteit van de receiving server
 
 PKI-O certificaat, certificaat ; in ieder geval PKI-O. CAA record in DNS.  Toegestane TLS strings:
 
@@ -385,17 +385,20 @@ PKI-O certificaat, certificaat ; in ieder geval PKI-O. CAA record in DNS.  Toege
 | TLS\_ECDHE\_RSA\_WITH\_AES\_256\_CBC\_SHA384 |
 | TLS\_ECDHE\_RSA\_WITH\_AES\_128\_CBC\_SHA256 |
 
-Bewust is afgezien van het gebruik van de DeviceCheck API. Implementatie bleek bewerkelijk en er is onduidelijkheid rond de privacy. Mogelijk leidt het tot linkability naar de telefoon. Authenticiteit van de TEKs is ook zonder deze API al afgedekt.   TLS eenzijdig, certificate pinning op Staat der Nederlanden RootCA (of een lager gelegen certificaat). Dit geeft aanvullende integriteit tijdens transport met een werkbare implementatie van het sleutelbeheer. Een hard coded check op een vast end entity certificaat is operationeel bewerkelijk en foutgevoelig.
+Bewust is afgezien van het gebruik van de DeviceCheck API. Implementatie bleek bewerkelijk en er is onduidelijkheid rond de privacy. Mogelijk leidt het tot linkability naar de telefoon. Authenticiteit van de TEKs is ook zonder deze API al afgedekt.   
+
+TLS eenzijdig, certificate pinning op Staat der Nederlanden RootCA (of een lager gelegen certificaat). Dit geeft aanvullende integriteit tijdens transport met een werkbare implementatie van het sleutelbeheer. Een hard coded check op een vast end entity certificaat is operationeel bewerkelijk en foutgevoelig.
 
 ###### Nog aanpassen als de certificaten er zijn
 
-Zie verder Bijlage B  Overwegingen rond upload van TEKs
+Zie verder [Bijlage B Overwegingen rond upload van TEKs](#bijlage-b-overwegingen-rond-upload-van-teks)
 
-## 2.8 Key Transport, downloads van TEKs
+### 2.8 Key Transport, downloads van TEKs
 
-### 2.8.1 Requirements
+#### 2.8.1 Requirements
 
-1.  Authenticiteit voor diagnose keys: bron integriteit + integriteit tijden transport en (kortstondig) na download.
+1.  Authenticiteit voor diagnose keys:  
+bron integriteit + integriteit tijden transport en (kortstondig) na download.
 
 2.  Authenticiteit voor download / Distribution Server / CDN
 
@@ -403,46 +406,47 @@ Zie verder Bijlage B  Overwegingen rond upload van TEKs
 
 4.  Authenticiteit van config files
 
-### 2.8.2 Authenticiteit van diagnose keys
+#### 2.8.2 Authenticiteit van diagnose keys
 
 Er wordt gebruikt gemaakt van 2 keer een geavanceerde digitale handtekening. De eerste conform GAEN vanwege interoperabiliteit; hierbij zijn uiteindelijk Apple en Google in control. De tweede op basis van een eigen pki-certificaat gebaseerde handtekening. De app zelf is hier in control en uiteindelijke bepaalt de verificatie van deze handtekening of de app de TEKs als authentiek beschouwt.
 
-1.  Conform specs GAEN 
-  Handtekening zonder certificaat, conform GAEN, ECDSA, P-256 curve, SHA256 
-  Private key beheren op basis van FIPS 140-2, L2+ in netHSM, OCS protected. 
-  Public key aanleveren bij Apple / google. 
-  De Public key wordt in PEM format gedeeld met Google na openen van een issue in de Google Bug Tracker, upload van de key en verificatie van het mailadres door Google.
+1.  Conform specs GAEN   
+  Handtekening zonder certificaat, conform GAEN, ECDSA, P-256 curve, SHA256   
+  Private key beheren op basis van FIPS 140-2, L2+ in netHSM, OCS protected.   
+  Public key aanleveren bij Apple / Google.   
+  De Public key wordt in PEM format gedeeld met Google na openen van een issue in de Google Bug Tracker, upload van de key en verificatie van het mailadres door Google.  
   _Apple ?_  
-  OTAP scheiding op basis van public / private pair per Bundle-ID waarbij: 
-  App-ID=Team-ID || Bundle-ID 
-  Key rollover (b.v. bij key compromise) op basis van: 
+  OTAP scheiding op basis van public / private pair per Bundle-ID waarbij:   
+  App-ID=Team-ID || Bundle-ID   
+  Key rollover (b.v. bij key compromise) op basis van:   
   -send new public key  
    -start signing with new private key,   
   -specify \_v2 in the verification_key_version field.   
   -Request Apple / Google to revoke first key when all downloaded TEKs have expired.
 
-1.  Ge-avanceerde, pki-certificaat-gebaseerde handtekening:
+1.  Ge-avanceerde, pki-certificaat-gebaseerde handtekening:  
  Algoritme conform PKI-O:  RSA2048|4096SHA256.   
   signing certificaat aanvragen bij CIBG/VWS,  
  PKI overheid; signing = critical   
-  Handtekening op basis van RFC5652 (PKCS#7 / CMS detached), der encoded, signature op basis van een SHA256 hash. The SHA256 over precies de payload, d.w.z. de TEKs (multiple of 8 bit (i.e. complete bytes)). Het signing certificaat en de CA server certificaten (tot aan de RootCA) worden meegegeven met de handtekening. Private keys  van de handtekeningen beheren op basis van FIPS 140-2, L2+ in netHSM, OCS protected. 
+  Handtekening op basis van RFC5652 (PKCS#7 / CMS detached), der encoded, signature op basis van een SHA256 hash. The SHA256 over precies de payload, d.w.z. de TEKs (multiple of 8 bit (i.e. complete bytes)).  
+  Het signing certificaat en de CA server certificaten (tot aan de RootCA) worden meegegeven met de handtekening. Private keys  van de handtekeningen beheren op basis van FIPS 140-2, L2+ in netHSM, OCS protected.   
   OTAP scheiding op basis van verschillend certificaat per omgeving.   
   Key rollover (b.v. bij key compromise) op basis van certificate revocation procedure bij TSP (certificaat leverancier).
 
 
-### 2.8.3 Authenticiteit van Fake keys
+#### 2.8.3 Authenticiteit van Fake keys
 
 Bij lage aantallen (weinig positief getesten en dus een beperkte set uploaded TEKs) wordt de set uitgebreid met fake keys. Signing is tweeledig en niet anders dan bij echte TEKs:
 
 - Conform specs GAEN
 - X.509 Certificaat (PKI-O) gebaseerde handtekening
 
-Zie ook:  Bijlage C  Fake Keys
+Zie ook: [Bijlage C Fake Keys](#bijlage-c-fake-keys)
 
-### 2.8.4 Authenticiteit van diagnose keys Internationaal
+#### 2.8.4 Authenticiteit van diagnose keys Internationaal
 
 
-### 2.8.5 Authenticiteit van download / Distribution Server / CDN
+#### 2.8.5 Authenticiteit van download / Distribution Server / CDN
 
 De origin server (distribution server) en het CDN worden voorzien van een PKI Certificaat (overheids website moet herkenbaar) en ondersteunt TLS.  
 
@@ -451,26 +455,27 @@ Aanvragen bij CIBG, in ieder geval PKI-O
 
 Zowel Android als iOS gaan uit van HTTPS, en op Android moet je je app expliciet configureren voor gebruik van HTTP, wat niet gebruikelijk is.
 
-### 2.8.6 Verificatie op Client van de gedistribueerde bestanden met diagnosed keys
+#### 2.8.6 Verificatie op Client van de gedistribueerde bestanden met diagnosed keys
 
 Verificatie van de GAEN handtekening conform GAEN. 
 De PKI certificaat gebaseerde handtekening verifieren comfom RFC 5652. 
 Pinning op:
-- Issuing CA (CA server die het signing certificaat uitgaf) d.m.v. verificatie van de  Subject Key Indentifier in het certificaat van de Issuing CA (vaste waarde).
+- Issuing CA (CA server die het signing certificaat uitgaf) d.m.v. verificatie van de  Subject Key Indentifier in het certificaat van de Issuing CA (_vaste waarde_).
 - Subject naam in het signing certificaat.  
-Op die manier is het mogelijk b.v. jaarlijks het signing certificaat te vervangen zonder update aan client zijde zolang het signing certificaat onder dezelfde subject naam uitgegeven wordt door dezelfde issuing ca. 
+
+Op die manier is het mogelijk b.v. jaarlijks het signing certificaat te vervangen zonder update aan client zijde zolang het signing certificaat onder dezelfde subject naam uitgegeven wordt door dezelfde issuing ca.   
 De verificatie gaat over de handtekening op de TEKs, het signing certificaat en alle bovenliggende CA certificaten tot en met een voorgeregistreerd RootCA certificaat op het device.
 
-## 2.9 Transport, downloads van config files 
+### 2.9 Transport, downloads van config files 
 
-### 2.9.1 Signing en verificatie van Config Files
+#### 2.9.1 Signing en verificatie van Config Files
 
-De config files welke door de apps gedownload en verwerkt worden dienen eveneens gesigned en geverifieerd te worden (zelfde manier voor signing en verificatie als voor de diagnosed keys). Immers:
+De config files welke door de apps gedownload en verwerkt worden dienen eveneens gesigned en geverifieerd te worden (zelfde manier voor signing en verificatie als voor de diagnosed keys). Immers:  
 De App is signed (Apple, Google)  
 De TEKs zijn signed  
-➔ voor config geen uitzondering
+-> voor config geen uitzondering
 
-## 2.10 Crypto Specs, algorithms, schema's and protocols
+### 2.10 Crypto Specs, algorithms, schema's and protocols
 
 |       |                                             |             |
 |---------|-----------------------------------------------|---------------|
@@ -506,31 +511,42 @@ Kort overzicht van dreigingen op basis van eerdere studies van derden:
 |SR 7: Location tracing through access to a central server                                                 |n                |
 |SR 8: Reconstructing social interaction graphs                                                            |n                |
 |SR 9: Reveal at-risk status to a central server                                                           |n                |
-|SECURITY ANALYSIS OF THE COVID-19 CONTACT TRACING SPECIFICATIONS BY APPLE INC. AND GOOGLE INC.           |                 |
+|**SECURITY ANALYSIS OF THE COVID-19 CONTACT TRACING SPECIFICATIONS BY APPLE INC. AND GOOGLE INC. **          |                 |
 |Power and Storage Drain Attacks                                                                           |n                |
 |Relay and Replay Attacks                                                                                  |n                |
 |Trolling Attacks                                                                                          |n                |
 |Tracking and Deanonymization Attacks                                                                      |n                |
 
-
+- Server modification (aanvallen direct op de receiving of distribution servers)
+- Noodzaak tot zaken als een ‘decoy’ om bepaalde zaken te verhullen / niet herleidbaar in tijd en plaats te maken.
 
 ## Bijlage B Overwegingen rond upload van TEKs
 
 Het dilemma: anonimiteit lijkt haaks te staan op bron integriteit.
 Technische oplossingen in de discussie:
 1. Code uitwisselen bij upload van TEKs geeft risico op hergebruik / replay.
-1. MAC, Message Authentication Code op basis van HMAC-SHA256. Een MAC waarde is een cryptografisch controle getal voor:
-    a. Verificatie van onveranderlijkheid van de data (b.v. tijdens transport)
-    b. Verificatie van de bron, alleen partijen die de juiste sleutel hebben kunnen de MAC waarde berekenen. In ons voorbeeld is dat de app op de mobiele telefoon en de receiving server.
-1. TLS tijdens transport, eenzijdig geauthentiseerd, alleen server certificate. Biedt doel integriteit (server authenticatie), integriteit tijdens transport en vertrouwelijkheid (TEKs waren al anoniem, geen echte requirement).
-1. TLS tijdens transport, tweezijdig geauthentiseerd, dus inclusief client authenticatie en bron integriteit waarbij:
-    a. Alle app instanties zelfde certificaat en dan weinig waarde, geen bron integriteit
+1. MAC, Message Authentication Code op basis van HMAC-SHA256. Een MAC waarde is een cryptografisch controle getal voor:  
+    a. Verificatie van onveranderlijkheid van de data (b.v. tijdens transport)  
+    b. Verificatie van de bron, alleen partijen die de juiste sleutel hebben kunnen de MAC waarde berekenen. In ons voorbeeld is dat de app op de mobiele telefoon en de receiving server.    
+1. TLS tijdens transport, eenzijdig geauthentiseerd, alleen server certificate.  
+ Biedt doel integriteit (server authenticatie), integriteit tijdens transport en vertrouwelijkheid (TEKs waren al anoniem, geen echte requirement).
+1. TLS tijdens transport, tweezijdig geauthentiseerd, dus inclusief client authenticatie en bron integriteit waarbij:  
+    a. Alle app instanties zelfde certificaat en dan weinig waarde, geen bron integriteit  
     b. Iedere app een eigen certificaat, wel bron integriteit maar leidt tot authenticatie en verlies van anonimiteit.
+
+|                      |AuthenticationCode /Tan|MAC                     |TLS-éénzijdig|TLS-mutual auth  |
+|-----------------------------|-----------------------|------------------------|-------------|-----------------|
+|anoniem                      |Herleidbaar (tijdelijk)|Herleidbaar (tijdelijk)|ja           |nee              |
+|Integriteit tijdens transport|nee                    |ja                      |ja           |ja               |
+|Bron integriteit             |ja                     |ja                      |nee          |ja               |
+|Doel integriteit             |nee                    |nee                     |ja           |ja               |
+|Voorkom wilde uploads        |nee                    |nee                     |nee          |ja
 
 
 ## Bijlage C Fake Keys
 
-Fake keys worden 2 maal getekend, conform GAEN en certificaat gebaseerd: 
+Fake keys worden 2 maal getekend, conform GAEN en certificaat gebaseerd:   
+
 \#!/bin/sh
 set -e
 
