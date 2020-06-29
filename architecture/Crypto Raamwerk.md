@@ -1,6 +1,6 @@
 # Covid-19 Exposure Notification Cryptografie raamwerk
 
-> Disclaimer: This is a translation/alternative version of the original document (link where possible): Crypto Raamwerk.docx, version 0.65. (https://github.com/minvws/nl-covid19-notification-app-coordination/blob/master/architecture/Crypto%20Raamwerk.docx)
+> Disclaimer: This is a translation/alternative version of the original document: Crypto Raamwerk.docx, version 0.65. (https://github.com/minvws/nl-covid19-notification-app-coordination/blob/master/architecture/Crypto%20Raamwerk.docx)
 > The original document is the authoritative version of this document and might include changes that are not reflected in this alternative version.
 > For the most up to date / accurate information, please refer to the original document.
 
@@ -141,7 +141,7 @@ In de eerste versie van dit document wordt een vereenvoudigd model gehanteerd va
 
 ### 1.3 Overzicht
 
-![Kernoplossing](https://github.com/minvws/nl-covid19-notification-app-coordination/tree/master/architecture/images/kernoplossing.png)
+![Kernoplossing](images/kernoplossing.png)
 
 Verdere detaillering en toelichting is terug te vinden in het infra architectuur document: Exposure Notificatie Infrastructuur Overview.ppt.
 
@@ -421,7 +421,7 @@ Er wordt gebruikt gemaakt van 2 keer een geavanceerde digitale handtekening. D
   App-ID=Team-ID || Bundle-ID   
   Key rollover (b.v. bij key compromise) op basis van:   
   -send new public key  
-   -start signing with new private key,   
+  -start signing with new private key,   
   -specify \_v2 in the verification_key_version field.   
   -Request Apple / Google to revoke first key when all downloaded TEKs have expired.
 
@@ -490,7 +490,7 @@ De TEKs zijn signed
 
 Kort overzicht van dreigingen op basis van eerdere studies van derden:
 
-|Privacy and Security Risk Evaluation of Digital Proximity Tracing Systems The DP-3T Project, 21 April 2020|-           |
+|Privacy and Security Risk Evaluation of Digital Proximity Tracing Systems The DP-3T Project, 21 April 2020|           |
 |----------------------------------------------------------------------------------------------------------|-----------------|
 |                                                                                                          |Crypto mitigated |
 |IR 1: Identify infected individuals                                                                       |n                |
@@ -512,7 +512,7 @@ Kort overzicht van dreigingen op basis van eerdere studies van derden:
 |SR 7: Location tracing through access to a central server                                                 |n                |
 |SR 8: Reconstructing social interaction graphs                                                            |n                |
 |SR 9: Reveal at-risk status to a central server                                                           |n                |
-|**SECURITY ANALYSIS OF THE COVID-19 CONTACT TRACING SPECIFICATIONS BY APPLE INC. AND GOOGLE INC. **          |                 |
+| **SECURITY ANALYSIS OF THE COVID-19 CONTACT TRACING SPECIFICATIONS BY APPLE INC. AND GOOGLE INC.**          |                 |
 |Power and Storage Drain Attacks                                                                           |n                |
 |Relay and Replay Attacks                                                                                  |n                |
 |Trolling Attacks                                                                                          |n                |
