@@ -32,15 +32,15 @@ The following table plots this observable network traffic on a timeline. For thi
 
 <table>
   <tr>
-    <td>Timestamp
-example (sec:ms)</td>
-    <td>Duration
-example (sec:ms)</td>
-    <td>Duration label</td>
-    <td>Action</td>
-    <td>Network
-packet length</td>
-    <td>Actor</td>
+    <th>Timestamp
+example (sec:ms)</th>
+    <th>Duration
+example (sec:ms)</th>
+    <th>Duration label</th>
+    <th>Action</th>
+    <th>Network
+packet length</th>
+    <th>Actor</th>
   </tr>
   <tr>
     <td>0:000</td>
@@ -129,13 +129,13 @@ packet length</td>
 
 Additional scenarios to take into account are:
 
-* When the user opens the key upload screen, the app does a /register call and caches the labConfirmationID and the confirmationKey until the expiration of these, at 6AM next morning. If the user opens the screen more than once on a day and eventually uploads his keys, the time between the /register call and the /postkeys call may be much longer than some seconds or minutes.
+* When the user opens the key upload screen, the app does a /register call and caches the labConfirmationID and the confirmationKey until the expiration of these, at 6AM next morning. If the user opens the screen more than once on a day and eventually uploads their keys, the time between the /register call and the /postkeys call may be much longer than some seconds or minutes.
 
 * The first call (to /register) might fail due to communications failure or server failure, resulting in one or even more retries.
 
 * The second call (to /postkeys) might fail due to communications failure or server failure, resulting in one or even more retries.
 
-* The user may change his mind about uploading his keys after the /register call has been made. Then the /postkeys call will not be invoked.
+* The user may change their mind about uploading their keys after the /register call has been made. Then the /postkeys call will not be invoked.
 
 # Equal request and response message lengths
 
