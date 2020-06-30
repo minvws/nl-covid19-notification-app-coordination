@@ -227,7 +227,7 @@ And let us assume (optimistically) that half of the Dutch population uses the ap
 That would mean 500 genuine uploads per day. And that would mean 20x 500 = 10000 decoy uploads per day.
 
 Half of the Dutch population in 2020 means about 8.5M users.
-This means that each app installation needs to generate 10000 / 8.5M = 0,00118 average decoy TEK upload sequence per day, or 0.035 per 30 days.
+This means that each app installation needs to generate 10000 / 8.5M = 0,00118 average decoy TEK upload sequences per day, or 0.035 per 30 days.
 
 Note that the total amount of decoy traffic is proportional with the number of app users and with the key uploads that those app users perform. So a lower number of app users will maintain the 20:1 rate of decoy traffic versus genuine traffic.
 
@@ -248,7 +248,7 @@ Each decoy TEK upload sequence must behave as follows:
 
 1. The decoy TEK upload sequence mimics the decoy traffic sequence as described in the previous paragraph, including the 14th TEK upload the following day.
 
-2. The app maintains a counter DECOYCOUNTER of decoy traffic sent during the day by the scheduled decoy TEK upload sequence. This counter is set to 0 at the start of each decoy TEK upload sequence. Each time a decoy message is sent, the counter is increased by 1.
+2. The app maintains a counter DECOYCOUNTER of the decoy messages sent. This counter is set to 0 at the start of each decoy TEK upload sequence. Each time a decoy message is sent, the counter is increased by 1.
 
 3. Whenever the user opens the upload screen and the /register call is made as described in the previous paragraph, AND decoy traffic is scheduled for this day:
 
