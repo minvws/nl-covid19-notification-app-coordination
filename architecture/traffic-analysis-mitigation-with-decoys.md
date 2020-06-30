@@ -11,7 +11,7 @@ Persons or entities that can listen in on network traffic include:
 
 * If user uses a corporate VPN, the corporate employer can continuously monitor the VPN network traffic to detect possible infections among employees.
 
-* If user is on a home Wifi network, any housemates can monitor the network traffic.
+* If user is on any Wi-Fi network, anybody on the same Wi-Fi network can monitor the network traffic, such as housemates, colleagues, etc.
 
 
 # TEK upload sequence
