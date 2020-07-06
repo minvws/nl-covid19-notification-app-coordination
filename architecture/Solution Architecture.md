@@ -208,9 +208,7 @@ TODO more detailed description of system landscape
 
 ## Overview
 
-The details surrounding the security and privacy implementation of the Proof of Concept is laid out in the document ‘Corona Cryptografie Raamwerk’, which is currently being prepared. While the details and rationale surrounding the choices can be found in that document, for this solution architecture we have outlined the key principles from the preliminary version in the following diagram.
-
-**NOTE:** Some items, such as the orange items, dotted items and items with question marks are currently under consideration or to be investigated, so this is not a complete picture yet. It will be updated alongside progress in the Cryptografie Raamwerk.
+The details surrounding the security and privacy implementation of the Proof of Concept is laid out in the document [‘Crypto Raamwerk’](Crypto Raamwerk.docx). While the details and rationale surrounding the choices can be found in that document, for this solution architecture we have outlined the key principles from the preliminary version in the following diagram.
 
 ![Security overview](images/security.png)
 
