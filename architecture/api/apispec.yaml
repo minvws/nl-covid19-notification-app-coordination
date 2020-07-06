@@ -218,6 +218,13 @@ paths:
           TODO: Add reference to the lab flow in the architecture.
           
           Discussion: we are aware that adding the HTTP verb ('post') to the method is not a good practice. For observer protection we want to homogenize all methods under protection to a name of 8 characters and this simply made sense in describing what the method does.
+      parameters:
+        - name: sig
+          in: query
+          description: The KeysRequest payload is signed with the confirmationKey using HMAC_SHA256. The resulting signature is placed in this parameter.
+          required: true
+          schema:
+            type: string
       requestBody:
         content:
           application/json: 
@@ -242,7 +249,13 @@ paths:
         This method implements observer protection. 
         
         NOTE: The name is a clear reference to postkeys, but these keys are stopped. 
-        
+      parameters:
+        - name: sig
+          in: query
+          description: The KeysRequest payload is signed with the confirmationKey using HMAC_SHA256. The resulting signature is placed in this parameter.
+          required: true
+          schema:
+            type: string
       requestBody:
         content:
           application/json: 
@@ -318,14 +331,25 @@ components:
     AppConfig:
       type: object
       properties:
-        version:
+        androidMinimumVersion:
           type: integer
           description: |
-            the minimum version of the app. The app has a hardcoded version number that is increased by 1  on each app release. Whenever the app downloads the manifest, it must compare its hardcoded version  number with that of the manifest. If the hardcoded version number is less than the manifest value,  the user will be asked to upgrade the app from the app store.  See https://github.com/minvws/nl-covid19-notification-app-coordination/blob/master/architecture/Solution%20Architecture.md#lifecycle-management.  
-            
-              TODO: this must be discussed with the Design team.
+            The minimum supported version of the Android app. The app has a build version number that is increased by 1  on each app release. Whenever the app downloads the manifest, it must compare its own version number with that of the manifest. If the version number is less than the manifest value, the user will be asked to upgrade the app from the app store.  See https://github.com/minvws/nl-covid19-notification-app-coordination/blob/master/architecture/Solution%20Architecture.md#lifecycle-management.  
           format: int64
           example: 123
+        iOSMinimumVersion:
+          type: string
+          description: |
+             the minimum supported version of the iOS app. The app has a build version number (major.minor.patch) that is increased on each app release. Whenever the app downloads the manifest, it must compare its own version number with that of the manifest. If the version number is less than the manifest value, the user will be asked to upgrade the app from the app store.  See https://github.com/minvws/nl-covid19-notification-app-coordination/blob/master/architecture/Solution%20Architecture.md#lifecycle-management.  
+          example: 1.2.0
+        iOSMinimumVersionMessage: 
+          type: string
+          description: If set, the app should not tell the user to upgrade, but dispplay this message to the user instead. It will help us migrate from testflight to the app store version.
+          example: "The test is over, please download a new version from the app store."
+        iOSAppStoreURL:
+          type: string
+          description: If set, the upgrade dialog can link to the app store url using this link.
+          example: "https://appsto.re/...."
         manifestFrequency:
           type: integer
           description: This defines the frequency of retrieving the manifest, in minutes. 
@@ -388,12 +412,7 @@ components:
           description: Base64 representation of a 128-bit key that will be used to sign TEKs upon upload. The device should generate this key using a secure random number generator.
         bucketID:
           type: string
-          description: identification of 'bucket' that contains the confirmationKey. See 'signature' field below.
-        signature:
-          type: string
-          description: |
-            The KeysRequest payload is signed with the confirmationKey using HMAC_SHA256.
-            TODO specify how to serialize KeysRequest payload for signing.        
+          description: identification of 'bucket' that contains the confirmationKey. See 'signature' field below.  
         padding:
           type: string
           description: |
