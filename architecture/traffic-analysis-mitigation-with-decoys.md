@@ -137,7 +137,7 @@ Additional scenarios to take into account are:
 
 * The user may change their mind about uploading their keys after the /register call has been made. Then the /postkeys call will not be invoked.
 
-# Equal request and response message lengths
+# Making individual requests indistinguishable
 
 An observer can detect and analyse all the Txxx_xxx request and response times, and all the Lxxx_xxx message lengths in the above table.
 
@@ -151,7 +151,11 @@ All calls to /register and /postkeys will have equal request and response sizes,
 
 This requires both the apps (Android and iOS) and the back end server to agree upon the request and response message lengths for the /register and /postkey implementations, so that the request and response payload will always fit.
 
-As a consequence of this measure, an observer cannot distinguish between /register calls and /postkeys calls.
+A second measure is:
+
+All calls to /register and /postkeys need to have comparable response times within a certain bandwidth. This needs to be handled at the server side. The decoy traffic introduced later on may be handled by different server-side components, but the response times of the decoy traffic need to be similar to the response times of the real /register and /postkeys handlers. This may be achieved by randomization of the decoy traffic response times.
+
+As a consequence of these measures, an observer cannot distinguish between /register calls and /postkeys calls, nor between individual real and decoy calls.
 
 # TEK upload observation
 
