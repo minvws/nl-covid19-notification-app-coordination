@@ -236,7 +236,7 @@ To ensure that an eavesdropper in or on the network can not derive any contamina
 
 4. Requests should not use headers that can be used to infer information about a user. E.g. a language accept header that downloads only a specific language file. It is better to download all languages and make the decision client side.
 
-TODO: Establish the frequency of decoy calls to provide sufficient blinding.
+A detailed design for the decoy requests can be found in the document ['Traffic Analysis Mitigation with Decoys'](traffic-analysis-mitigation-with-decoys.md).
 
 # Lab result validation flow
 
