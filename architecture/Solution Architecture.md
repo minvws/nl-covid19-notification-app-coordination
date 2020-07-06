@@ -2,7 +2,7 @@
 
 ## Baseline for the "Proof of Concept"
 
-**Version:** 0.6 (28/5/2020)
+**Version:** 0.8 (6/7/2020)
 
 **Status:** Draft
 
@@ -208,9 +208,7 @@ TODO more detailed description of system landscape
 
 ## Overview
 
-The details surrounding the security and privacy implementation of the Proof of Concept is laid out in the document ‘Corona Cryptografie Raamwerk’, which is currently being prepared. While the details and rationale surrounding the choices can be found in that document, for this solution architecture we have outlined the key principles from the preliminary version in the following diagram.
-
-**NOTE:** Some items, such as the orange items, dotted items and items with question marks are currently under consideration or to be investigated, so this is not a complete picture yet. It will be updated alongside progress in the Cryptografie Raamwerk.
+The details surrounding the security and privacy implementation of the Proof of Concept is laid out in the document [‘Crypto Raamwerk’](Crypto Raamwerk.docx). While the details and rationale surrounding the choices can be found in that document, for this solution architecture we have outlined the key principles from the preliminary version in the following diagram.
 
 ![Security overview](images/security.png)
 
@@ -236,7 +234,7 @@ To ensure that an eavesdropper in or on the network can not derive any contamina
 
 4. Requests should not use headers that can be used to infer information about a user. E.g. a language accept header that downloads only a specific language file. It is better to download all languages and make the decision client side.
 
-TODO: Establish the frequency of decoy calls to provide sufficient blinding.
+A detailed design for the decoy requests can be found in the document ['Traffic Analysis Mitigation with Decoys'](traffic-analysis-mitigation-with-decoys.md).
 
 # Lab result validation flow
 
@@ -250,15 +248,15 @@ The flow is designed to:
 * The low tech nature also allows to use channels such as a phone call to exchange tans.
 
 
-## Variant 1: Infection Confirmation Codes
+## Variant 1: Separate GGD portal
 
-### Phase 1: Distributing Infection Confirmation Codes
+### Phase 1: Logging in to the portal
 
-The key ingredient of Variant 1 is the use of one-time Infection Confirmation Codes. Because there is no link to the health authority system for patients that are in this flow, the responsibility is with the callcenter staff that calls the patient. They check positive status in their respective systems and using a web portal, they confirm an infection for this patient. Note that this is an extremely privacy friendly flow because the app backend has zero ties to any real lab result or personal data. There simply is no personal patient data anywhere in the lab backend (privacy by design).
+The key ingredient of Variant 1 is the use of a separate portal to confirm infections. Because there is no link to the health authority system for patients that are in this flow, the responsibility is with the callcenter staff that calls the patient. They check positive status in their respective systems and using a web portal, they confirm an infection for this patient. Note that this is an extremely privacy friendly flow because the app backend has zero ties to any real lab result or personal data. There simply is no personally identifiable patient data anywhere in the lab backend (privacy by design).
 
-The following data flow diagram depicts how one time ICC codes are generated in batches and distributed to health authority call centers. The person distributing the codes can be the local call center manager, or the central authorities, in the case where the patients aren't called by health authority callcenters but by their own physician/hospital (this case is rare). Authentication to the portal will happen through an existing Identity Hub at GGD.
+The following data flow diagram depicts how a user will authenticate with the portal.
 
-![Phase 1: Distributing Infection Confirmation Codes to health authority callcenters](images/variant1_step1_iccdistribution.png)
+![Phase 1: Logging in to the portal](images/variant1_step1_authentication.png)
 
 ### Phase 2, step A: Calling the patient and exchanging a key
 
@@ -317,15 +315,15 @@ The documentation for DeviceCheck and Safetynet Attestation can be found here:
 
 * [https://developer.android.com/training/safetynet/attestation](https://developer.android.com/training/safetynet/attestation)
 
-TODO: These checks are controversial. First, it relies on a server API at Apple and Google, which can be down and could be a privacy risk.
+We have decided not to apply these platform specific checks. First, it relies on a server API at Apple and Google, which can be down and could be a privacy risk.
 
-The Android Developer blog states: 
+Second, the Android Developer blog states: 
 
 "*In other words, not all users who fail attestation are necessarily abusers, and not all abusers will necessarily fail attestation. By blocking users solely on their attestation results, you might be missing abusive users that don't fail attestations. Furthermore, you might also be blocking legitimate, loyal customers who fail attestations for reasons other than abuse*" (NOTE:  https://android-developers.googleblog.com/2017/11/10-things-you-might-be-doing-wrong-when.html)
 
 The safetynet attestation documentation further states about attestation failure: *"Most likely, the device launched with an Android version less than 7.0 and it does not support hardware attestation. In this case, Android has a software implementation of attestation which produces the same sort of attestation certificate, but signed with a key hardcoded in Android source code. Because this signing key is not a secret, the attestation could have been created by an attacker pretending to provide secure hardware"* (NOTE:  https://developer.android.com/training/articles/security-key-attestation)
 
-This leads us to believe that when applying these checks, we could be rejecting keys from legitimate users, while not preventing any attack. TODO: Get more information and clarity around this check.
+This leads us to believe that when applying these checks, we introduce risks and dependencies while not gaining a substantial amount of security.
 
 # App Considerations
 
