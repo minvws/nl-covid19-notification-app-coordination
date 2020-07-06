@@ -1,6 +1,6 @@
 ## Toegankelijkheid
 
-Een van de uitgangspunten bij het ontwikkelen van deze app is digitale toegankelijheid. IN dit document wordt dit uitgangspunt uitgewerkt tot concrete richtlijnen en handvatten voor zowel de ontwerpers, ontwikkelaars en testers. Het document wordt aangevuld op basis van vragen en feedback vanuit het team en de community.
+Een van de uitgangspunten bij het ontwikkelen van deze app is digitale toegankelijkheid. IN dit document wordt dit uitgangspunt uitgewerkt tot concrete richtlijnen en handvatten voor zowel de ontwerpers, ontwikkelaars en testers. Het document wordt aangevuld op basis van vragen en feedback vanuit het team en de community.
 
 Net als bijvoorbeeld privacy en beveiliging is toegankelijkheid iets dat gedurende het hele traject aandacht verdiend. Iets achteraf toegankelijk proberen te maken is veel werk en levert vaak geen optimaal resultaat. Zeker gezien de korte doorlooptijd van dit proces is het van belang om toegankelijkheid in één keer zo goed mogelijk te doen.
 
@@ -18,7 +18,7 @@ In de requirements staat dat we ervoor zorgen dat de app voldoet aan de [Web Acc
   * Lossen we het waar mogelijk structureel op of besluiten we dit niet te doen op basis van de impact. Ook dit besluit leggen we vast
 * Bij release bundelen we de gemaakte keuzes in een toegankelijkheidsverklaring. Deze verklaring stellen we op volgens het voorlopige model voor toegankelijkheidsverklaringen via <www.toegankelijkheidsverklaring.nl>
   * De verklaring moet in ieder geval vindbaar zijn in de Appstore-beschrijving van de app
-  * Mogelijk nemen we ook een link hiernaar op in de app zelf
+  * We nemen ook een link hiernaar op in de app zelf
 
 ### Design
 
@@ -27,6 +27,7 @@ Voor ontwerpers zijn de volgende uitgangspunten relevant. Tussen haakjes staat h
 * Voor elke afbeelding wordt een afweging gemaakt of deze decoratief is. Als dit het geval is, wordt dit in het design vermeld Als dit niet het geval is, voorziet het design in een tekstalternatief. (1.1.1)
 * Gebruikte kleuren hebben voldoende contrast (zie criterium voor details). Dit geldt voor tekst, niet-decoratieve grafische elementen en visuele informatie die nodig is om onderdele nvan de interface te herkennen. (1.4.3 en 1.4.11)
 * Ontwerp waar nodig aparte schermen voor portret/landschap (1.3.4)
+* Zorg in het ontwerp voor voldoende ruimte bij het vergroten van tekst naar 200% (1.4.4)
 * Meldingen moeten voor iedereen leesbaar zijn, ook als je daar meer tijd voor nodig hebt. Ontwerp meldingen dus altijd met een knop om de melding te sluiten (Sluiten/OK/Verder etc) en laat ze niet vanzelf verdwijnen. (2.2.1)
 * Denk bij het implementeren van animaties langer dan 5 seconden aan een mogelijkheid deze te pauzeren (2.2.2)
   * Dit geldt niet als de animatie het enige element in de viewport is, dus bijvoorbeeld een loader/spinner
@@ -58,6 +59,7 @@ Door de handvatten voor design en ontwikkeling zal er wat toegankelijkheid betre
 * Test met de ingebouwde screenreader Talkback (1.1.1, 1.3.1, 4.1.2)
   * Controleer of alle elementen een duidelijk label hebben
   * Controleer of alle elementen met het juiste type worden benoemd. Dus "knop", "tekstvak" etc
+  * Doorloop de hele flow en check of dit duidelijk is, let hierbij vooral op logische meldingen, fouten en focusmanagement
 * Controleer de weergave van de ap met de opties "kleurinversie", "donkere mode" en "kleurcorrectie"
   * Leveren deze instellingen een te lag contrast op?
 * Controleer zowel de functie tekst vergroten als vergroting
@@ -69,8 +71,12 @@ Door de handvatten voor design en ontwikkeling zal er wat toegankelijkheid betre
 * Test met de ingebouwde screenreader VoiceOver (1.1.1, 1.3.1, 4.1.2)
   * Controleer of alle elementen een duidelijk label hebben
   * Controleer of alle elementen met het juiste type worden benoemd. Dus "knop", "tekstvak" etc
-* Test met de zoomfunctie
+  * Doorloop de hele flow en check of dit duidelijk is, let hierbij vooral op logische meldingen, fouten en focusmanagement
+* Test met de zoomfunctie en tekstvergroting
   * Is de app nog bruikbaar op de grootste vergrotingsfactor
+* Test met de functie vette tekst
+  * Wordt alle tekst vet weergegeven?
+  * Is alles nog leesbaar?
 * Test met de verschillende functies voor kleuraanpassing zoals donkere mode, hoog contrast enkleuren omkeren
   * Levert dit een te laag contrast op?
 
