@@ -315,7 +315,7 @@ The documentation for DeviceCheck and Safetynet Attestation can be found here:
 
 * [https://developer.android.com/training/safetynet/attestation](https://developer.android.com/training/safetynet/attestation)
 
-TODO: These checks are controversial. First, it relies on a server API at Apple and Google, which can be down and could be a privacy risk.
+We have decided not to apply these platform specific checks. First, it relies on a server API at Apple and Google, which can be down and could be a privacy risk.
 
 The Android Developer blog states: 
 
@@ -323,7 +323,7 @@ The Android Developer blog states:
 
 The safetynet attestation documentation further states about attestation failure: *"Most likely, the device launched with an Android version less than 7.0 and it does not support hardware attestation. In this case, Android has a software implementation of attestation which produces the same sort of attestation certificate, but signed with a key hardcoded in Android source code. Because this signing key is not a secret, the attestation could have been created by an attacker pretending to provide secure hardware"* (NOTE:  https://developer.android.com/training/articles/security-key-attestation)
 
-This leads us to believe that when applying these checks, we could be rejecting keys from legitimate users, while not preventing any attack. TODO: Get more information and clarity around this check.
+This leads us to believe that when applying these checks, we introduce risks and dependencies while not gaining a substantial amount of security.
 
 # App Considerations
 
