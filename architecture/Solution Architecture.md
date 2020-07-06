@@ -248,15 +248,15 @@ The flow is designed to:
 * The low tech nature also allows to use channels such as a phone call to exchange tans.
 
 
-## Variant 1: Infection Confirmation Codes
+## Variant 1: Separate GGD portal
 
-### Phase 1: Distributing Infection Confirmation Codes
+### Phase 1: Logging in to the portal
 
-The key ingredient of Variant 1 is the use of one-time Infection Confirmation Codes. Because there is no link to the health authority system for patients that are in this flow, the responsibility is with the callcenter staff that calls the patient. They check positive status in their respective systems and using a web portal, they confirm an infection for this patient. Note that this is an extremely privacy friendly flow because the app backend has zero ties to any real lab result or personal data. There simply is no personal patient data anywhere in the lab backend (privacy by design).
+The key ingredient of Variant 1 is the use of a separate portal to confirm infections. Because there is no link to the health authority system for patients that are in this flow, the responsibility is with the callcenter staff that calls the patient. They check positive status in their respective systems and using a web portal, they confirm an infection for this patient. Note that this is an extremely privacy friendly flow because the app backend has zero ties to any real lab result or personal data. There simply is no personally identifiable patient data anywhere in the lab backend (privacy by design).
 
-The following data flow diagram depicts how one time ICC codes are generated in batches and distributed to health authority call centers. The person distributing the codes can be the local call center manager, or the central authorities, in the case where the patients aren't called by health authority callcenters but by their own physician/hospital (this case is rare). Authentication to the portal will happen through an existing Identity Hub at GGD.
+The following data flow diagram depicts how a user will authenticate with the portal.
 
-![Phase 1: Distributing Infection Confirmation Codes to health authority callcenters](images/variant1_step1_iccdistribution.png)
+![Phase 1: Logging in to the portal](images/variant1_step1_authentication.png)
 
 ### Phase 2, step A: Calling the patient and exchanging a key
 
