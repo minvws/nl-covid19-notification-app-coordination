@@ -2,7 +2,7 @@
 
 ## Baseline for the "Proof of Concept"
 
-**Version:** 0.6 (28/5/2020)
+**Version:** 0.8 (6/7/2020)
 
 **Status:** Draft
 
