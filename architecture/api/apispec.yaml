@@ -218,6 +218,13 @@ paths:
           TODO: Add reference to the lab flow in the architecture.
           
           Discussion: we are aware that adding the HTTP verb ('post') to the method is not a good practice. For observer protection we want to homogenize all methods under protection to a name of 8 characters and this simply made sense in describing what the method does.
+      parameters:
+        - name: sig
+          in: query
+          description: The KeysRequest payload is signed with the confirmationKey using HMAC_SHA256. The resulting signature is placed in this parameter.
+          required: true
+          schema:
+            type: string
       requestBody:
         content:
           application/json: 
@@ -242,7 +249,13 @@ paths:
         This method implements observer protection. 
         
         NOTE: The name is a clear reference to postkeys, but these keys are stopped. 
-        
+      parameters:
+        - name: sig
+          in: query
+          description: The KeysRequest payload is signed with the confirmationKey using HMAC_SHA256. The resulting signature is placed in this parameter.
+          required: true
+          schema:
+            type: string
       requestBody:
         content:
           application/json: 
@@ -399,12 +412,7 @@ components:
           description: Base64 representation of a 128-bit key that will be used to sign TEKs upon upload. The device should generate this key using a secure random number generator.
         bucketID:
           type: string
-          description: identification of 'bucket' that contains the confirmationKey. See 'signature' field below.
-        signature:
-          type: string
-          description: |
-            The KeysRequest payload is signed with the confirmationKey using HMAC_SHA256.
-            TODO specify how to serialize KeysRequest payload for signing.        
+          description: identification of 'bucket' that contains the confirmationKey. See 'signature' field below.  
         padding:
           type: string
           description: |
