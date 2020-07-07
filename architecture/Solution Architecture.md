@@ -222,7 +222,24 @@ Each part of the diagram tries to address a number of key aspects:
 
 * Data integrity: how can we ensure that the data has not been tampered with.
 
-## Blinding
+## Data cleanup
+
+We don't want to keep data around longer than necessary. Therefor we have defined a few rules we apply for data cleanup.
+
+### Backend 
+1) Lab confirmations that aren't followed by uploaded TEKs should be deleted after 24 hours.
+2) TEKs that aren't confirmed with a positive test should be deleted after 24 hours.
+3) Buckets for TEK uploads should be removed within 4 hours after the confirmation key expires (the 4 hour grace window will help with devices with a skewed clock/timezone).
+3) Files on the CDN should be removed after 14 days.
+4) Files on the CDN should be pruned of keys that are older than 14 days.
+5) Cache headers on Exposure Key Sets on the CDN (maxage, s-maxage, etc) should reflect the same lifetimes, so that intermediary caches can follow the same pattern. 
+
+### Apps
+1) The apps should retrieve TEK keys from the GAEN framework and then retain them only for as long as is necessary to upload them (no permanent storage).
+2) Downloaded EKS files from the CDN that have been processed by the framework should be immediately removed. (The app should only remember the file hash). 
+3) Confirmation keys / bucket ids should be cleaned up when the validity of the key has expired. 
+
+## Traffic Analysis Mitigation
 
 To ensure that an eavesdropper in or on the network can not derive any contamination or exposure conclusions from the traffic he can see, we take the following measures:
 
