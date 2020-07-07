@@ -357,19 +357,36 @@ components:
           type: integer
           description: This defines the frequency of retrieving the manifest, in minutes. 
           example: 360
-        decoyProbability:
+        decoyIntervalHours:
           type: integer
+          format: int32
+          minimum: 1
+          maximum: 100000
           description: |
-            This defines the probability of sending decoys. This is configurable so we can tune the probability to server load if necessary. 
-            
-            TODO: Define formula for calculating the actual frequency.
+            This defines the time interval in hours during which a decoy traffic sequence is planned with probability `decoyProbability`. 
+            This is configurable so we can tune the probability to server load if necessary. 
+            The default value is 720 hours = 30 days.
+            See https://github.com/minvws/nl-covid19-notification-app-coordination/blob/master/architecture/traffic-analysis-mitigation-with-decoys.md
+        decoyProbability:
+          type: number
+          format: float
+          minimum: 0
+          maximum: 1
+          description: |
+            This defines the probability of sending decoys during `decoyIntervalHours`. This is configurable so we can tune the probability to server load if necessary. 
+            The default value is 0.035; see https://github.com/minvws/nl-covid19-notification-app-coordination/blob/master/architecture/traffic-analysis-mitigation-with-decoys.md.
+            A value of 0.0 implies that no decoy traffic will be scheduled.
         requestMinSize:
           type: integer
+          minimum: 100
+          maximum: 100000
           description: |
             The minimum number of characters that the total /register, /postkeys and /stopkeys request messages should be, by filling the request´s
             'padding' field with random charachters.
         requestMaxSize:
           type: integer
+          minimum: 100
+          maximum: 100000
           description: |
             The maximum number of characters that the total /register, /postkeys and /stopkeys request messages should be, by filling the request´s
             'padding' field with random charachters.
