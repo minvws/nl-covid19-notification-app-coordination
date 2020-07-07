@@ -409,7 +409,7 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/TEK'
-          description: Base64 representation of a 128-bit key that will be used to sign TEKs upon upload. The device should generate this key using a secure random number generator.
+          description: Base64 representation of a 256-bit key that will be used to sign TEKs upon upload. The device should generate this key using a secure random number generator.
         bucketID:
           type: string
           description: identification of 'bucket' that contains the confirmationKey. See 'signature' field below.  
