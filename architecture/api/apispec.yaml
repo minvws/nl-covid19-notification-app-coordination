@@ -183,12 +183,12 @@ paths:
         The device sends a labConfirmationID in the request that will also be stored in the bucket.
         This labConfirmationID is generated on the device and read by the device owner to the operator who submits
         the key to the server out-of-band.
-        The method returns a confirmationKey  
+        The method returns a confirmationKey.
+        See https://github.com/minvws/nl-covid19-notification-app-coordination/blob/master/architecture/Solution%20Architecture.md#lab-result-validation-flow.
         
         This method implements observer protection. 
+        See https://github.com/minvws/nl-covid19-notification-app-coordination/blob/master/architecture/traffic-analysis-mitigation-with-decoys.md
 
-          TODO: Add reference to observer protection documentation in architecture        
-          TODO: Add reference to the lab flow in the architecture.
       requestBody:
         content:
           application/json: 
@@ -209,15 +209,12 @@ paths:
       summary: Upload diagnosis keys (TEKs) to the server
       description: |
         This method is used by a device to upload one or more TEK keys to the server. 
+        See https://github.com/minvws/nl-covid19-notification-app-coordination/blob/master/architecture/Solution%20Architecture.md#lab-result-validation-flow.
         
         This method implements observer protection. 
-        
-        Notes: the phone will never know whether a test result was positive, for privacy reasons. This means that a user might upload keys using this method by using the 'I've been tested positive' flow even though there isn't a positive test result. This is OK, since without the positive test result, the keys won't be processed. It also creates a decoy in itself: seeing keys being uploaded does not consitute a sign of infection. 
+        See https://github.com/minvws/nl-covid19-notification-app-coordination/blob/master/architecture/traffic-analysis-mitigation-with-decoys.md
 
-          TODO: Add reference to observer protection documentation in architecture        
-          TODO: Add reference to the lab flow in the architecture.
-          
-          Discussion: we are aware that adding the HTTP verb ('post') to the method is not a good practice. For observer protection we want to homogenize all methods under protection to a name of 8 characters and this simply made sense in describing what the method does.
+        Notes: the phone will never know whether a test result was positive, for privacy reasons. This means that a user might upload keys using this method by using the 'I've been tested positive' flow even though there isn't a positive test result. This is OK, since without the positive test result, the keys won't be processed. It also creates a decoy in itself: seeing keys being uploaded does not consitute a sign of infection. 
       parameters:
         - name: sig
           in: query
