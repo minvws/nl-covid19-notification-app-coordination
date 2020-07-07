@@ -377,6 +377,9 @@ components:
           description: The day that the patient's symptoms started. This is usually < 14 days ago. However, we impose no constraint on it.
     EnrollmentRequest:
       type: object
+      additionalProperties: false
+      required:
+      - "padding"
       properties:
         padding:
           type: string
@@ -404,15 +407,24 @@ components:
           description: The returned key is valid for this number of seconds after it was retrieved. The device should re-register if this time is elapsed. Typically the validUntil will be the number of seconds until 4am the next day so it's valid long enough to be able to upload the 14th key at a random time past midnight.
     KeysRequest:
       type: object
+      additionalProperties: false
+      required:
+      - "keys"
+      - "bucketID"
+      - "padding"
       properties:
         keys:
           type: array
           items:
             $ref: '#/components/schemas/TEK'
-          description: Base64 representation of a 256-bit key that will be used to sign TEKs upon upload. The device should generate this key using a secure random number generator.
+          description: Base64 representation of a 128-bit key that will be used to sign TEKs upon upload. The device should generate this key using a secure random number generator.
         bucketID:
           type: string
           description: identification of 'bucket' that contains the confirmationKey. See 'signature' field below.  
+          format: "byte"
+          minLength: 22
+          maxLength: 44
+          pattern: ^[a-zA-Z0-9+/]{22,43}={1,2}$
         padding:
           type: string
           description: |
@@ -425,9 +437,14 @@ components:
       - "keyData"
       - "rollingStartNumber"
       - "rollingPeriod"
+      additionalProperties: false
       properties:
         keyData:
           type: "string"
+          format: "byte"
+          minLength: 22
+          maxLength: 44
+          pattern: ^[a-zA-Z0-9+/]{22,43}={1,2}$
           example: "aWYgeW91IHJlYWQgdGhpcyBzYXkgaGVsbG8gaW4gI25vdGlmaWNhdGllLWFwcCBvbiBjb2RlZm9ybmwgc2xhY2s="
         rollingStartNumber:
           type: integer
@@ -438,8 +455,7 @@ components:
           minimum: 0
           example: 144
         regionsOfInterest:
-           type: array
-           items: 
-             type: string
-           description: "Reserved for future use. A traveler may want to indicate that the key from this day is relevant in certain countries. TODO: enhance/change based on interoperability requirements"
-
+          type: array
+          items: 
+            type: string
+          description: "Reserved for future use. A traveler may want to indicate that the key from this day is relevant in certain countries. TODO: enhance/change based on interoperability requirements"
