@@ -149,9 +149,9 @@ paths:
     post:
       tags:
         - Lab Confirmation
-      summary: Confirm a positive test result based on a LabConfirmationID
+      summary: Confirm a positive test result based on a LabConfirmationId
       description: |
-        This method confirms that a specific LabConfirmationID is associated with a positive COVID19 test result.
+        This method confirms that a specific LabConfirmationId is associated with a positive COVID19 test result.
         
         The method is either called by: 
         
@@ -180,8 +180,8 @@ paths:
         This method is called by a device to exchange a secret, in the fallback flow (in case a secret wasn't yet 
         exchanged in the test facility). 
         The secret is stored in an anonymous bucket on the server where later the TEK keys will be dropped.
-        The device sends a labConfirmationID in the request that will also be stored in the bucket.
-        This labConfirmationID is generated on the device and read by the device owner to the operator who submits
+        The device sends a labConfirmationId in the request that will also be stored in the bucket.
+        This labConfirmationId is generated on the device and read by the device owner to the operator who submits
         the key to the server out-of-band.
         The method returns a confirmationKey.
         See https://github.com/minvws/nl-covid19-notification-app-coordination/blob/master/architecture/Solution%20Architecture.md#lab-result-validation-flow.
@@ -389,9 +389,9 @@ components:
     LabConfirmationRequest:
       type: object
       properties:
-        labConfirmationID:
+        labConfirmationId:
           type: string
-          description: The labConfirmationID identifies the result in the app ecosystem. For patients who are enrolled via the test facility (QR Scan), the labConfirmationID is known to the Lab/HA system. For patients who are enrolled directly during a result confirmation call (fallback flow), the labConfirmationID is handed out via the out of band phone conversation and entered by the operator. 
+          description: The labConfirmationId identifies the result in the app ecosystem. For patients who are enrolled via the test facility (QR Scan), the labConfirmationId is known to the Lab/HA system. For patients who are enrolled directly during a result confirmation call (fallback flow), the labConfirmationId is handed out via the out of band phone conversation and entered by the operator. 
         dateOfSymptomsOnset:
           type: string
           format: date
@@ -413,19 +413,19 @@ components:
     EnrollmentResponse:
       type: object
       required:
-      - bucketID
+      - bucketId
       - confirmationKey
-      - labConfirmationID
+      - labConfirmationId
       - padding
       properties:
-        bucketID: 
+        bucketId: 
           type: string
           description: Random generated number that will later in the upload process associate the keys with the correct signature
         confirmationKey:
           type: string
           description: |
             Base64 representation of a 256-bit key that will be used to sign TEKs upon upload. 
-        labConfirmationID:
+        labConfirmationId:
           type: string
           description: |
             Confirmation code that the phone should display so the phone owner can read it to an operator. The value may include dashes to denote separators, e.g. AB8-B7F should be rendered as two sets of characters.
@@ -446,7 +446,7 @@ components:
       additionalProperties: false
       required:
       - "keys"
-      - "bucketID"
+      - "bucketId"
       - "padding"
       properties:
         keys:
@@ -454,7 +454,7 @@ components:
           items:
             $ref: '#/components/schemas/TEK'
           description: Base64 representation of a 128-bit key that will be used to sign TEKs upon upload. The device should generate this key using a secure random number generator.
-        bucketID:
+        bucketId:
           type: string
           description: identification of 'bucket' that contains the confirmationKey. See 'signature' field below.  
           format: "byte"
