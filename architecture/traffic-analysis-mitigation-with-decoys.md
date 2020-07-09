@@ -16,19 +16,15 @@ Persons or entities that can listen in on network traffic include:
 
 # TEK upload sequence
 
-Genuine TEK uploads are a sequence of 3 calls from app to server:
+Genuine TEK uploads are a sequence of two calls from app to server:
 
 1. /register, to request a one-time password (labConfirmationID) and an accompanying confirmationKey and bucketID
 
 2. /postkeys, to submit the TEK keys up to today.
 
-3. /postkeys, once more to submit the 14th TEK key.  (NOTE:  It may be that in a next release of the GAEN framework the 14th (current) TEK is delivered together with the last 13 TEKs, followed immediately by a TEK renewal inside the framework, in the interest of privacy.)
-
 In between the first two calls, the user reads the labConfirmationID to the health care worker over the phone. This will take some time, typically from 5 to 60 seconds (this is an estimation; not a result from a user test).
 
-There’s a few hours of delay in between the second and third call, until just after Midnight when the framework allows retrieval of the 14th key.
-
-The following table plots this observable network traffic on a timeline. For this example, a delay of 20 seconds is used between the first and second call, and a delay of 8000 seconds is used between the second and third call.
+The following table plots this observable network traffic on a timeline. For this example, a delay of 20 seconds is used between the first and second call.
 
 <table>
   <tr>
@@ -98,38 +94,9 @@ packet length</th>
     <td>Lpst_rsp</td>
     <td>Server</td>
   </tr>
-  <tr>
-    <td>8021:100</td>
-    <td>0:150</td>
-    <td>Tp14_req</td>
-    <td>Send /postkeys request for 14th TEK; 8000s later in this example</td>
-    <td>Lp14_req</td>
-    <td>App</td>
-  </tr>
-  <tr>
-    <td>8021:250</td>
-    <td>0:200</td>
-    <td>Tp14_prc</td>
-    <td>Process /postkeys request</td>
-    <td>-</td>
-    <td>Server</td>
-  </tr>
-  <tr>
-    <td>8021:450</td>
-    <td>0:100</td>
-    <td>Tp14_rsp</td>
-    <td>Send /postkeys response</td>
-    <td>Lp14_rsp</td>
-    <td>Server</td>
-  </tr>
-</table>
-
-
- 
+  </table>
 
 Additional scenarios to take into account are:
-
-* When the user opens the key upload screen, the app does a /register call and caches the labConfirmationID and the confirmationKey until the expiration of these, at 6AM next morning. If the user opens the screen more than once on a day and eventually uploads their keys, the time between the /register call and the /postkeys call may be much longer than some seconds or minutes.
 
 * The first call (to /register) might fail due to communications failure or server failure, resulting in one or even more retries.
 
@@ -143,13 +110,17 @@ An observer can detect and analyse all the Txxx_xxx request and response times, 
 
 A first measure to mitigate traffic analysis is:
 
-All calls to /register and /postkeys will have equal request and response sizes, by using padding.
+All calls to /register and /postkeys will have random request and response sizes within a certain bandwidth, by using padding.
 
-* Lreg_req must be equal to Lpst_req
+This requires the following:
+* Both apps (Android and iOS) must add padding to the /register and /postkeys payloads, and to the /stopkeys decoy traffic endpoint introduced later on. 
+The request messages contain a `padding` field that must contain random characters. (Characters must be random, so that any zip compression in the chain does not reduce the message size and reveal decoy traffic.)
+Further, the app's `Appconfig` contains two parameters `requestMinimumSize` and `requestMaximumSize` that specify
+the minimum and maximum size in bytes of the total request payload. The app generates a random integer `messageSize = random(requestMinimumSize..requestMaximumSize)` from a negative exponential distribution and adds random padding characters to the `padding` field to get the request payload to be size `messageSize`.
+* In the same manner, the back end server has two system parameters `responseMinimumSize` and `responseMaximumSize`. For the /register and /postkey response messages, it generates a a random integer `messageSize = random(responseMinimumSize..responseMaximumSize)` and adds random padding characters to the `padding` field to get the response payload to be size `messageSize`.
 
-* Lreg_rsp must be equal to Lpst_rsp.
-
-This requires both the apps (Android and iOS) and the back end server to agree upon the request and response message lengths for the /register and /postkey implementations, so that the request and response payload will always fit.
+The default `requestMinimumSize` is 1800, and the `maximumRequestSize` is 300,000.
+See Appendix 1 for calculation of these sizes.
 
 A second measure is:
 
@@ -161,7 +132,7 @@ As a consequence of these measures, an observer cannot distinguish between /regi
 
 Without any decoy traffic, an observer can deduce the following:
 
-* 0 calls on a day: no upload 
+* 0 calls on a day: no upload
 
 * 1 call on a day and no call on day after: no upload
 
@@ -259,3 +230,144 @@ Each decoy TEK upload sequence must behave as follows:
     1. any remaining scheduled decoy traffic for this day is canceled.
 
     2. the decoy traffic to be scheduled after this genuine /register call is subtracted with DECOYCOUNTER.
+
+
+# Appendix 1: calculation of minimum and maximum /postkeys request sizes
+
+## minimum size: 1800 bytes
+Below is a sample /postkeys request.
+The JSON is pretty-printed for readability.
+However, the clients send this messages without whitespace.
+
+This sample request is 1704 bytes long when whitespace is stripped.
+We round this off to __1800 bytes minimum request size__.
+
+```
+{
+    "keys": [
+        {
+            "keyData": "bHcL2Vxrgk0BOkShJiMQUA==",
+            "rollingStartNumber": 2655936,
+            "rollingPeriod": 144,
+            "regionsOfInterest": [
+                "NL"
+            ]
+        },
+        {
+            "keyData": "bHcL2Vxrgk0BOkShJiMQUA==",
+            "rollingStartNumber": 2655936,
+            "rollingPeriod": 144,
+            "regionsOfInterest": [
+                "NL"
+            ]
+        },
+        {
+            "keyData": "bHcL2Vxrgk0BOkShJiMQUA==",
+            "rollingStartNumber": 2655936,
+            "rollingPeriod": 144,
+            "regionsOfInterest": [
+                "NL"
+            ]
+        },
+        {
+            "keyData": "bHcL2Vxrgk0BOkShJiMQUA==",
+            "rollingStartNumber": 2655936,
+            "rollingPeriod": 144,
+            "regionsOfInterest": [
+                "NL"
+            ]
+        },
+        {
+            "keyData": "bHcL2Vxrgk0BOkShJiMQUA==",
+            "rollingStartNumber": 2655936,
+            "rollingPeriod": 144,
+            "regionsOfInterest": [
+                "NL"
+            ]
+        },
+        {
+            "keyData": "bHcL2Vxrgk0BOkShJiMQUA==",
+            "rollingStartNumber": 2655936,
+            "rollingPeriod": 144,
+            "regionsOfInterest": [
+                "NL"
+            ]
+        },
+        {
+            "keyData": "bHcL2Vxrgk0BOkShJiMQUA==",
+            "rollingStartNumber": 2655936,
+            "rollingPeriod": 144,
+            "regionsOfInterest": [
+                "NL"
+            ]
+        },
+        {
+            "keyData": "bHcL2Vxrgk0BOkShJiMQUA==",
+            "rollingStartNumber": 2655936,
+            "rollingPeriod": 144,
+            "regionsOfInterest": [
+                "NL"
+            ]
+        },
+        {
+            "keyData": "bHcL2Vxrgk0BOkShJiMQUA==",
+            "rollingStartNumber": 2655936,
+            "rollingPeriod": 144,
+            "regionsOfInterest": [
+                "NL"
+            ]
+        },
+        {
+            "keyData": "bHcL2Vxrgk0BOkShJiMQUA==",
+            "rollingStartNumber": 2655936,
+            "rollingPeriod": 144,
+            "regionsOfInterest": [
+                "NL"
+            ]
+        },
+        {
+            "keyData": "bHcL2Vxrgk0BOkShJiMQUA==",
+            "rollingStartNumber": 2655936,
+            "rollingPeriod": 144,
+            "regionsOfInterest": [
+                "NL"
+            ]
+        },
+        {
+            "keyData": "bHcL2Vxrgk0BOkShJiMQUA==",
+            "rollingStartNumber": 2655936,
+            "rollingPeriod": 144,
+            "regionsOfInterest": [
+                "NL"
+            ]
+        },
+        {
+            "keyData": "bHcL2Vxrgk0BOkShJiMQUA==",
+            "rollingStartNumber": 2655936,
+            "rollingPeriod": 144,
+            "regionsOfInterest": [
+                "NL"
+            ]
+        },
+        {
+            "keyData": "bHcL2Vxrgk0BOkShJiMQUA==",
+            "rollingStartNumber": 2655936,
+            "rollingPeriod": 144,
+            "regionsOfInterest": [
+                "NL"
+            ]
+        }
+    ],
+    "bucketID": "EtIaYg3yLKnvPmoYzaJpdyqpOTx5SPVlT2x1pI8u+bQ=",
+    "padding": "ZGVmYXVsdA=="
+}
+```
+
+## maximum size: 300,000 bytes
+The default `requestMaximumSize` is 300,000 (300 thousand). 
+The theoretical maximum request size is calculated as follows:
+- One can travel through 11 countries in Europe on a 24-hour day, with some effort. Let us set a theoretical maximum of 15 countries.
+- a TEK with 15 countries (`regionsOfInterest`) measures 184 bytes in JSON without white space.
+- There is a maximum of 144 TEKs per day, if users presses Upload button every 10 minutes during this day.
+
+This gives a theoretical maximum of 184 x 144 x 14 = 264,960 for only the TEK payload. We round this off to __300,000 maximum request size__.
