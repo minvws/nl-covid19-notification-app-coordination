@@ -11,18 +11,18 @@ Persons or entities that can listen in on network traffic include:
 
 * If user uses a corporate VPN, the corporate employer can continuously monitor the VPN network traffic to detect possible infections among employees.
 
-* If user is on any Wi-Fi network, anybody on the same Wi-Fi network can monitor the network traffic, such as housemates, colleagues, etc.
+* If user is on a home or corporate Wi-Fi network, anybody on the same Wi-Fi network can monitor the network traffic, such as housemates, colleagues, etc.
 
 
 # TEK upload sequence
 
-Genuine TEK uploads are a sequence of two calls from app to server:
+Genuine TEK uploads are a sequence of 2 calls from app to server:
 
-1. /register, to request a one-time password (labConfirmationID) and an accompanying confirmationKey and bucketID
+1. /register, to request a one-time password (labConfirmationID) and an accompanying confirmationKey and bucketId. This call is made whenever the user opens the Upload screen.
 
-2. /postkeys, to submit the TEK keys up to today.
+2. /postkeys, to submit the TEK keys. This call is made when the user presses the Upload button on the Upload screen.
 
-In between the first two calls, the user reads the labConfirmationID to the health care worker over the phone. This will take some time, typically from 5 to 60 seconds (this is an estimation; not a result from a user test).
+In between the two calls, the user reads the labConfirmationID to the health care worker over the phone. This will take some time, typically from 5 to 60 seconds (this is an estimation; not a result from a user test).
 
 The following table plots this observable network traffic on a timeline. For this example, a delay of 20 seconds is used between the first and second call.
 
@@ -98,35 +98,56 @@ packet length</th>
 
 Additional scenarios to take into account are:
 
+* The user may change their mind about uploading their keys after the /register call has been made. Then the /postkeys call will not be invoked.
+
+* The user may open the Upload screen and press the Upload button at any time, without having been tested and without being called by the health authority. So a TEK upload sequence does not imply that the user has been tested positive.
+
 * The first call (to /register) might fail due to communications failure or server failure, resulting in one or even more retries.
 
 * The second call (to /postkeys) might fail due to communications failure or server failure, resulting in one or even more retries.
 
-* The user may change their mind about uploading their keys after the /register call has been made. Then the /postkeys call will not be invoked.
 
 # Making individual requests indistinguishable
 
 An observer can detect and analyse all the Txxx_xxx request and response times, and all the Lxxx_xxx message lengths in the above table.
 
-A first measure to mitigate traffic analysis is:
+To mitigate this, the following measures are taken for /register calls, for /postkeys calls, and for decoy calls:
+* request size randomization with same bandwidht for all request messages
+* response size randomization with same bandwidth for all response messages
+* response time randomization for all message handling
 
-All calls to /register and /postkeys will have random request and response sizes within a certain bandwidth, by using padding.
-
-This requires the following:
-* Both apps (Android and iOS) must add padding to the /register and /postkeys payloads, and to the /stopkeys decoy traffic endpoint introduced later on. 
-The request messages contain a `padding` field that must contain random characters. (Characters must be random, so that any zip compression in the chain does not reduce the message size and reveal decoy traffic.)
-Further, the app's `Appconfig` contains two parameters `requestMinimumSize` and `requestMaximumSize` that specify
-the minimum and maximum size in bytes of the total request payload. The app generates a random integer `messageSize = random(requestMinimumSize..requestMaximumSize)` from a negative exponential distribution and adds random padding characters to the `padding` field to get the request payload to be size `messageSize`.
-* In the same manner, the back end server has two system parameters `responseMinimumSize` and `responseMaximumSize`. For the /register and /postkey response messages, it generates a a random integer `messageSize = random(responseMinimumSize..responseMaximumSize)` and adds random padding characters to the `padding` field to get the response payload to be size `messageSize`.
-
-The default `requestMinimumSize` is 1800, and the `maximumRequestSize` is 300,000.
-See Appendix 1 for calculation of these sizes.
-
-A second measure is:
-
-All calls to /register and /postkeys need to have comparable response times within a certain bandwidth. This needs to be handled at the server side. The decoy traffic introduced later on may be handled by different server-side components, but the response times of the decoy traffic need to be similar to the response times of the real /register and /postkeys handlers. This may be achieved by randomization of the decoy traffic response times.
+These measures are described in the following subsections.
 
 As a consequence of these measures, an observer cannot distinguish between /register calls and /postkeys calls, nor between individual real and decoy calls.
+
+## request size randomization
+All calls to /register and /postkeys will have random request sizes within a certain bandwidth, by using padding.
+
+This requires that both apps (Android and iOS) add padding to the /register and /postkeys request payloads, and to the /stopkeys decoy traffic endpoint introduced later on. 
+The request messages contain a `padding` field that must contain random characters. (Characters must be random, so that any zip compression in the chain does not reduce the message size and reveal decoy traffic.)
+Further, the app's `Appconfig` contains two parameters `requestMinimumSize` and `requestMaximumSize` that specify
+the minimum and maximum size in bytes of the total request payload. The app generates a random integer `messageSize = random(requestMinimumSize..requestMaximumSize)` from a negative exponential distribution and adds random padding characters to the `padding` field to get the request payload to be size `messageSize`. If the payload size is already larger than `messageSize`, the `padding` field is set to `""`.
+
+We set the default `requestMinimumSize` at __1800 bytes__, and the default `requestMaximumSize` at __110,000 bytes__. See Appendix 1 for a calculation of these sizes.
+
+### number of TEKs in upload and excess message size
+
+A user may repeatedly open the Upload screen and press the Upload button. 
+Whenever the Upload button is pressed, the last 14 day's TEKs are retrieved from the Exposure Notification framework (EN framework). The EN Framework at this time generates a new TEK for the current day, for privacy reasons. This means that the number of TEKs on a day is equal to one plus the number of times the user presses the Upload button on that day. In theory, there is no upper bound on this. Users may open the Upload Screen and press the Upload button as often as they wish. Further, other events might trigger a TEK rotation, e.g. another installed EN app or a button in the EN settings. So a TEK upload message may contain a large number of TEKs.
+
+Hence an observer of the network traffic knows that a request message with a size larger than `maximumRequestSize` is not a decoy request message.
+However, the observer cannot be sure that the upload message is a real upload that is confirmed by the health authority, since the user may also perform the upload without being called by the health authority. So a request message larger than `maximumRequestSize` does not reveal a health authority-confirmed TEK upload.
+
+## response size randomization
+The back end server has two system parameters `responseMinimumSize` and `responseMaximumSize`. For the /register and /postkey response messages, it generates a a random integer `messageSize = random(responseMinimumSize..responseMaximumSize)` and adds random padding characters to the `padding` field to get the response payload to be size `messageSize`.
+
+The default `responseMinimumSize` is set to __200 bytes__ and the default 
+`responseMaximumSize` is set to __400 bytes__. See Appendix 2 for a calculation of these sizes.
+
+## response time randomization
+All calls to /register and /postkeys need to have comparable response times within a certain bandwidth. This needs to be handled at the server side. The decoy traffic introduced later on may be handled by different server-side components, but the response times of the decoy traffic need to be similar to the response times of the real /register and /postkeys handlers. This may be achieved by randomization of the decoy traffic response times.
+
+
 
 # TEK upload observation
 
@@ -134,57 +155,21 @@ Without any decoy traffic, an observer can deduce the following:
 
 * 0 calls on a day: no upload
 
-* 1 call on a day and no call on day after: no upload
+* 1 call on a day: no upload
 
-* 1 call on a day and 1 call on following day: possible upload (/register may have been called twice; or genuine /register and a delayed /postkeys after Midnight)
+* 2 calls on a day with interval < 5 minutes: likely upload (/register and /postkeys have been invoked, maybe during a call with health authority, or /register has been retried, which is unlikely)
 
-* 1 call on a day and 2 calls on following day: possible upload (/register may have been called twice; or /register, 1st /postkeys delayed until after Midnight, and another /register)
-
-* 2 calls on a day with interval < 5 min: very likely upload (/register and /postkeys have been invoked, or /register has been retried, which is unlikely)
-
-* 2 calls on a day with interval > 5 min: very likely upload (/register and /postkeys have been invoked, and for some reason the user opened upload screen twice or more that day.)
-
-* more than 2 calls in a day: very likely upload (/register and/or /postkeys has been retried. /postkeys might have failed, but unlikely.)
+* 2 calls on a day with interval > 5 minutes: maybe an upload (/register and /postkeys have been invoked) or user opened Upload screen twice, resulting in 2 /register calls.
 
 ## Combination of TEK upload and phone call
 
-Another datum that may be observed is that during a genuine TEK upload (/register and /postkeys calls) is having a phone call with the health care worker. If this is a VoIP call, this will be visible on the WiFi network. If this is a cell phone call, its call metadata could be analysed by e.g. corporate device management software, or by a nearby observer.
+Another datum that may be observed is that during a genuine TEK upload (/register and /postkeys calls) the device is having a phone call with the health authority worker. If this is a VoIP call, this will be visible on the WiFi network. If this is a cell phone call, its call metadata could be analysed by e.g. corporate device management software, or by a nearby observer.
 
 Decoy traffic as described below will make this analysis less valuable.
 
 # Decoy traffic design
 
-We take two measures to introduce decoy traffic:
-
-1. Generate decoy traffic when user opens upload screen, to make genuine and simulated TEK uploads indistinguishable
-
-2. Generate simulated TEK uploads on random days.
-
-These two measures are described in the following two paragraphs.
-
-## Upload screen decoy traffic
-
-Whenever a user opens upload screen and /register is invoked:
-
-1. Schedule a first decoy message after random (5 .. 120) seconds (emulating a real upload)
-
-2. Determine random number of additional decoy messages to send: rand (0 .. 3), negative exponential distribution: 0 additional decoys very likely, 3 additional decoys very unlikely, e.g. probability 1/10000.
-
-3. Schedule those randomly across the rest of the day, until Midnight.
-
-4. If the real upload (call to /postkeys) is done, cancel the first remaining decoy message if it has not been sent yet.
-
-This ensures that number of calls done across the day does not reveal whether a real upload has been done, except when all of the following conditions hold: 
-
-* the user has opened the upload screen twice or more times this day
-
-* the user did a real upload
-
-* the random number of decoy messages has been set at 3 (chance of 1/10000)
-
-* the real upload occurred after the 10 random decoy messages have been sent, towards the end of the day.
-
-This scenario is unlikely, but it is possible. The risk that this scenario occurs and an observer thus can detect a real key upload, has to be accepted.
+The apps will schedule simulated TEK uploads on random days.
 
 ## Random simulated TEK upload
 
@@ -198,49 +183,40 @@ The daily infection numbers of the pandemic over the course of March to June 202
 
 So for the calculation of the required decoy traffic volume let us take a number of daily infections of 1000. 
 
-And let us assume (optimistically) that half of the Dutch population uses the app and are willing to perform the key upload. 
+And let us assume (optimistically) that half of the Dutch population use the app and are willing to perform the key upload. 
 That would mean 500 genuine uploads per day. And that would mean 20x 500 = 10000 decoy uploads per day.
 
 Half of the Dutch population in 2020 means about 8.5M users.
 This means that each app installation needs to generate 10000 / 8.5M = 0.00118 average decoy TEK upload sequences per day.
 
-Note that the total amount of decoy traffic is proportional with the number of app users and with the key uploads that those app users perform. So a lower number of app users will maintain the 20:1 rate of decoy traffic versus genuine traffic.
+Note that the total amount of decoy traffic is proportional to the number of app users and with the key uploads that those app users perform. So a lower number of app users will maintain the 20:1 rate of decoy traffic versus genuine traffic.
 
 The decoy traffic is then generated by the app as follows:
 
-1. Each 24 hours, determine whether a decoy traffic sequence is to be scheduled with a probability of `Appconfig.decoyProbability` (taken from the `/appconfig` response). This is a value between 0 and 1. The default value when the app has not successfully retrieved `Appconfig` yet, is the aforementioned 0.00118.
+1. Every day at 1:00 AM, determine whether a decoy traffic sequence is to be scheduled with a probability of `Appconfig.decoyProbability` (taken from the `/appconfig` response). This is a value between 0 and 1. The default value when the app has not successfully retrieved `Appconfig` yet, is the aforementioned 0.00118.
 So take a number `R = random(0..1)` and only if `R < Appconfig.decoyProbability`, continue with the next step.
 Otherwise, stop this procedure and wait for the next round (in 24 hours).
+1. Pick a random time `decoyTime` between 7AM and 7PM of the current day.
+(Note: we do not take into account Sundays and holidays that may have no genuine upload traffic since health authority offices may be closed.)
+1. Schedule a decoy transmission job (simulating a /register call) at `decoyTime`.
+1. Pick a random number of seconds `decoyInterval = random (5..900)` (interval between first and second decoy call).
+1. Schedule a second decoy transmission job (simulating a /postkeys call) for time `decoyTime + decoyInterval`.
 
-2. Pick a random day in the next `Appconfig.decoyIntervalHours` hours to schedule the decoy upload sequence.
-Note: we do not take into account Sundays and holidays that may have lower genuine upload traffic. We simply distribute randomly over this interval.
-
-3. Pick a random time between 7AM and 7PM to schedule the decoy sequence start.
-
-4. Schedule a decoy TEK upload sequence for this random day and time.
-
-Each decoy TEK upload sequence must behave as follows:
-
-1. The decoy TEK upload sequence mimics the decoy traffic sequence as described in the previous paragraph, including the 14th TEK upload the following day.
-
-2. The app maintains a counter DECOYCOUNTER of the decoy messages sent. This counter is set to 0 at the start of each decoy TEK upload sequence. Each time a decoy message is sent, the counter is increased by 1.
-
-3. Whenever the user opens the upload screen and the /register call is made as described in the previous paragraph, AND decoy traffic is scheduled for this day:
-
-    1. any remaining scheduled decoy traffic for this day is canceled.
-
-    2. the decoy traffic to be scheduled after this genuine /register call is subtracted with DECOYCOUNTER.
+Each decoy transmission job does the following:
+1. Create a valid request message payload `KeysRequest` with 1 random TEK, a random bucketId and padding as described above, plus a random signature
+1. Send this request to the /stopkeys decoy endpoint
+1. Ignore the response
 
 
 # Appendix 1: calculation of minimum and maximum /postkeys request sizes
 
-## minimum size: 1800 bytes
+## minimum upload request size: 1800 bytes
 Below is a sample /postkeys request.
 The JSON is pretty-printed for readability.
-However, the clients send this messages without whitespace.
+However, the clients send JSON messages without whitespace.
 
 This sample request is 1704 bytes long when whitespace is stripped.
-We round this off to __1800 bytes minimum request size__.
+We round this off and set `minimumRequestSize` to __1800 bytes__.
 
 ```
 {
@@ -358,16 +334,31 @@ We round this off to __1800 bytes minimum request size__.
             ]
         }
     ],
-    "bucketID": "EtIaYg3yLKnvPmoYzaJpdyqpOTx5SPVlT2x1pI8u+bQ=",
+    "bucketId": "EtIaYg3yLKnvPmoYzaJpdyqpOTx5SPVlT2x1pI8u+bQ=",
     "padding": "ZGVmYXVsdA=="
 }
 ```
 
-## maximum size: 300,000 bytes
-The default `requestMaximumSize` is 300,000 (300 thousand). 
-The theoretical maximum request size is calculated as follows:
-- One can travel through 11 countries in Europe on a 24-hour day, with some effort. Let us set a theoretical maximum of 15 countries.
-- a TEK with 15 countries (`regionsOfInterest`) measures 184 bytes in JSON without white space.
-- There is a maximum of 144 TEKs per day, if users presses Upload button every 10 minutes during this day.
+## maximum request size: 110,000 bytes
+One TEK with one regionOfInterest in JSON format, with comma separator at the end is: 
 
-This gives a theoretical maximum of 184 x 144 x 14 = 264,960 for only the TEK payload. We round this off to __300,000 maximum request size__.
+    {"keyData":"bHcL2Vxrgk0BOkShJiMQUA==","rollingStartNumber":2655936,"rollingPeriod":144,"regionsOfInterest":["NL"]},
+ 
+This is 115 bytes long.
+
+Let us assume that the users only rarely upload or rotate their TEKs more than 1000 times in 14 days.
+So 1000 TEKs occupy 1000 x 115 = 115,000 JSON bytes in an upload message. The rest of the JSON payload is less than 100 bytes. We set a `maximumRequestSize` for decoy messages at __110,000 bytes__, allowing for close to 1000 TEKs in the upload message.
+
+For each country the user travels to on a day, a 5 byte entry is added to the TEK's `regionsOfInterest` field, e.g. `,"DE"`. This increases the TEK size only marginally, and we do not increase the `maximumRequestSize` for this.
+
+
+# Appendix 2: caclulation of minimum and maximum response sizes
+A sample /register response is shown below.
+
+    {"labConfirmationId":"TRQ-SVZ","bucketId":"cG90tM1ekKZ3rvhw7joPijxJZlXgtc7TYbiYzpkFdJo=","confirmationKey":"/032olvdoznvtsZLTYV5FEyrSpMpDn14+fvQ6yOgEds=","validity":46405,"padding":""}
+
+This is 184 bytes without whitespace.
+
+A sample /postkeys response is `{"padding":""}`
+
+So to make these two responses indistinguisable in length, we set `responseMinimumSize` to __200 bytes__ and `responseMaximumSize` to __400 bytes__. Response length must be randomized between these values by the server by filling the `padding` field. The difference between the minimum and maximum should mitigate analysis on different response lengths between real and decoy traffic endpoints due to different lengths in HTTP response headers, cookies etc.
