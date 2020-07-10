@@ -405,10 +405,10 @@ components:
         padding:
           type: string
           minLength: 0
-          maxLength: 4000
+          maxLength: 110000
           description: |
               The client should add padding for observer protection, so that the length of a request does not reveal that this is an enrollment. 
-              The size of the padding should be randomized from a uniform distribution so that the total request message size is between `Appconfig.requestMinimumSize` and
+              The size of the padding should be randomized from a negative exponential distribution so that the total request message size is between `Appconfig.requestMinimumSize` and
               `Appconfig.requestMaximumSize`.
     EnrollmentResponse:
       type: object
@@ -436,10 +436,10 @@ components:
         padding:
           type: string
           minLength: 0
-          maxLength: 4000
+          maxLength: 10000
           description: |
               The server should add padding for observer protection, so that the length of a response does not reveal that this is a /register response. 
-              The size of the padding should be randomized from a uniform distribution so that the total request message size is between system parameters `responseMinimumSize` and
+              The size of the padding should be randomized from a negative exponential distribution so that the total request message size is between system parameters `responseMinimumSize` and
               `responseMaximumSize`.
     KeysRequest:
       type: object
@@ -464,11 +464,11 @@ components:
         padding:
           type: string
           minLength: 0
-          maxLength: 4000
+          maxLength: 110000
           description: |
               The request should add padding for observer protection, so that the length of a request does not reveal that this is a /postkeys call. 
-              The size of the padding should be randomized from a uniform distribution so that the total request message size is between `Appconfig.requestMinimumSize` and
-              `Appconfig.requestMaximumSize`.
+              The size of the padding should be randomized from a negative exponential distribution so that the total request message size is between 
+              `Appconfig.requestMinimumSize` and `Appconfig.requestMaximumSize`.
     KeysResponse:
       type: object
       additionalProperties: false
@@ -478,10 +478,10 @@ components:
         padding:
           type: string
           minLength: 0
-          maxLength: 4000
+          maxLength: 10000
           description: |
               The server should add padding for observer protection, so that the length of a response does not reveal that this is a /postkeys response. 
-              The size of the padding should be randomized from a uniform distribution so that the total request message size is between system parameters `responseMinimumSize` and
+              The size of the padding should be randomized from a negative exponential distribution so that the total request message size is between system parameters `responseMinimumSize` and
               `responseMaximumSize`.
     TEK:
       type: "object"
@@ -497,7 +497,7 @@ components:
           minLength: 22
           maxLength: 44
           pattern: ^[a-zA-Z0-9+/]{22,43}={1,2}$
-          example: "aWYgeW91IHJlYWQgdGhpcyBzYXkgaGVsbG8gaW4gI25vdGlmaWNhdGllLWFwcCBvbiBjb2RlZm9ybmwgc2xhY2s="
+          example: "dGlmaWNhdGllLWFwcCBvbiBjb2RlZm9ybmwgc2xhY2s="
         rollingStartNumber:
           type: integer
           minimum: 0
