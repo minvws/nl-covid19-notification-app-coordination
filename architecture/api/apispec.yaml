@@ -145,7 +145,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/AppConfig'
-  /labconfirm:
+  /caregiverportal/labconfirm:
     post:
       tags:
         - Lab Confirmation
