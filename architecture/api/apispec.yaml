@@ -406,6 +406,7 @@ components:
           type: string
           minLength: 0
           maxLength: 110000
+          pattern: ^[a-zA-Z0-9+/]{0,110000}={0,2}$
           description: |
               The client should add padding for observer protection, so that the length of a request does not reveal that this is an enrollment. 
               The size of the padding should be randomized from a negative exponential distribution so that the total request message size is between `Appconfig.requestMinimumSize` and
@@ -437,6 +438,7 @@ components:
           type: string
           minLength: 0
           maxLength: 10000
+          pattern: ^[a-zA-Z0-9+/]{0,10000}={0,2}$
           description: |
               The server should add padding for observer protection, so that the length of a response does not reveal that this is a /register response. 
               The size of the padding should be randomized from a negative exponential distribution so that the total request message size is between system parameters `responseMinimumSize` and
@@ -465,6 +467,7 @@ components:
           type: string
           minLength: 0
           maxLength: 110000
+          pattern: ^[a-zA-Z0-9+/]{0,110000}={0,2}$
           description: |
               The request should add padding for observer protection, so that the length of a request does not reveal that this is a /postkeys call. 
               The size of the padding should be randomized from a negative exponential distribution so that the total request message size is between 
@@ -479,6 +482,7 @@ components:
           type: string
           minLength: 0
           maxLength: 10000
+          pattern: ^[a-zA-Z0-9+/]{0,10000}={0,2}$
           description: |
               The server should add padding for observer protection, so that the length of a response does not reveal that this is a /postkeys response. 
               The size of the padding should be randomized from a negative exponential distribution so that the total request message size is between system parameters `responseMinimumSize` and
