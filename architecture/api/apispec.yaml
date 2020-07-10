@@ -380,6 +380,13 @@ components:
           description: |
             The maximum number of characters that the total /register, /postkeys and /stopkeys request messages should be, by filling the request´s
             'padding' field with random charachters.
+        repeatedUploadDelay:
+          type: integer
+          minimum: 0
+          maximum: 80000
+          description: |
+            The number of seconds delay to schedule a second TEK upload during the `EnrollmentResponse.validity` period.
+            For an explanation, see https://github.com/minvws/nl-covid19-notification-app-coordination/blob/master/architecture/traffic-analysis-mitigation-with-decoys.md.
         
     Bundle:
       type: object
