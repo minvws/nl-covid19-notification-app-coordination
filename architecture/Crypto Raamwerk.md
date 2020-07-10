@@ -1,3 +1,7 @@
+## WARNING
+
+This document is slightly behind on the master word version (2020/7/10).
+
 # Covid-19 Exposure Notification Cryptografie raamwerk
 
 > Disclaimer: This is a translation/alternative version of the original document: Crypto Raamwerk.docx, version 0.65. (https://github.com/minvws/nl-covid19-notification-app-coordination/blob/master/architecture/Crypto%20Raamwerk.docx)
