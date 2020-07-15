@@ -145,13 +145,13 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/AppConfig'
-  /labconfirm:
+  /caregiverportal/labconfirm:
     post:
       tags:
         - Lab Confirmation
-      summary: Confirm a positive test result based on a LabConfirmationID
+      summary: Confirm a positive test result based on a LabConfirmationId
       description: |
-        This method confirms that a specific LabConfirmationID is associated with a positive COVID19 test result.
+        This method confirms that a specific LabConfirmationId is associated with a positive COVID19 test result.
         
         The method is either called by: 
         
@@ -180,15 +180,15 @@ paths:
         This method is called by a device to exchange a secret, in the fallback flow (in case a secret wasn't yet 
         exchanged in the test facility). 
         The secret is stored in an anonymous bucket on the server where later the TEK keys will be dropped.
-        The device sends a labConfirmationID in the request that will also be stored in the bucket.
-        This labConfirmationID is generated on the device and read by the device owner to the operator who submits
+        The device sends a labConfirmationId in the request that will also be stored in the bucket.
+        This labConfirmationId is generated on the device and read by the device owner to the operator who submits
         the key to the server out-of-band.
-        The method returns a confirmationKey  
+        The method returns a confirmationKey.
+        See https://github.com/minvws/nl-covid19-notification-app-coordination/blob/master/architecture/Solution%20Architecture.md#lab-result-validation-flow.
         
         This method implements observer protection. 
+        See https://github.com/minvws/nl-covid19-notification-app-coordination/blob/master/architecture/traffic-analysis-mitigation-with-decoys.md
 
-          TODO: Add reference to observer protection documentation in architecture        
-          TODO: Add reference to the lab flow in the architecture.
       requestBody:
         content:
           application/json: 
@@ -209,15 +209,12 @@ paths:
       summary: Upload diagnosis keys (TEKs) to the server
       description: |
         This method is used by a device to upload one or more TEK keys to the server. 
+        See https://github.com/minvws/nl-covid19-notification-app-coordination/blob/master/architecture/Solution%20Architecture.md#lab-result-validation-flow.
         
         This method implements observer protection. 
-        
-        Notes: the phone will never know whether a test result was positive, for privacy reasons. This means that a user might upload keys using this method by using the 'I've been tested positive' flow even though there isn't a positive test result. This is OK, since without the positive test result, the keys won't be processed. It also creates a decoy in itself: seeing keys being uploaded does not consitute a sign of infection. 
+        See https://github.com/minvws/nl-covid19-notification-app-coordination/blob/master/architecture/traffic-analysis-mitigation-with-decoys.md
 
-          TODO: Add reference to observer protection documentation in architecture        
-          TODO: Add reference to the lab flow in the architecture.
-          
-          Discussion: we are aware that adding the HTTP verb ('post') to the method is not a good practice. For observer protection we want to homogenize all methods under protection to a name of 8 characters and this simply made sense in describing what the method does.
+        Notes: the phone will never know whether a test result was positive, for privacy reasons. This means that a user might upload keys using this method by using the 'I've been tested positive' flow even though there isn't a positive test result. This is OK, since without the positive test result, the keys won't be processed. It also creates a decoy in itself: seeing keys being uploaded does not consitute a sign of infection. 
       parameters:
         - name: sig
           in: query
@@ -234,7 +231,10 @@ paths:
       responses:
         200:
           description: Keys processed correctly
-          content: {}
+          content:
+            application/json: 
+              schema: 
+                $ref: '#/components/schemas/KeysResponse'
   /stopkeys:
     post:
       tags:
@@ -265,7 +265,10 @@ paths:
       responses:
         200:
           description: Decoy keys processed correctly
-          content: {}
+          content:
+            application/json: 
+              schema: 
+                $ref: '#/components/schemas/KeysResponse'
 components:
   schemas:
     Manifest:
@@ -355,11 +358,36 @@ components:
           description: This defines the frequency of retrieving the manifest, in minutes. 
           example: 360
         decoyProbability:
-          type: integer
+          type: number
+          format: float
+          minimum: 0
+          maximum: 1
           description: |
-            This defines the probability of sending decoys. This is configurable so we can tune the probability to server load if necessary. 
-            
-            TODO: Define formula for calculating the actual frequency.
+            This defines the probability of sending decoys during a 24-hour period. This is configurable so we can tune the probability to server load if necessary. 
+            The default value is 0.00118; see https://github.com/minvws/nl-covid19-notification-app-coordination/blob/master/architecture/traffic-analysis-mitigation-with-decoys.md.
+            A value of 0.0 implies that no decoy traffic will be scheduled.
+        requestMinimumSize:
+          type: integer
+          minimum: 100
+          maximum: 100000
+          description: |
+            The minimum number of characters that the total /register, /postkeys and /stopkeys request messages should be, by filling the request´s
+            'padding' field with random charachters.
+        requestMaximumSize:
+          type: integer
+          minimum: 100
+          maximum: 100000
+          description: |
+            The maximum number of characters that the total /register, /postkeys and /stopkeys request messages should be, by filling the request´s
+            'padding' field with random charachters.
+        repeatedUploadDelay:
+          type: integer
+          minimum: 0
+          maximum: 80000
+          description: |
+            The number of seconds delay to schedule a second TEK upload during the `EnrollmentResponse.validity` period.
+            For an explanation, see https://github.com/minvws/nl-covid19-notification-app-coordination/blob/master/architecture/traffic-analysis-mitigation-with-decoys.md.
+        
     Bundle:
       type: object
       properties:
@@ -368,33 +396,44 @@ components:
     LabConfirmationRequest:
       type: object
       properties:
-        labConfirmationID:
+        labConfirmationId:
           type: string
-          description: The labConfirmationID identifies the result in the app ecosystem. For patients who are enrolled via the test facility (QR Scan), the labConfirmationID is known to the Lab/HA system. For patients who are enrolled directly during a result confirmation call (fallback flow), the labConfirmationID is handed out via the out of band phone conversation and entered by the operator. 
+          description: The labConfirmationId identifies the result in the app ecosystem. For patients who are enrolled via the test facility (QR Scan), the labConfirmationId is known to the Lab/HA system. For patients who are enrolled directly during a result confirmation call (fallback flow), the labConfirmationId is handed out via the out of band phone conversation and entered by the operator. 
         dateOfSymptomsOnset:
           type: string
           format: date
           description: The day that the patient's symptoms started. This is usually < 14 days ago. However, we impose no constraint on it.
     EnrollmentRequest:
       type: object
+      additionalProperties: false
+      required:
+      - "padding"
       properties:
         padding:
           type: string
+          minLength: 0
+          maxLength: 110000
+          pattern: ^[a-zA-Z0-9+/]{0,110000}={0,2}$
           description: |
-              The request should add padding for observer protection, so that the length of a request does not reveal that this is an enrollment. 
-              The size of the padding should be randomized in such a way that the entire payload is at least. 
-              TODO: define how big.
+              The client should add padding for observer protection, so that the length of a request does not reveal that this is an enrollment. 
+              The size of the padding should be randomized from a negative exponential distribution so that the total request message size is between `Appconfig.requestMinimumSize` and
+              `Appconfig.requestMaximumSize`.
     EnrollmentResponse:
       type: object
+      required:
+      - bucketId
+      - confirmationKey
+      - labConfirmationId
+      - padding
       properties:
-        BucketID: 
+        bucketId: 
           type: string
           description: Random generated number that will later in the upload process associate the keys with the correct signature
         confirmationKey:
           type: string
           description: |
             Base64 representation of a 256-bit key that will be used to sign TEKs upon upload. 
-        labConfirmationID:
+        labConfirmationId:
           type: string
           description: |
             Confirmation code that the phone should display so the phone owner can read it to an operator. The value may include dashes to denote separators, e.g. AB8-B7F should be rendered as two sets of characters.
@@ -402,33 +441,74 @@ components:
           type: integer
           format: int64
           description: The returned key is valid for this number of seconds after it was retrieved. The device should re-register if this time is elapsed. Typically the validUntil will be the number of seconds until 4am the next day so it's valid long enough to be able to upload the 14th key at a random time past midnight.
+        padding:
+          type: string
+          minLength: 0
+          maxLength: 10000
+          pattern: ^[a-zA-Z0-9+/]{0,10000}={0,2}$
+          description: |
+              The server should add padding for observer protection, so that the length of a response does not reveal that this is a /register response. 
+              The size of the padding should be randomized from a negative exponential distribution so that the total request message size is between system parameters `responseMinimumSize` and
+              `responseMaximumSize`.
     KeysRequest:
       type: object
+      additionalProperties: false
+      required:
+      - "keys"
+      - "bucketId"
+      - "padding"
       properties:
         keys:
           type: array
           items:
             $ref: '#/components/schemas/TEK'
           description: Base64 representation of a 128-bit key that will be used to sign TEKs upon upload. The device should generate this key using a secure random number generator.
-        bucketID:
+        bucketId:
           type: string
           description: identification of 'bucket' that contains the confirmationKey. See 'signature' field below.  
+          format: "byte"
+          minLength: 22
+          maxLength: 44
+          pattern: ^[a-zA-Z0-9+/]{22,43}={1,2}$
         padding:
           type: string
+          minLength: 0
+          maxLength: 110000
+          pattern: ^[a-zA-Z0-9+/]{0,110000}={0,2}$
           description: |
-            The request should add padding for observer protection, so that the length of a request does not reveal that this is an upload of keys. The size of the padding should be randomized in such a way that the entire payload is at least
-            
-            TODO: define how big.
+              The request should add padding for observer protection, so that the length of a request does not reveal that this is a /postkeys call. 
+              The size of the padding should be randomized from a negative exponential distribution so that the total request message size is between 
+              `Appconfig.requestMinimumSize` and `Appconfig.requestMaximumSize`.
+    KeysResponse:
+      type: object
+      additionalProperties: false
+      required:
+      - "padding"
+      properties:
+        padding:
+          type: string
+          minLength: 0
+          maxLength: 10000
+          pattern: ^[a-zA-Z0-9+/]{0,10000}={0,2}$
+          description: |
+              The server should add padding for observer protection, so that the length of a response does not reveal that this is a /postkeys response. 
+              The size of the padding should be randomized from a negative exponential distribution so that the total request message size is between system parameters `responseMinimumSize` and
+              `responseMaximumSize`.
     TEK:
       type: "object"
       required:
       - "keyData"
       - "rollingStartNumber"
       - "rollingPeriod"
+      additionalProperties: false
       properties:
         keyData:
           type: "string"
-          example: "aWYgeW91IHJlYWQgdGhpcyBzYXkgaGVsbG8gaW4gI25vdGlmaWNhdGllLWFwcCBvbiBjb2RlZm9ybmwgc2xhY2s="
+          format: "byte"
+          minLength: 22
+          maxLength: 44
+          pattern: ^[a-zA-Z0-9+/]{22,43}={1,2}$
+          example: "dGlmaWNhdGllLWFwcCBvbiBjb2RlZm9ybmwgc2xhY2s="
         rollingStartNumber:
           type: integer
           minimum: 0
@@ -438,8 +518,7 @@ components:
           minimum: 0
           example: 144
         regionsOfInterest:
-           type: array
-           items: 
-             type: string
-           description: "Reserved for future use. A traveler may want to indicate that the key from this day is relevant in certain countries. TODO: enhance/change based on interoperability requirements"
-
+          type: array
+          items: 
+            type: string
+          description: "Reserved for future use. A traveler may want to indicate that the key from this day is relevant in certain countries. TODO: enhance/change based on interoperability requirements"
