@@ -18,7 +18,7 @@ Persons or entities that can listen in on network traffic include:
 
 Genuine TEK uploads are a sequence of 2 calls from app to server:
 
-1. /register, to request a one-time password (labConfirmationID) and an accompanying confirmationKey and bucketId. Also, a validity period in seconds is returned by the server, which expires at 4:00 AM. (An interval in seconds is used instead of a timestamp, since the device's clock might be skewed.)
+1. /register, to request a one-time password (labConfirmationID) and an accompanying confirmationKey and bucketId. Also, a validity period in seconds is returned by the server, (which typically expires at 4:00 AM). (An interval in seconds is used instead of a timestamp, since the device's clock might be skewed.)
 
 2. /postkeys, to submit the TEK keys. This call is made when the user presses the Upload button on the Upload screen.
 
