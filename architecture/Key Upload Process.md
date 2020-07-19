@@ -169,5 +169,11 @@ K0916.1
 
 # Alternative approach considered
 
-If the client discards the cofirmationKey after upload instead of keeping it, and creates a new bucket for the next upload, the user is uploading more data (new bucket needs all keys again), but more importantly, we could get into a race condition: if the user uploads too soon, and the GGD asks him to re-upload beause of a key mismatch, the new bucket will get a new code.            
+## delay multiple upload attempts 
+
+We considered delaying the upload when a user hits upload multiple times and onky upload the last one after a delay. However this gives the user the opportunity to conrinue broadcasting the key and will conflict sith server side bucket closure. Therefor we abandoned this idea.
+
+## Immediate bucket discard after upload 
+
+If the client discards the cofirmationKey after upload instead of keeping it, and creates a new bucket for the next upload, the user is uploading more data (new bucket needs all keys again), but more importantly, we could get into a race condition: if the user uploads too soon, and the GGD asks them to re-upload beause of a key mismatch, the new bucket will get a new code and not match the one read to the operator.           
          
