@@ -18,7 +18,7 @@ The updated process should follow the following guiding principles:
 
 ## Proposed process
 
-1. Every time the user requests an upload, the device uploads the keys of the past 14 days MINUS keys that it has already uploaded for the current bucket. (I.e. device keeps trac of keys it has already uploaded to the *current* bucket)
+1. Every time the user requests an upload, the device uploads the keys of the past 14 days MINUS keys that it has already uploaded for the *current* bucket. (I.e. device keeps trac of keys it has already uploaded to the current bucket)
 2. This 'keeping track' does not need to cache the actual key data, just some metadata, so we don't accidentally create a key store outside GAEN.
 3. If after reading the keys from GAEN it appears we do not have today's key, we know we are dealing with a 1.4 device (or 1.5 and google has its switch turned off), and we schedule an upload after midnight of the last key.
 4. On the server, a bucket silently discards **same day** keys that are uploaded '**bucketCloseDelayMinutes**'  after the GGD entered the confirmation code. Note: previous day keys should not be automaticaly discarded even after bucketCloseDelayMinutes has elapsed. This ensures that in the case of an 1.4 device the key is accepted (it arrives after midnight and is therefor not a 'same day' key). It also ensures in the case of a 1.5 device that it only accepts same day keys from before the GGD call; thwarting any later disgruntled patient keys.
