@@ -79,7 +79,7 @@ Time | Event | Remarks
 11.05h | GAEN generates K0915.3 | 
 12.00h | User uploads a set of keys again to bucket B. | Only K0915.3 gets uploaded, rest was already done
 12.00h | GAEN generates K0915.4 | 
-12.00h | Server silently discards K0915.4 as it's a same day key that arrives > 30 minutes after GGD code |
+12.00h | Server silently discards K0915.3 as it's a same day key that arrives > 30 minutes after GGD code |
             
    
 Keys now on the device:
