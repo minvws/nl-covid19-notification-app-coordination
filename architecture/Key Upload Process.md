@@ -53,8 +53,8 @@ Time | Event | Remarks
 ---- | ----- | -------
 00.00h | GAEN generates K0914.1 | The device has 14 days of keys. 
 10.00h | User opens upload screen and gets a new bucket (bucket A) |
-       | User uploads a set of keys because of fiddling with the upload button | The device doesn't know if the user has a GGD call at this point, so it should honor the upload
-       | GAEN now generates K0914.2 because of tek reset. |
+| User uploads a set of keys because of fiddling with the upload button | The device doesn't know if the user has a GGD call at this point, so it should honor the upload
+| GAEN now generates K0914.2 because of tek reset. |
 23.59h | No further events this day, no call from GGD. |
 
 Keys now on the device:
