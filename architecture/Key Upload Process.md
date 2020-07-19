@@ -21,10 +21,11 @@ The updated process should follow the following guiding principles:
 1. Every time the user requests an upload, the device uploads the keys of the past 14 days MINUS keys that it has already uploaded for the current bucket. (I.e. device keeps trac of keys it has already uploaded to the current bucket)
 2. This 'keeping track' does not need to cache the actual key data, just some metadata, so we don't accidentally create a key store outside GAEN.
 3. If after reading the keys from GAEN it appears we do not have today's key, we know we are dealing with a 1.4 device (or 1.5 and google has its switch turned off), and we schedule an upload after midnight of the last key.
-4. On the server, a bucket silently discards **same day** keys that are uploaded x minutes after the GGD entered the confirmation code. (previous day keys don't have to be discarded). This ensures that in the case of an 1.4 device the key is accepted (it arrives after midnight and is therefor not a 'same day' key). It also ensures in the case of a 1.5 device that it only accepts same day keys from before the GGD call; thwarting any later disgruntled patient keys.
+4. On the server, a bucket silently discards **same day** keys that are uploaded '**bucketCloseDelayMinutes**' minutes after the GGD entered the confirmation code. (previous day keys don't have to be discarded). This ensures that in the case of an 1.4 device the key is accepted (it arrives after midnight and is therefor not a 'same day' key). It also ensures in the case of a 1.5 device that it only accepts same day keys from before the GGD call; thwarting any later disgruntled patient keys.
 5. On the server, if a key arrives after midnight and there is already a key for that day, it should be discarded, as this indicates tampering. (a 1.4 device would ONLY send today's key after midnight, so the existance of a key for that day means no 1.4. A 1.5 device would NOT upload after midnight. Ergo, a post-midnight upload of a key when a key for that day already is present, represents malice.
 
-The value of x represents a trade-off. A larger number of minutes gives the user some more time to upload his same day key during/after the call. However it also gives the user more time to use this now 'known infected phone' to generate false positive encounters ('disgruntled patient syndrome'). We start x at 30 minutes, but it should be configurable. Because the server accepts previous days keys but not same day keys, the worst case scenario is: the user uploads too late and we miss the last same day key.
+### Determining bucketCloseDelayMinutes
+The value of bucketCloseDelayMinutes represents a trade-off. A larger number of minutes gives the user some more time to upload his same day key during/after the call. However it also gives the user more time to use this now 'known infected phone' to generate false positive encounters ('disgruntled patient syndrome'). We start x at 30 minutes, but it should be configurable in the server. Because the server accepts previous days keys but not same day keys, the worst case scenario is: the user uploads too late and we miss the last same day key.
 
 
 ## Edge case validation
@@ -53,8 +54,8 @@ Time | Event | Remarks
 ---- | ----- | -------
 00.00h | GAEN generates K0914.1 | The device has 14 days of keys. 
 10.00h | User opens upload screen and gets a new bucket (bucket A) |
-| User uploads a set of keys because of fiddling with the upload button | The device doesn't know if the user has a GGD call at this point, so it should honor the upload
-| GAEN now generates K0914.2 because of tek reset. |
+10.00h | User uploads a set of keys because of fiddling with the upload button | The device doesn't know if the user has a GGD call at this point, so it should honor the upload
+10.00h | GAEN now generates K0914.2 because of tek reset. |
 23.59h | No further events this day, no call from GGD. |
 
 Keys now on the device:
@@ -71,14 +72,14 @@ Time | Event | Remarks
 ---- | ----- | -------
 00.00h | GAEN generates K0915.1 and deletes K0901.1 (too old) |
 10.00h | User opens upload screen and gets a new bucket (bucket B) |
-       | Users uploads a set of keys again. | Device uploads K0902.1 through K0915.1 to bucket B
-       | GAEN generates K0915.2 | 
+10.00h | Users uploads a set of keys again. | Device uploads K0902.1 through K0915.1 to bucket B
+10.00h | GAEN generates K0915.2 | 
 11.00h | User gets call from GGD with positive test result and is asked to confirm code and upload keys. |
 11.05h | User hands over code and uploads keys to bucket B.  | Only K0915.2 gets uploaded, rest was already done
-       | GAEN generates K0915.3 | 
+11.05h | GAEN generates K0915.3 | 
 12.00h | User uploads a set of keys again to bucket B. | Only K0915.3 gets uploaded, rest was already done
-       | GAEN generates K0915.4 | 
-       | Server silently discards K0915.4 as it's a same day key that arrives > 30 minutes after GGD code |
+12.00h | GAEN generates K0915.4 | 
+12.00h | Server silently discards K0915.4 as it's a same day key that arrives > 30 minutes after GGD code |
             
    
 Keys now on the device:
@@ -114,9 +115,9 @@ Time | Event | Remarks
 ---- | ----- | -------
 00.00h | GAEN generates K0914.1 | The device has 14 days of keys. 
 10.00h | User opens upload screen and gets a new bucket (bucket A) |
-       | User uploads a set of keys because of fiddling with the upload button | The device doesn't know if the user has a GGD call at this point, so it should honor the upload
-       | GAEN does NOT perform a TEK reset. |
-       | Device schedules a post midnight TEK upload |
+10.00h | User uploads a set of keys because of fiddling with the upload button | The device doesn't know if the user has a GGD call at this point, so it should honor the upload
+10.00h | GAEN does NOT perform a TEK reset. |
+10.00h | Device schedules a post midnight TEK upload |
 23.59h | No further events this day, no call from GGD. |
 
 Keys now on the device:
@@ -134,13 +135,13 @@ Time | Event | Remarks
 00.00h | GAEN generates K0915.1 and deletes K0901.1 (too old) |
 00.30h | The nightly batch uploads K0914.1 to bucket A| Bucket A never got GGD confirmation so will be discarded on the server when the bucket validity ends.
 10.00h | User opens upload screen and gets a new bucket (bucket B) |
-       | Users uploads a set of keys again. | Device uploads K0902.2 to K0914.1
-       | GAEN does NOT perform a TEK reset | 
+10.00h | Users uploads a set of keys again. | Device uploads K0902.2 to K0914.1
+10.00h | GAEN does NOT perform a TEK reset | 
 11.00h | User gets call from GGD with positive test result and is asked to confirm code and upload keys. |
 11.05h | User hands over code and uploads keys. | Nothing happens, this key was already uploaded to the current bucket.
-       | GAEN dos NOT perform a TEK reset
+11.05h | GAEN dos NOT perform a TEK reset
 12.00h | User uploads a set of keys again. | Nothing happens again, no new keys to send.
-       | GAEN does NOT perform a TEK reset | 
+12.00h | GAEN does NOT perform a TEK reset | 
             
 Keys now on the device:
 
