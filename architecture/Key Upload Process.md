@@ -140,7 +140,7 @@ Time | Event | Remarks
 10.00h | GAEN does NOT perform a TEK reset | 
 11.00h | User gets call from GGD with positive test result and is asked to confirm code and upload keys. |
 11.05h | User hands over code and uploads keys. | Device uploads K0902.1 through K0914.1 to bucket B again (server discovers it already has these and ignores it)
-11.05h | GAEN dos NOT perform a TEK reset
+11.05h | GAEN does NOT perform a TEK reset
 11.20h | Server publishes K0902.1 through K0915.**2** to the CDN. |
 12.00h | User uploads a set of keys again. | Device uploads K0902.1 through K0914.1 to bucket B again (server discovers it already has these and ignores it)
 12.00h | GAEN does NOT perform a TEK reset | 
