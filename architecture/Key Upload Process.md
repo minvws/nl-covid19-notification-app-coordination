@@ -21,8 +21,8 @@ The updated process should follow the following guiding principles:
 1. Every time the user requests an upload, the device uploads the keys of the past 14 days.
 2. The *server* keeps track of keys it already has and makes sure it does not publish keys to the CDN that were already published.
 3. If after reading the keys from GAEN it appears we do not have today's key (this can be derived from the key's rollingStartNumber which is a timestamp), we know we are dealing with a 1.4 device (or 1.5 and google has its switch turned off), and we schedule an upload after midnight of the last key.
-4. On the server, a bucket silently discards **same day** keys that are uploaded '**bucketCloseDelayMinutes**'  after the GGD entered the confirmation code. Note: previous day keys should not be automaticaly discarded even after bucketCloseDelayMinutes has elapsed. This ensures that in the case of an 1.4 device the key is accepted (it arrives after midnight and is therefor not a 'same day' key). It also ensures in the case of a 1.5 device that it only accepts same day keys from before the GGD call; thwarting any later disgruntled patient keys.
-5. On the server, if a key arrives after midnight and there is already a key for the day that key belongs to (yesterday), it should be **discarded**, as this indicates tampering. Rationale: a 1.4 device would ONLY send today's key after midnight, so the existance of a key for that day means no 1.4. A 1.5 device would NOT upload after midnight. Ergo, a post-midnight upload of a key when a key for that day already is present, represents malice.
+4. On the server, a bucket silently discards **same day** keys (rollingStart today) that are uploaded '**bucketCloseDelayMinutes**'  after the GGD entered the confirmation code. Note: previous day keys should not be automaticaly discarded even after bucketCloseDelayMinutes has elapsed. This ensures that in the case of an 1.4 device the key is accepted (it arrives after midnight and is therefor not a 'same day' key). It also ensures in the case of a 1.5 device that it only accepts same day keys from before the GGD call; thwarting any later disgruntled patient keys.
+5. On the server, if a key arrives after midnight and there is already a key for the day that key belongs to (yesterday/registerDay), it should be **discarded**, as this indicates tampering. Rationale: a 1.4 device would ONLY send today's key after midnight, so the existance of a key for that day means no 1.4. A 1.5 device would NOT upload after midnight. Ergo, a post-midnight upload of a key when a key for that day already is present, represents malice.
 
 ### Determining bucketCloseDelayMinutes
 The value of bucketCloseDelayMinutes represents a trade-off. A larger number of minutes gives the user some more time to upload his same day key during/after the call. However it also gives the user more time to use this now 'known infected phone' to generate false positive encounters ('disgruntled patient syndrome'). We set bucketCloseDelayMinites at 30 minutes initially, but it should be configurable in the server. Because the server accepts previous days keys but not same day keys, the worst case scenario is: the user uploads too late and we miss the last same day key.
@@ -91,6 +91,15 @@ K0906.1, K0907.1, K0908.1, K0909.1, K0910.1,
 K0911.1, K0912.1, K0913.1, K0914.1, K0914.2,
 K0915.1, K0915.2, K0915.3, K0915.4
 ```            
+
+#### September 16
+
+Time | Event | Remarks
+---- | ----- | -------
+00.00h | GAEN generates K0916.1 and deletes K0902.1 (too old) |
+00.30h | User tries to mimic a 1.4 device and tries to upload his keys to include K0916.1| Bucket B ignores the keys it already has and K0916.1 is discarded because it's a key for today and the bucket doesn't accept same day keys after midnight.
+
+            
 
 ### User that's on GAEN 1.4 or 1.5 with same-day key release turned OFF by Google
 
