@@ -29,8 +29,47 @@ See [the pseudo code implementation](#pseudo-code-implementation) for a visualis
 ### Determining bucketCloseDelayMinutes
 The value of bucketCloseDelayMinutes represents a trade-off. A larger number of minutes gives the user some more time to upload his same day key during/after the call. However it also gives the user more time to use this now 'known infected phone' to generate false positive encounters ('disgruntled patient syndrome'). We set bucketCloseDelayMinites at 30 minutes initially, but it should be configurable in the server. Because the server accepts previous days keys but not same day keys, the worst case scenario is: the user uploads too late and we miss the last same day key.
 
+# Pseudo code implementation
 
-## Edge case validation
+## Backend steps 4 and 5 from proposed process. 
+
+```
+Log(‘interaction for bucket A, created at x’)
+
+// first perform regular validity, signature and duplicate checks. 
+// then: 
+
+For each uploaded key: 
+Log(‘validating key with rolling start yyyy-mm-dd hh:mm, ...)
+
+If(date(key.rollingStart) > date(bucket.createdAt)) { 
+    // key too new or bucket too old
+    Log(‘key for date y discarded: key too new’)
+} else if (date(key.rollingStart) == today)) { 
+    // this is a ‘same day key’, generated on the
+    // day the user gets result. 
+    // it must arrive within the call window (Step 4 from proposed process)
+    If (pendingLabResult || now - labResult.confirmationTime < 30 min) { 
+         Log(‘same day key accepted: before call or within call window’)
+    } else { 
+         Log(‘key rejected: outside window’)
+         
+    } 
+} else if (date(rollingKeyStart)==date(bucket.createdAt) { 
+   // key from result day that arrives after today, extra check to ensure it’s a 1.4 device and not a tampered 1.5 device (Step 5)
+    If (bucket has no keys for rollingStart date) {
+        Log(“key for result day accepted after midnight”) 
+    } else { 
+        Log(“key for result day after midnight rejected: already a key present for that day”)
+    }
+} else { 
+   // Key from the past. 
+   Log(key from the past accepted)
+} 
+```
+
+
+## Appendix: Edge case validation
 
 ### User who is on GAEN 1.5 with same-day key release turned on by Google
 
@@ -191,41 +230,3 @@ We considered delaying the upload when a user hits upload multiple times and onk
 
 If the client discards the cofirmationKey after upload instead of keeping it, and creates a new bucket for the next upload, the user is uploading more data (new bucket needs all keys again), but more importantly, we could get into a race condition: if the user uploads too soon, and the GGD asks them to re-upload beause of a key mismatch, the new bucket will get a new code and not match the one read to the operator.           
          
-# Pseudo code implementation
-
-## Backend steps 4 and 5 from proposed process. 
-
-```
-Log(‘interaction for bucket A, created at x’)
-
-// first perform regular validity, signature and duplicate checks. 
-// then: 
-
-For each uploaded key: 
-Log(‘validating key with rolling start yyyy-mm-dd hh:mm, ...)
-
-If(date(key.rollingStart) > date(bucket.createdAt)) { 
-    // key too new or bucket too old
-    Log(‘key for date y discarded: key too new’)
-} else if (date(key.rollingStart) == today)) { 
-    // this is a ‘same day key’, generated on the
-    // day the user gets result. 
-    // it must arrive within the call window (Step 4 from proposed process)
-    If (pendingLabResult || now - labResult.confirmationTime < 30 min) { 
-         Log(‘same day key accepted: before call or within call window’)
-    } else { 
-         Log(‘key rejected: outside window’)
-         
-    } 
-} else if (date(rollingKeyStart)==date(bucket.createdAt) { 
-   // key from result day that arrives after today, extra check to ensure it’s a 1.4 device and not a tampered 1.5 device (Step 5)
-    If (bucket has no keys for rollingStart date) {
-        Log(“key for result day accepted after midnight”) 
-    } else { 
-        Log(“key for result day after midnight rejected: already a key present for that day”)
-    }
-} else { 
-   // Key from the past. 
-   Log(key from the past accepted)
-} 
-```
