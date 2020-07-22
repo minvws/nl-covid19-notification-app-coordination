@@ -24,6 +24,8 @@ The updated process should follow the following guiding principles:
 4. On the server, a bucket silently discards **same day** keys that are uploaded '**bucketCloseDelayMinutes**'  after the GGD entered the confirmation code. Note: previous day keys should not be automaticaly discarded even after bucketCloseDelayMinutes has elapsed. This ensures that in the case of an 1.4 device the key is accepted (it arrives after midnight and is therefor not a 'same day' key). It also ensures in the case of a 1.5 device that it only accepts same day keys from before the GGD call; thwarting any later disgruntled patient keys.
 5. On the server, if a key arrives after midnight and there is already a key for the day that key belongs to (yesterday), it should be **discarded**, as this indicates tampering. Rationale: a 1.4 device would ONLY send today's key after midnight, so the existance of a key for that day means no 1.4. A 1.5 device would NOT upload after midnight. Ergo, a post-midnight upload of a key when a key for that day already is present, represents malice.
 
+See [the pseudo code implementation](#pseudo-code-implementation) for a visualisation of step 4 and 5.
+
 ### Determining bucketCloseDelayMinutes
 The value of bucketCloseDelayMinutes represents a trade-off. A larger number of minutes gives the user some more time to upload his same day key during/after the call. However it also gives the user more time to use this now 'known infected phone' to generate false positive encounters ('disgruntled patient syndrome'). We set bucketCloseDelayMinites at 30 minutes initially, but it should be configurable in the server. Because the server accepts previous days keys but not same day keys, the worst case scenario is: the user uploads too late and we miss the last same day key.
 
@@ -180,9 +182,9 @@ We considered delaying the upload when a user hits upload multiple times and onk
 
 If the client discards the cofirmationKey after upload instead of keeping it, and creates a new bucket for the next upload, the user is uploading more data (new bucket needs all keys again), but more importantly, we could get into a race condition: if the user uploads too soon, and the GGD asks them to re-upload beause of a key mismatch, the new bucket will get a new code and not match the one read to the operator.           
          
-# Pseudo code implementation. 
+# Pseudo code implementation
 
-## Backend bullet 4 and 5 from proposed process. 
+## Backend steps 4 and 5 from proposed process. 
 
 ```
 Log(‘interaction for bucket A, created at x’)
@@ -199,7 +201,7 @@ If(date(key.rollingStart) > date(bucket.createdAt)) {
 } else if (date(key.rollingStart) == today)) { 
     // this is a ‘same day key’, generated on the
     // day the user gets result. 
-    // it must arrive within the call window (bullet 4 from proposed process)
+    // it must arrive within the call window (Step 4 from proposed process)
     If (pendingLabResult || now - labResult.confirmationTime < 30 min) { 
          Log(‘same day key accepted: before call or within call window’)
     } else { 
@@ -207,7 +209,7 @@ If(date(key.rollingStart) > date(bucket.createdAt)) {
          
     } 
 } else if (date(rollingKeyStart)==date(bucket.createdAt) { 
-   // key from result day that arrives after today, extra check to ensure it’s a 1.4 device and not a tampered 1.5 device (bullet 5)
+   // key from result day that arrives after today, extra check to ensure it’s a 1.4 device and not a tampered 1.5 device (Step 5)
     If (bucket has no keys for rollingStart date) {
         Log(“key for result day accepted after midnight”) 
     } else { 
