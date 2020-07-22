@@ -13,16 +13,19 @@ The updated process should follow the following guiding principles:
 
 1) Security: we should avoid publishing TEKs that may still be active (this could be caused by the device still echo'ing it, due to clock skew). This includes avoiding keys that the user uploads too long after the 'positive test' phonecall.
 2) Usability: we should minimize traffic for the user, but only if it does not introduce security risks.
-3) Minimize impact: our timelines do not allow a major change in the way we do things.
-4) Backward compatibility: Google introduced a 'switch' that allows them to change the TEK release without rolling out a software update. This means our app will have to work with both values of the switch. Caveat: there is no 'getVersion' in the GAEN framework until API 1.6, nor a way to see the value of this switch, so the app will have to derive this from the behavior. 
+3) Minimize impact on our existing processes.
+4) Backward compatibility: Devices will be able to run different versions of GAEN, with and without immediate key release. This means our app will have to work with both scenarios. Caveat: there is no 'getVersion' in the GAEN framework yet, so we should avoid solutions that are version dependent (the app will have to derive this from the behavior, if necessary, so ideally our solution is generic). 
 
 ## Proposed process
+
+Below is the process that meets the above requirements and works across both versions. 
 
 1. Every time the user requests an upload, the device uploads the keys of the past 14 days.
 2. The *server* keeps track of keys it already has and makes sure it does not publish keys to the CDN that were already published.
 3. If after reading the keys from GAEN it appears we do not have today's key (this can be derived from the key's rollingStartNumber which is a timestamp), we know we are dealing with a 1.4 device (or 1.5 and google has its switch turned off), and we schedule an upload after midnight of the last key.
 4. On the server, a bucket silently discards **same day** keys (rollingStart today) that are uploaded '**bucketCloseDelayMinutes**'  after the GGD entered the confirmation code. Note: previous day keys should not be automaticaly discarded even after bucketCloseDelayMinutes has elapsed. This ensures that in the case of an 1.4 device the key is accepted (it arrives after midnight and is therefor not a 'same day' key). It also ensures in the case of a 1.5 device that it only accepts same day keys from before the GGD call; thwarting any later disgruntled patient keys.
 5. On the server, if a key arrives after midnight and there is already a key for the day that key belongs to (yesterday/registerDay), it should be **discarded**, as this indicates tampering. Rationale: a 1.4 device would ONLY send today's key after midnight, so the existance of a key for that day means no 1.4. A 1.5 device would NOT upload after midnight. Ergo, a post-midnight upload of a key when a key for that day already is present, represents malice.
+6. The server should be able to embargo keys before release (i.e. accept them from the user, but release them at a later time). For this we introduce an optional 'embargoedUntil' field on the key in our database. If not filled, the key doesn't have an embargo and is available for release in the next batch process. If filled, the Exposore Key Set engine will ignore the key until after the embargoedUntil date.
 
 See [the pseudo code implementation](#pseudo-code-implementation) for a visualisation of step 4 and 5.
 
@@ -51,6 +54,7 @@ If(date(key.rollingStart) > date(bucket.createdAt)) {
     // it must arrive within the call window (Step 4 from proposed process)
     If (pendingLabResult || now - labResult.confirmationTime < 30 min) { 
          Log(‘same day key accepted: before call or within call window’)
+         key.embargoedUntil = next midnight; // TODO: confirm if midnight is correct or if we want to change this to 'x hours'.
     } else { 
          Log(‘key rejected: outside window’)
          
