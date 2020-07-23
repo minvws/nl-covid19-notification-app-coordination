@@ -29,3 +29,7 @@ if (daysSinceSymptomOnset >= 12)       transmissionRiskLevel = 6; // not contagi
 ```
 
 Note that the risk calculation assigns a *value* to each of these classifications during the matching phase by providing the [risk calculation parameters](https://developer.apple.com/documentation/exposurenotification/enexposureconfiguration).
+
+== Todo ==
+
+Describe how to handle absence of dateOfSymptomsOnset (either in portal or backend)
