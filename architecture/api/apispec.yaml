@@ -187,7 +187,7 @@ paths:
         See https://github.com/minvws/nl-covid19-notification-app-coordination/blob/master/architecture/Solution%20Architecture.md#lab-result-validation-flow.
         
         This method implements observer protection. 
-        See https://github.com/minvws/nl-covid19-notification-app-coordination/blob/master/architecture/traffic-analysis-mitigation-with-decoys.md
+        See https://github.com/minvws/nl-covid19-notification-app-coordination/blob/master/architecture/Traffic%20Analysis%20Mitigation%20With%20Decoys.md
 
       requestBody:
         content:
@@ -212,7 +212,7 @@ paths:
         See https://github.com/minvws/nl-covid19-notification-app-coordination/blob/master/architecture/Solution%20Architecture.md#lab-result-validation-flow.
         
         This method implements observer protection. 
-        See https://github.com/minvws/nl-covid19-notification-app-coordination/blob/master/architecture/traffic-analysis-mitigation-with-decoys.md
+        See https://github.com/minvws/nl-covid19-notification-app-coordination/blob/master/architecture/Traffic%20Analysis%20Mitigation%20With%20Decoys.md
 
         Notes: the phone will never know whether a test result was positive, for privacy reasons. This means that a user might upload keys using this method by using the 'I've been tested positive' flow even though there isn't a positive test result. This is OK, since without the positive test result, the keys won't be processed. It also creates a decoy in itself: seeing keys being uploaded does not consitute a sign of infection. 
       parameters:
@@ -364,7 +364,7 @@ components:
           maximum: 1
           description: |
             This defines the probability of sending decoys during a 24-hour period. This is configurable so we can tune the probability to server load if necessary. 
-            The default value is 0.00118; see https://github.com/minvws/nl-covid19-notification-app-coordination/blob/master/architecture/traffic-analysis-mitigation-with-decoys.md.
+            The default value is 0.00118; see https://github.com/minvws/nl-covid19-notification-app-coordination/blob/master/architecture/Traffic%20Analysis%20Mitigation%20With%20Decoys.md.
             A value of 0.0 implies that no decoy traffic will be scheduled.
         requestMinimumSize:
           type: integer
@@ -386,7 +386,7 @@ components:
           maximum: 80000
           description: |
             The number of seconds delay to schedule a second TEK upload during the `EnrollmentResponse.validity` period.
-            For an explanation, see https://github.com/minvws/nl-covid19-notification-app-coordination/blob/master/architecture/traffic-analysis-mitigation-with-decoys.md.
+            For an explanation, see https://github.com/minvws/nl-covid19-notification-app-coordination/blob/master/architecture/Traffic%20Analysis%20Mitigation%20With%20Decoys.md.
         
     Bundle:
       type: object
