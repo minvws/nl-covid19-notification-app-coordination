@@ -12,7 +12,7 @@ To be able to adjust the level of stuffing, we introduce a configuration value *
 
 We will use 150 as initial value for eksMinimumBatchSize (roughly 10-15 times a single key set).
 
-Note that there's also an eksMaximumBatchSize defined by Apple and Google. If the number of keys exceeds a batch, the EKS engine will split the keys into multiple files belonging to the same batch. It is not necessary to stuff the keys in that case, as the keys are randomized across all files belonging to the batch, and even if the last file of the batch is small, no linkability can be derived from it.
+Note that we also define an **eksMaximumBatchSize** as suggested by Apple and Google. If the number of keys exceeds a batch, the EKS engine will split the keys into multiple files belonging to the same batch. It is not necessary to stuff the keys in that case, as the keys are randomized across all files belonging to the batch, and even if the last file of the batch is small, no linkability can be derived from it.
 
 ## Realistically random keys
 
