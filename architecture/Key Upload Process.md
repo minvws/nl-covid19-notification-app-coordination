@@ -30,7 +30,7 @@ Below is the process that meets the above requirements and works across both ver
 See [the pseudo code implementation](#pseudo-code-implementation) for a visualisation of step 4 and 5.
 
 ### Determining bucketCloseDelayMinutes
-The value of bucketCloseDelayMinutes represents a trade-off. A larger number of minutes gives the user some more time to upload his same day key during/after the call. However it also gives the user more time to use this now 'known infected phone' to generate false positive encounters ('disgruntled patient syndrome'). We set bucketCloseDelayMinites at 30 minutes initially, but it should be configurable in the server. Because the server accepts previous days keys but not same day keys, the worst case scenario is: the user uploads too late and we miss the last same day key.
+The value of bucketCloseDelayMinutes represents a trade-off. A larger number of minutes gives the user some more time to upload his same day key during/after the call. However it also gives the user more time to use this now 'known infected phone' to generate false positive encounters ('disgruntled patient syndrome'). We set bucketCloseDelayMinites at 120 minutes initially, but it should be configurable in the server. Because the server accepts previous days keys but not same day keys, the worst case scenario is: the user uploads too late and we miss the last same day key, so we select 120 as a tradeoff between giving the user enough time to perform the upload and close the bucket to prevent trolling.
 
 # Pseudo code implementation
 
@@ -52,9 +52,9 @@ If(date(key.rollingStart) > date(bucket.createdAt)) {
     // this is a ‘same day key’, generated on the
     // day the user gets result. 
     // it must arrive within the call window (Step 4 from proposed process)
-    If (pendingLabResult || now - labResult.confirmationTime < 30 min) { 
+    If (pendingLabResult || now - labResult.confirmationTime < 120 min) { 
          Log(‘same day key accepted: before call or within call window’)
-         key.embargoedUntil = next midnight; // TODO: confirm if midnight is correct or if we want to change this to 'x hours'.
+         key.embargoedUntil = 2 hours after upload; // Based on Google recommendation and checked with validation team.
     } else { 
          Log(‘key rejected: outside window’)
          
@@ -123,9 +123,9 @@ Time | Event | Remarks
 11.05h | User hands over code and uploads keys to bucket B.  | Device uploads K0902.1 through K0915.**2** to bucket B
 11.05h | GAEN generates K0915.3 | 
 11.20h | Server publishes K0902.1 through K0915.**2** to the CDN. |
-12.00h | User uploads a set of keys again to bucket B. | Device uploads K0902.1 through K0915.**3** to bucket B
-12.00h | GAEN generates K0915.4 | 
-12.00h | Server silently discards all keys as they arrive > 30 minutes after GGD code |
+14.00h | User uploads a set of keys again to bucket B. | Device uploads K0902.1 through K0915.**3** to bucket B
+14.00h | GAEN generates K0915.4 | 
+14.00h | Server silently discards all keys as they arrive > 120 minutes after GGD code |
             
    
 Keys now on the device:
