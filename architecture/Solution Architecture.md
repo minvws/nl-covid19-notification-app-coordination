@@ -295,6 +295,10 @@ Note that this only stores the keys in our database, and doesn't yet publish the
 
 Note 2: A privacy feature of this approach is that the phone never has any clue if the user has received a positive test. Although we read the keys from the apple/google api and upload them, this doesn't guarantee to the phone itself that a user is positive. In fact, a user might choose to simply upload his keys even though there's no test. This helps blind the actual keys uploads. Keys that get uploaded like this never get published because the positive lab indication will be missing. So only if both conditions are true (user has uploaded their keys with consent AND a lab result confirmed a positive test), the exposure keys get distributed. Keys or lab results that don't have matching conditions, get cleaned up and deleted after a timeout period.
 
+Complete Phase 2 LabFlow sequence diagram:
+
+![Complete Phase 2 sequence diagram](images/variant1_step2_labflow.png)
+
 ### Phase 3: Publishing the keys
 
 At regular intervals, all keys that are confirmed with a positive result get packaged, signed and distributed via our CDN. The data flow diagram for this final step is this:
