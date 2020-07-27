@@ -145,7 +145,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/AppConfig'
-  /caregiverportal/labconfirm:
+  /caregiverportal/{version}/labconfirm:
     post:
       tags:
         - Lab Confirmation
@@ -188,7 +188,7 @@ paths:
                     pollToken: null
         400:
           description: Lab Confirmation Id format validation failed
-  /caregiverportal/labverify:
+  /caregiverportal/{version}/labverify:
     post:
       tags:
         - Lab Confirmation
@@ -473,7 +473,7 @@ components:
         pollToken:
           type: string
           format: jwt
-          description: The pollToken identifies a temporary (30 sec.) session where the bucket that is connected to the LabConfirmationId can be checked for key existance. The pollToken property is only filled if the Lab Confirmation is valid (.valid=true).
+          description: The pollToken identifies a temporary (30 sec.) session where the bucket that is connected to the LabConfirmationId can be checked for key existence. The pollToken property is only filled if the Lab Confirmation is valid (.valid=true).
     LabVerifyRequest:
       type: object
       properties:
