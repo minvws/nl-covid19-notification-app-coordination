@@ -41,7 +41,7 @@ paths:
         
         The frequency of retrieving the manifest should be defined based on the value manifestFrequency in the AppConfig, with a certain randomness
         
-          TODO: Define randomness formula for retrieving the manifest request.
+        TODO: Define randomness formula for retrieving the manifest request.
       operationId: getManifest
       responses:
         200:
@@ -145,7 +145,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/AppConfig'
-  /caregiverportal/labconfirm:
+  /caregiverPortal/labconfirm:
     post:
       tags:
         - Lab Confirmation
@@ -154,23 +154,77 @@ paths:
         This method confirms that a specific LabConfirmationId is associated with a positive COVID19 test result.
         
         The method is either called by: 
-        
           * the lab/health authority's backend system 
           * the Infection Confirmation Code system in absence of a HA backend
-          
-        TODO: Should we require a JWT instead of a 'simple' call? Connections are over internal network? Would add signing to the mix, but requires secret to be shared with backends that call this.  
-        TODO: If not JWS, should we use a body with json containing the lab confirmation id instead of a request param?
-        TODO: Add auth info. 
+        
+        Can only be called once per unique valid LabConfirmationId.
+      security:
+        - caregiverportalJwtAuth: []
       requestBody:
         content:
           application/json: 
             schema: 
               $ref: '#/components/schemas/LabConfirmationRequest'
+            example:
+              labConfirmationId: "2L245B"
+              dateOfSymptomsOnset: "2020-07-10T00:00:00.000Z"
         required: true
       responses:
         200:
-          description: Lab confirmation processed Correctly
-          content: {}
+          description: Lab Confirmation Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LabVerifyResponse'
+              examples:
+                Success
+                  value:
+                    valid: true
+                    pollToken: -first_jwt_polltoken-
+                Invalid labConfirmationId:
+                  description: Lab Confirmation Id not found
+                  value:
+                    valid: false
+                    pollToken: null
+        400:
+          description: Lab Confirmation Id format validation failed
+  /caregiverPortal/labverify:
+    post:
+      tags:
+        - Lab Confirmation
+      summary: Verify if the appuser has uploaded its keys.
+      description: |
+        This method verifies that the appuser, who is temporary linked to the PollToken-session, has uploaded its keys.
+      security: 
+        - caregiverportalJwtAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LabVerifyRequest'
+        required: true
+      responses:
+        200:
+          description: Lab Verify Request Valid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LabVerifyResponse'
+              examples:
+                Success:
+                  value:
+                    valid: true
+                    pollToken: null
+                Pending:
+                  value:
+                    valid: false
+                    pollToken: -refreshed_jwt_pollToken-
+                Invalid pollToken:
+                  value:
+                    valid: false
+                    pollToken: null
+        400:
+          description: Lab Verify Request validation failed, expired PollToken or request formatted invalid.
   /register:
     post:
       tags:
@@ -270,6 +324,11 @@ paths:
               schema: 
                 $ref: '#/components/schemas/KeysResponse'
 components:
+  securitySchemes:
+    caregiverportalJwtAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
   schemas:
     Manifest:
       type: object
@@ -398,11 +457,39 @@ components:
       properties:
         labConfirmationId:
           type: string
+          example: "2L245B"
           description: The labConfirmationId identifies the result in the app ecosystem. For patients who are enrolled via the test facility (QR Scan), the labConfirmationId is known to the Lab/HA system. For patients who are enrolled directly during a result confirmation call (fallback flow), the labConfirmationId is handed out via the out of band phone conversation and entered by the operator. 
         dateOfSymptomsOnset:
           type: string
           format: date
+          example: "2020-07-10T00:00:00.000Z"
           description: The day that the patient's symptoms started. This is usually < 14 days ago. However, we impose no constraint on it.
+    LabConfirmationResponse:
+      type: object
+      properties:
+        valid:
+          type: boolean
+          description: The valid property indicates if the labConfirmationId is valid and linked to a valid bucket.
+        pollToken:
+          type: string
+          format: jwt
+          description: The pollToken identifies a temporary (30 sec.) session where the bucket that is connected to the LabConfirmationId can be checked for key existence. The pollToken property is only filled if the Lab Confirmation is valid (.valid=true).
+    LabVerifyRequest:
+      type: object
+      properties:
+        pollToken:
+          type: string
+          description: The pollToken identifies the currrent Lab Confirmation session. Sourced from the LabConfirmationResponse or LabVerifyResponse.
+    LabVerifyResponse:
+      type: object
+      properties:
+        valid:
+          type: boolean
+          description: The valid field describes the result of the Lab Verify Request. Valid is only true when the pollToken-linked bucket can be found and has been filled with keys *after* the Lab Confirmation took place. 
+        pollToken:
+          type: string
+          format: jwt
+          description: The refreshed PollToken that can be used for the next Lab Verify Request. This field is null when the LabVerifyRequest authorization is insufficient or the LabVerify result is valid (.valid=true) which means that polling should be stopped. 
     EnrollmentRequest:
       type: object
       additionalProperties: false
