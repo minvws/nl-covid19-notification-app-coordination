@@ -144,7 +144,9 @@ The app must add padding characters to the `padding` field to get the total requ
 The allowed characters for the padding are the characters from the Base64 encoding scheme (https://tools.ietf.org/html/rfc4648#section-4), [a-zA-Z0-9/=]. The `=` character is only allowed once or twice at the end of the string.
 
 ## response size randomization
-The back end server has two system parameters `responseMinimumSize` and `responseMaximumSize`. For the /register and /postkey response messages, it generates a a random integer `messageSize = random_int(responseMinimumSize .. responseMaximumSize)` and adds random padding characters to the `padding` field to get the response payload to be size `messageSize`.
+The back end server has two system parameters `responseMinimumSize` and `responseMaximumSize`. For the /register, /postkey and /stopkeys response messages, it generates a 
+random integer `messageSize = random_int(responseMinimumSize .. responseMaximumSize)` and adds random padding characters to the `padding` field to get the response payload 
+to be size `messageSize`.
 
 The default `responseMinimumSize` is set to __200 bytes__ and the default 
 `responseMaximumSize` is set to __300 bytes__. See Appendix 2 for a calculation of these sizes.
