@@ -74,33 +74,6 @@ paths:
             application/zip:
               schema:
                 type: object
-  /resourcebundle/{id}:
-    get:
-      tags:
-        - CDN
-      summary: Get a bundle of I18N strings (zipped)
-      description: 'The resource bundle contains a number of I18N strings that we
-        can update without updating the entire app. The bundle should only be fetched
-        if the manifest indicates that bundleVersion is higher than the version of
-        the last retrieved bundle. Note that there''s only one bundle containing all
-        languages we support; we don''t want a network sniffer to be able to derive
-        any fingerprintable information from the download, such as the language of
-        a user. TODO: should we just provide a json bundle and rely on gzip, or does
-        it make sense to publish this as a zip?'
-      parameters:
-        - name: id
-          in: path
-          description: id from manifest ResourceBundle
-          required: true
-          schema:
-            type: string
-      responses:
-        200:
-          description: Bundle retrieved succesfully
-          content:
-            application/zip:
-              schema:
-                $ref: '#/components/schemas/Bundle'
   /riskcalculationparameters/{id}:
     get:
       tags:
@@ -338,17 +311,13 @@ components:
           items:
             type: string
             example: ""
-        resourceBundle:
-          type: string
-          description: Current resource bundle to fetch from endpoint (TODO). 
-          example: c26cf8af
         riskCalculationParameters:
           type: string
-          description: ResourceBundle to fetch from endpoint (TODO).
+          description: risk calculation parameters to fetch from endpoint /riskcalculationparameters/{id}.
           example: bbe32fcb
         appConfig:
           type: string
-          description: Mobile app config to fetch from endpoint (TODO). 
+          description: Mobile app config to fetch from endpoint /appconfig/{id}. 
           example: aae34fcb
     RiskCalculationParameters:
       type: object
