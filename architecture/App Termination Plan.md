@@ -18,12 +18,9 @@ So to disable the apps on the devices, the Appconfig key `coronaMelderDeactivate
 ## Deactivating the server infrastructure
 In addition to the previous server configuration change, the following actions need to be taken at the server side:
 - The periodic background job for processing and publishing Exposure Key Sets is taken out of service.
-- The TEK upload endpoints ("/register", "/postkeys", "/stopkeys") are modified to return an HTTP code 410 ('gone'). If a user 
-- The TEK upload endpoints are taken out of service.
+- The TEK upload endpoints ("/register", "/postkeys", "/stopkeys") are modified to do no processing, and to return an HTTP code 410 ('gone'). Note that this may be done by modifying the application code, or in a load balancer or firewall that precedes the application servers.
+As a consequence, if a user tries to perform a TEK upload, the app will show an end-of-service message. 
+(Attempts to upload keys at app end-of-life should occur rarely, since as soon as the app receivces the `coronaMelderDeactivated` key described previously, the TEK upload function will be disabled.)
 - The periodic refresh job from the European Federation Gateway is taken out of service.
-- The CDN needs to remain active for some time, in the order of 30 days to allow all app installations nation-wide to retrieve the Appconfig with the `deactivated` key.
-- All server infrastructure must be decommissioned.
-
-## To be decided
-- Should the technical infrastructure remain available for any new epidemic?
-- Should backups of the server database be archived according to Dutch archive law? And/or in accordance with Dutch Wet op de geneeskundige behandelingsovereenkomst (WGBO)?
+- The CDN needs to remain active for some time, in the order of 30 days to allow all app installations nation-wide to retrieve the Appconfig with the `coronaMelderDeactivated` key.
+- All server infrastructure is decommissioned.
