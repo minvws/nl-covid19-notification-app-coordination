@@ -150,7 +150,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/LabVerifyResponse'
               examples:
-                Success
+                Success:
                   value:
                     valid: true
                     pollToken: -first_jwt_polltoken-
@@ -415,6 +415,12 @@ components:
           description: |
             The number of seconds delay to schedule a second TEK upload during the `EnrollmentResponse.validity` period.
             For an explanation, see https://github.com/minvws/nl-covid19-notification-app-coordination/blob/master/architecture/Traffic%20Analysis%20Mitigation%20With%20Decoys.md.
+        coronoMelderDeactivated:
+          type: string
+          nullable: true
+          description: |
+            only if value == "deactivated", the app stops working as described in 
+            https://github.com/minvws/nl-covid19-notification-app-coordination/blob/master/architecture/App%20Termination%20Plan.md
         
     Bundle:
       type: object
