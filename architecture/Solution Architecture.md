@@ -4,8 +4,6 @@
 
 **Version:** 1.0 (12/8/2020)
 
-**Status:** Done
-
 # Introduction
 
 The ministry of VWS is currently investigating if and how a contract tracing app could be used to help with the current corona crisis. As there are significant technical, privacy, epidemiological and behaviour-science related challenges this will initially be a "Proof of Concept" (PoC) only.
