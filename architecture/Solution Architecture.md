@@ -2,9 +2,7 @@
 
 ## Baseline for the "Proof of Concept"
 
-**Version:** 0.8 (6/7/2020)
-
-**Status:** Draft
+**Version:** 1.0 (12/8/2020)
 
 # Introduction
 
@@ -37,7 +35,8 @@ The requirements document received from the Dutch health authority GGD are leadi
 - [System Landscape](#system-landscape)
 - [Security & Privacy](#security--privacy)
   * [Overview](#overview)
-  * [Blinding](#blinding)
+  * [Data cleanup](#data-cleanup)
+  * [Traffic Analysis Mitigation](#traffic-analysis-mitigation)
 - [Lab result validation flow](#lab-result-validation-flow)
 - [Backend Considerations](#backend-considerations)
   * [Backend overview](#backend-overview)
@@ -198,12 +197,6 @@ Key elements to be built
 
 * A portal for health staff that pushes through the infected keys; and, as it is in key primary workflows of the health authorities, should be very stable and ‘always up’. It is also the system that is closest to (what little) data that is sensitive; so it will require authentication of an appropriate level. Integration with the workflows of the health authorities should be kept to a minimum so that health and personal information that is not needed for solid exposure notification, is confined to the health system and can not be stored inside the app ecosystem / backends. 
 
-# System Landscape
-
-Based on the flows in the previous chapter and the elements that need to be built, we can provide a system landscape that illustrates how each component relates to the other components:
-
-TODO more detailed description of system landscape
-
 # Security & Privacy
 
 ## Overview
@@ -295,6 +288,12 @@ Note that this only stores the keys in our database, and doesn't yet publish the
 
 Note 2: A privacy feature of this approach is that the phone never has any clue if the user has received a positive test. Although we read the keys from the apple/google api and upload them, this doesn't guarantee to the phone itself that a user is positive. In fact, a user might choose to simply upload his keys even though there's no test. This helps blind the actual keys uploads. Keys that get uploaded like this never get published because the positive lab indication will be missing. So only if both conditions are true (user has uploaded their keys with consent AND a lab result confirmed a positive test), the exposure keys get distributed. Keys or lab results that don't have matching conditions, get cleaned up and deleted after a timeout period.
 
+### Phase 2, step C: Checking if the upload succeeded
+
+Once the keys are uploaded, the GGD employee can check if the upload succeeeded. This does not give the GGD access to the key, the backend system only returns a true/false if the upload in step B was succesful. A system of temporary poll tokens is used to refresh the UI and display a 'check mark' in the portal upon success. Poll tokens have a lifetime of 30 seconds.
+
+![Complete Phase 2 sequence diagram](images/variant1_step2C_verify.png)
+
 ### Phase 3: Publishing the keys
 
 At regular intervals, all keys that are confirmed with a positive result get packaged, signed and distributed via our CDN. The data flow diagram for this final step is this:
@@ -313,12 +312,6 @@ Note that while we use the keys from the previous phase as an example in the dia
 The following diagram illustrates the required backend components to be able to satisfy the requirements:
 
 ![High level backend overview](images/backend_overview.png)
-
-## Infrastructure
-
-Defining the details of the infrastructure is outside the scope of this solution architecture, but from an architectural perspective the following requirements for the infrastructure apply:
-
-* TODO: Define infrastructure requirements.
 
 ## App/Device Verification
 
