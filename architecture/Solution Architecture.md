@@ -292,9 +292,9 @@ Note 2: A privacy feature of this approach is that the phone never has any clue 
 
 ### Phase 2, step C: Checking if the upload succeeded
 
-Once the keys are uploaded, the GGD employee can check if the upload succeeeded. This does not give the GGD access to the key, the backend system only returns a true/false if the upload in step B was succesful. A system of temporary poll tokens is used to refresh the UI and display a 'check mark' in the portal upon success.
+Once the keys are uploaded, the GGD employee can check if the upload succeeeded. This does not give the GGD access to the key, the backend system only returns a true/false if the upload in step B was succesful. A system of temporary poll tokens is used to refresh the UI and display a 'check mark' in the portal upon success. Poll tokens have a lifetime of 30 seconds.
 
-![Complete Phase 2 sequence diagram](images/variant1_step2_labflow.png)
+![Complete Phase 2 sequence diagram](images/variant1_step2C_verify.png)
 
 ### Phase 3: Publishing the keys
 
