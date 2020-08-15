@@ -1,6 +1,6 @@
-# Proof of Concept Notification App - Documentation 
+# COVID-19 Notification App - Documentation 
 
-This repository contains the documentation of the Proof of Concept Notification App for The Netherlands.
+This repository contains the documentation of the Dutch COVID-19 Notification App CoronaMelder.
 
 Note to contributors: Due to the nature of the project, some documents are in different formats or languages. If you would like to contribute an alternative format or a translation, please include the following disclaimer near the top of all alternative versions: 
 
