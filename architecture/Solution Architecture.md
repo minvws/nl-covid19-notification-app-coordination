@@ -1,14 +1,14 @@
 # COVID-19 Notification App - Solution Architecture
 
-## Baseline for the "Proof of Concept"
+## Baseline for the COVID-19 Notification App CoronaMelder
 
 **Version:** 1.0 (12/8/2020)
 
 # Introduction
 
-The ministry of VWS is currently investigating if and how a contact tracing app could be used to help with the current corona crisis. As there are significant technical, privacy, epidemiological and behaviour-science related challenges this will initially be a "Proof of Concept" (PoC) only.
+The Dutch Ministry of Health, Welfare and Sport intends to use the Dutch COVID-19 Notification App CoronaMelder to reduce COVID-19 infections. This document describes the functional and technical architecture of the notification app CoronaMelder.
 
-This document describes the functional and technical architecture of this PoC. Note that, as part of the Dutch Covid19 response, there are also several other workstreams happening in parallel (such as for example investigating a follow up, post infection, support app). 
+Note that, as part of the Dutch Covid19 response, there are also several other workstreams happening in parallel (such as for example investigating a follow up, post infection, support app). 
 
 The requirements document received from the Dutch health authority GGD are leading in the decisions in this solution architecture. The original requirements document can be found at [https://www.rijksoverheid.nl/binaries/rijksoverheid/documenten/publicaties/2020/05/19/programma-van-eisen/20200519+Programma+van+Eisen+def.pdf](https://www.rijksoverheid.nl/binaries/rijksoverheid/documenten/publicaties/2020/05/19/programma-van-eisen/20200519+Programma+van+Eisen+def.pdf)
 
@@ -17,7 +17,7 @@ The requirements document received from the Dutch health authority GGD are leadi
 # Table of contents
 
 - [COVID-19 Notification App - Solution Architecture](#covid-19-notification-app---solution-architecture)
-  * [Baseline for the "Proof of Concept"](#baseline-for-the-proof-of-concept)
+  * [Baseline for the COVID-19 Notification App CoronaMelder](#baseline-for-the-COVID-19-Notification-App-CoronaMelder)
 - [Introduction](#introduction)
 - [Table of contents](#table-of-contents)
 - [Guiding principles](#guiding-principles)
