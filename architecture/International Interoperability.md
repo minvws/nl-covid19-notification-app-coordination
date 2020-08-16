@@ -1,6 +1,4 @@
-# Dutch CoronaMelder App 
-
-## International interoperability
+# International Interoperability
 
 **Version**: 0.1, 14 august 2020
 
@@ -8,13 +6,9 @@
 
 **Authors**: 
 
-Ivo Jansch
-
-Maarten Brugman
-
-Ryan Barrett
-
-Dirk-Willem van Gulik
+* Ivo Jansch
+* Maarten Brugman
+* Dirk-Willem van Gulik
 
 # Introduction
 
@@ -84,10 +78,10 @@ Therefore, we need to look at the risks and features we need for both travelers 
 
 <table>
   <tr>
-    <td>Who is at risk</td>
-    <td>Potential source of infection</td>
-    <td>What does the person at risk need for successful Exposure Notification?</td>
-    <td>Remark</td>
+    <th>Who is at risk</th>
+    <th>Potential source of infection</th>
+    <th>What does the person at risk need for successful Exposure Notification?</th>
+    <th>Remark</th>
   </tr>
   <tr>
     <td rowspan="3">Traveler</td>
@@ -153,7 +147,8 @@ The following definitions are used in this document:
 
 Deriving the ideal datasets that users of contact tracing apps need, from the above risk profiles,  we come to the following aggregate:
 
-Traveler’s app requires: 		All domestic keys of origin  					+ Keys of all travelers who traveled to origin 
+Traveler’s app requires: 		All domestic keys of origin  
+					+ Keys of all travelers who traveled to origin 
 
 + All domestic keys of destination 
 
@@ -173,15 +168,24 @@ If a traveler from The Netherlands travels to Germany, then the *origin* is ‘N
 
 Mapping the country of interest on the above datasets, we get (for the example of a Dutch traveler to Germany) 6 keysets, marked **a** through **f** below:
 
-Traveler’s app requires: 		**a**) All domestic keys of origin 					 (keys with origin = NL)					**b**) + Keys of all travelers who traveled to origin 					(keys with region of interest = NL)
+Traveler’s app requires: 		**a**) All domestic keys of origin 
+					 (keys with origin = NL)
 
-**c**) + All domestic keys of destination 	(keys with origin = DE)
+					**b**) + Keys of all travelers who traveled to origin 
+					(keys with region of interest = NL)
 
-**d**) + Keys of all travelers who traveled to destination	(keys with region of interest = DE)	
+**c**) + All domestic keys of destination 
+	(keys with origin = DE)
 
-Non-traveler’s app requires:   	**e**) All domestic keys of origin 					(keys with origin = NL)
+**d**) + Keys of all travelers who traveled to destination
+	(keys with region of interest = DE)
+	
 
-**f**) + Keys of all travelers who traveled to origin	(keys with region of interest = NL)
+Non-traveler’s app requires:   	**e**) All domestic keys of origin 
+					(keys with origin = NL)
+
+**f**) + Keys of all travelers who traveled to origin
+	(keys with region of interest = NL)
 
 ## Example scenario
 
@@ -213,10 +217,10 @@ As we can see here, some keys only are relevant for the Dutch app ecosystem and 
 
 <table>
   <tr>
-    <td>Key</td>
-    <td>Day</td>
-    <td>Origin</td>
-    <td>Regions of interest</td>
+    <th>Key</th>
+    <th>Day</th>
+    <th>Origin</th>
+    <th>Regions of interest</th>
   </tr>
   <tr>
     <td>1</td>
@@ -423,13 +427,24 @@ The interface between the Dutch CoronaMelder backend and the apps is enhanced wi
 
 The manifest file in the current back-end contains all Dutch key files. To not hugely increase this manifest’s size, we create new separate manifests per region of interest. The international manifests will look like this:
 
-{     keySets: [        {             "id": “b2eaf132be1ef”,            “dateFrom”: “2020-08-01”,            “dateTo”: “2020-08-15”        },        {            “id”: “24bcd345”,            ….        }
+{ 
+    keySets: [
+        { 
+            "id": “b2eaf132be1ef”,
+            “dateFrom”: “2020-08-01”,
+            “dateTo”: “2020-08-15”
+        },
+        {
+            “id”: “24bcd345”,
+            ….
+        }
 
     ]
 
 }
 
-The reason each keyset has a dateFrom and dateTo is that this way we can see that it contains keys for a certain date range. Clients could selectively download only files that contain keys for the days that the user was abroad. This would however require that the user not only indicates that he visited another country, but also exact dates.
+
+The reason each keyset has a dateFrom and dateTo is that this way we can see that it contains keys for a certain date range. Clients could selectively download only files that contain keys for the days that the user was abroad. This would however require that the user not only indicates that he visited another country, but also exact dates.
 
 Note that this manifest contains less fields than the domestic manifest, as there are no risk parameters or app config as we have in the domestic manifest
 
@@ -493,7 +508,8 @@ The app does not and will not use location information. This means that the user
 
 # References
 
-[EFGS/1] 	eHealth Network Guidelines to the EU Member States and the European Commission on Interoperability specifications for cross-border transmission chains between approved apps; Basic interoperability elements between COVID+ Keys driven solutions; V1.0 2020-06-16 [https://ec.europa.eu/health/sites/health/files/ehealth/docs/mobileapps_interoperabilityspecs_en.pdf](https://ec.europa.eu/health/sites/health/files/ehealth/docs/mobileapps_interoperabilityspecs_en.pdf)
+[EFGS/1] 	eHealth Network Guidelines to the EU Member States and the European Commission on Interoperability specifications for cross-border transmission chains between approved apps; Basic interoperability elements between COVID+ Keys driven solutions; V1.0 2020-06-16 
+[https://ec.europa.eu/health/sites/health/files/ehealth/docs/mobileapps_interoperabilityspecs_en.pdf](https://ec.europa.eu/health/sites/health/files/ehealth/docs/mobileapps_interoperabilityspecs_en.pdf)
 
 [EFGS/2] 	eHealth Network Guidelines to the EU Member States and the European Commission on Interoperability specifications for cross-border transmission chains between approved apps; Detailed interoperability elements between COVID+ Keys driven solutions; V1.0 2020-06-16 [https://ec.europa.eu/health/sites/health/files/ehealth/docs/mobileapps_interoperabilitydetailedelements_en.pdf](https://ec.europa.eu/health/sites/health/files/ehealth/docs/mobileapps_interoperabilitydetailedelements_en.pdf)
 
