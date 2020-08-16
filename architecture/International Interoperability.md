@@ -147,60 +147,63 @@ The following definitions are used in this document:
 
 Deriving the ideal datasets that users of contact tracing apps need, from the above risk profiles,  we come to the following aggregate:
 
-Traveler’s app requires: 		All domestic keys of origin  
-					+ Keys of all travelers who traveled to origin 
-
-+ All domestic keys of destination 
-
-+ Keys of all travelers who traveled to destination
-
-Non-traveler’s app requires:   	All domestic keys of origin 
-
-+ Keys of all travelers who traveled to origin
+<table>
+<tr>
+<td>Traveler’s app requires: 	</td>
+<td>
+  1) All domestic keys of origin  
+  2) Keys of all travelers who traveled to origin 
+  3) All domestic keys of destination 
+  4) Keys of all travelers who traveled to destination
+</td>
+</tr>
+<tr>
+<td>Non-traveler’s app requires:</td>
+<td>
+  1) All domestic keys of origin
+  2) Keys of all travelers who traveled to origin
+</td>
+</tr>
+</table>
 
 This maps nicely on the proposal for the Federation Gateway from the e-health initiative. This gateway stores keys for all participating countries and adds 2 important fields:
 
 * The country of origin: which country (app) did the key come from.
-
 * The *regions of interest*: for which regions is the key relevant.
 
 If a traveler from The Netherlands travels to Germany, then the *origin* is ‘NL’ and the *region of interest* is DE, so that when the Dutch person is tested positive for COVID-19, their key can be shared with Germany to notify people they have met during their stay.
 
 Mapping the country of interest on the above datasets, we get (for the example of a Dutch traveler to Germany) 6 keysets, marked **a** through **f** below:
 
-Traveler’s app requires: 		**a**) All domestic keys of origin 
-					 (keys with origin = NL)
-
-					**b**) + Keys of all travelers who traveled to origin 
-					(keys with region of interest = NL)
-
-**c**) + All domestic keys of destination 
-	(keys with origin = DE)
-
-**d**) + Keys of all travelers who traveled to destination
-	(keys with region of interest = DE)
+<table>
+<tr>
+<td>Traveler’s app requires:</td>
+<td>
+1. All domestic keys of origin (keys with origin = NL)
+2. Keys of all travelers who traveled to origin (keys with region of interest = NL)
+3. All domestic keys of destination (keys with origin = DE)
+4. Keys of all travelers who traveled to destination (keys with region of interest = DE)
 	
-
-Non-traveler’s app requires:   	**e**) All domestic keys of origin 
-					(keys with origin = NL)
-
-**f**) + Keys of all travelers who traveled to origin
-	(keys with region of interest = NL)
+</td>
+</tr>
+<tr>
+<td>Non-traveler’s app requires:</td>
+<td>	
+1. All domestic keys of origin (keys with origin = NL)
+2. Keys of all travelers who traveled to origin (keys with region of interest = NL)
+</td>
+</tr>
+</table>
 
 ## Example scenario
 
 To deal with two travellers meeting the process is as follows (for example for a Dutch Traveler and a German national that both met an Italian while all three where in Germany):
 
 1. The Italian traveler is tested by the local health authorities in Italy and found infected. 
-
 2. With her/his consent - her/his TEK(s) are added to the Italian backend; with the Country of Interest ‘DE’ (as the Italian has been in Germany).
-
 3. The Italian back-end sends its data to the Federation Gateway.
-
 4. The German back-end picks up this data and mixes this in with its domestic set **(b)**.
-
 5. A German citizen’s mobile app picks up the German set **(a,b)** -- this yields a match from set **b**.
-
 6. The Dutch citizen’s mobile app picks up the Dutch set **(a,b)**. This yields no matches. The Dutch citizen indicates that he has traveled to Germany and therefore also picks up set **c** and **d**; this yields a match on set **d**.
 
 ## Determining regions of interest
