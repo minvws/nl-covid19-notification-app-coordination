@@ -461,7 +461,7 @@ The same holds true for the PKI Overheid CMS signatures that we place on files. 
 
 ## Trust between Dutch back-end and Federation Gateway
 
-When exchanging keys, the Federation Gateway and the Dutch backend mutually authenticate with a X.509 client and server certificates, as described in [EFGS/2] (Section 6). The Dutch back-end will verify (pin) the Federation Gateway explicitly. The Federation Gateway will authenticate the Dutch back-end explicitly (page 48 of [EFGS/2]
+When exchanging keys, the Federation Gateway and the Dutch backend mutually authenticate with a X.509 client and server certificates, as described in [EFGS/2] (Section 6). The Dutch back-end will verify (pin) the Federation Gateway explicitly. The Federation Gateway will authenticate the Dutch back-end explicitly (page 48 of [EFGS/2])
 
 ## Key Stuffing
 
