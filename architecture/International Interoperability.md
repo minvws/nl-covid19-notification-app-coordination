@@ -150,17 +150,17 @@ Deriving the ideal datasets that users of contact tracing apps need, from the ab
 <table>
 <tr>
  <td rowspan="4">Traveler’s app requires: 	</td>
- <td>1. All domestic keys of origin</td>  
+ <td>a. All domestic keys of origin</td>  
 </tr>
-<tr><td>2. Keys of all travelers who traveled to origin </td></tr>
-<tr><td>3. All domestic keys of destination </td></tr>
-<tr><td>4. Keys of all travelers who traveled to destination</td></tr>
+<tr><td>b. Keys of all travelers who traveled to origin </td></tr>
+<tr><td>c. All domestic keys of destination </td></tr>
+<tr><td>d. Keys of all travelers who traveled to destination</td></tr>
 </td>
 </tr>
 <tr>
 <td rowspan="2">Non-traveler’s app requires:</td>
-<td>1. All domestic keys of origin</td></tr>
-<tr><td>2. Keys of all travelers who traveled to origin</td></tr>
+<td>a. All domestic keys of origin</td></tr>
+<tr><td>b. Keys of all travelers who traveled to origin</td></tr>
 </table>
 
 This maps nicely on the proposal for the Federation Gateway from the e-health initiative. This gateway stores keys for all participating countries and adds 2 important fields:
@@ -168,21 +168,21 @@ This maps nicely on the proposal for the Federation Gateway from the e-health in
 * The country of origin: which country (app) did the key come from.
 * The *regions of interest*: for which regions is the key relevant.
 
-If a traveler from The Netherlands travels to Germany, then the *origin* is ‘NL’ and the *region of interest* is DE, so that when the Dutch person is tested positive for COVID-19, their key can be shared with Germany to notify people they have met during their stay.
+If a traveler from The Netherlands travels to Germany, then the *origin* is ‘NL’ and the *region of interest* is 'DE', so that when the Dutch person is tested positive for COVID-19, their key can be shared with Germany to notify people they have met during their stay.
 
-Mapping the country of interest on the above datasets, we get (for the example of a Dutch traveler to Germany) 6 keysets, marked **a** through **f** below:
+Mapping the country of interest on the above datasets, we get (for the example of a Dutch traveler to Germany) 4 keysets, marked **a** through **d** below:
 
 <table>
 <tr>
 <td rowspan="4">Traveler’s app requires:</td>
-<td>1. All domestic keys of origin</td><td>keys with origin = NL</td></tr>
-<tr><td>2. Keys of all travelers who traveled to origin</td><td>keys with region of interest = NL</td></tr>
-<tr><td>3. All domestic keys of destination</td><td>keys with origin = DE</td></tr>
-<tr><td>4. Keys of all travelers who traveled to destination</td><td>keys with region of interest = DE</td></tr>	
+<td>a. All domestic keys of origin</td><td>keys with origin = NL</td></tr>
+<tr><td>b. Keys of all travelers who traveled to origin</td><td>keys with region of interest = NL</td></tr>
+<tr><td>c. All domestic keys of destination</td><td>keys with origin = DE</td></tr>
+<tr><td>d. Keys of all travelers who traveled to destination</td><td>keys with region of interest = DE</td></tr>	
 <tr>
 <td rowspan="2">Non-traveler’s app requires:</td>
-<td>1. All domestic keys of origin</td><td>keys with origin = NL</td></tr>
-<tr><td>2. Keys of all travelers who traveled to origin</td><td>keys with region of interest = NL</td></tr>
+<td>a. All domestic keys of origin</td><td>keys with origin = NL</td></tr>
+<tr><td>b. Keys of all travelers who traveled to origin</td><td>keys with region of interest = NL</td></tr>
 </table>
 
 ## Example scenario
@@ -206,7 +206,7 @@ The following diagram shows an example of a traveler who travels to Germany, the
 
 *Figure 1: schematic of what countries a key is relevant for (T = day of test result)*
 
-As we can see here, some keys only are relevant for the Dutch app ecosystem and have region of interest = NL. But on T-10, T-7 and T-4, the keys have 2 regions of interest, because the key (which has a lifetime of a day typically) was broadcasted in 2 countries on those days. The below table shows how the keys get ‘tagged’ after determining the regions of interest:
+As we can see here, some keys only are relevant for the Dutch app ecosystem and have region of interest = NL. But on T-10, T-7 and T-4, the keys have 2 regions of interest, because the key (which has a lifetime of a day typically) has RPIs that were broadcast in 2 countries on those days. The below table shows how the keys get ‘tagged’ after determining the regions of interest:
 
 <table>
   <tr>
@@ -304,7 +304,7 @@ As we can see here, some keys only are relevant for the Dutch app ecosystem and 
 
 Side note: in the Dutch CoronaMelder back-end it’s unlikely that we would actually share 14 keys. After applying the ‘days of symptom onset’ a number of keys that are deemed outside the infectious period of the user, will not be shared. But let us assume for now that all 14 keys of this user are infectious and shared. This design also includes the possibility to apply such filtering to the data received from other countries prior to its distribution to dutch citizens and/or adjust these risk settings (the principle here is that each country’s National Health Authority determines these tradeoffs).
 
-All keys are sent to the Federation Gateway. Keys 1 to 5 and 11 to 14 are published on the Dutch CDN. Keys 6 to 10 have not been broadcasted in NL, so while they are sent to the Gateway, they are not part of the Dutch keysets.  
+All keys are sent to the Federation Gateway. Keys 1 to 5 and 11 to 14 are published on the Dutch CDN. The RPIs of keys 6 to 10 have not been broadcast in NL, so while they are sent to the Gateway, they are not part of the Dutch keysets.  
 
 ## Coordinating transmission risk levels between countries
 
@@ -340,7 +340,7 @@ Because we are performing a 2-way exchange of keys between the gateway and our b
 
 The following diagram depicts a high level architecture of our interaction with the Federation Gateway. Here we can see the relationship between the *origin* of the key and the *regions of interest* of the keys, and where keys come from and how they are published.
 
-We publish the foreign keysets on the CDN in a separate folder so that these files can be selectively downloaded by only those residents that have traveled *to* a particular country. Residents that do not travel only need the NL keysets, which include all keys that have ‘region of interest’ NL (whether they originated from NL or from other countries).
+We publish the foreign keysets on the CDN in a separate folder so that these files can be selectively downloaded by only those residents who have traveled *to* a particular country. Residents who do not travel only need the NL keysets, which include all keys that have ‘region of interest’ NL (whether they originated from NL or from other countries).
 
 The blue parts are new compared to the existing setup. The yellow parts are external.
 
@@ -372,7 +372,7 @@ The diagram leads to the following responsibilities / tasks for each of the comp
 
 ### CoronaMelder Existing Back-end 
 
-The existing backend must be modified to allow the GGD to specify regions of interest for keys. It should add *origin *and *ROI *fields to the Key table in the database to store this information for each key. (Note a caveat: GGD authorization and Keys arrive in the back-end asynchronously via 2 different channels - this should be taken into account when applying the ROI to keys - the ROI might arrive before the actual keys arrive).
+The existing backend must be modified to allow the GGD to specify regions of interest for keys. It should add *origin* and *ROI* fields to the Key table in the database to store this information for each key. (Note a caveat: GGD authorization and Keys arrive in the back-end asynchronously via 2 different channels - this should be taken into account when applying the ROI to keys - the ROI might arrive before the actual keys arrive).
 
 ### CoronaMelder Interop Server
 
@@ -445,9 +445,9 @@ We need to balance the granularity of the keyfiles with the overhead in each fil
 
 ### Exposure Key Set
 
-[https://coronamelder-dist.nl/[country]/exposurekeyset/[sha](https://coronamelder-dist.nl/[country]/exposurekeyset/[sha)]
+https://coronamelder-dist.nl/[country]/exposurekeyset/[id]
 
-An Exposure Key Set follows the exact same structure as our existing Exposure Key Sets, but with a country identifier in the URL. The URL includes a filename of the set, which is the sha256 hash of the keyset file.
+An Exposure Key Set follows the exact same structure as our existing Exposure Key Sets, but with a country identifier in the URL. The URL includes the filename of the set. (The filename will be determined by the backend, similar to how it's currently producing those filenames for domestic key sets.)
 
 # Security Considerations
 
@@ -461,11 +461,11 @@ The same holds true for the PKI Overheid CMS signatures that we place on files. 
 
 ## Trust between Dutch back-end and Federation Gateway
 
-When exchanging keys, the Federation Gateway and the Dutch backend mutually authenticate with a X.509 client and server certificates, as described in [EFGS/2] (NOTE:  Section 6,   ). The Dutch back-end will verify (pin) the Federation Gateway explicitly. The Federation Gateway will authenticate the Dutch back-end explicitly (page 48 of [EFGS/2]
+When exchanging keys, the Federation Gateway and the Dutch backend mutually authenticate with a X.509 client and server certificates, as described in [EFGS/2] (Section 6). The Dutch back-end will verify (pin) the Federation Gateway explicitly. The Federation Gateway will authenticate the Dutch back-end explicitly (page 48 of [EFGS/2]
 
 ## Key Stuffing
 
-In theory it could happen that we send only a few files from a few infected persons to the gateway. To ensure that a compromised gateway wouldn’t be able to link keys so it can track persons across multiple days, the same stuffing rules as applied domestically are applied  before we upload them to the Gateway.
+In theory it could happen that we send only a few files from a few infected persons to the gateway. To ensure that a compromised gateway wouldn’t be able to link keys so it can track persons across multiple days, the same stuffing rules as applied domestically are applied before we upload them to the Gateway. In addition to the stuffing we currently do, we should also randomize regions of interest, so real keys are indistinguishable from stuffed keys.
 
 # Privacy Considerations
 
