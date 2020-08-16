@@ -14,14 +14,14 @@ Rights granted by the Contributor
 *	The Contributor does not transfer any intellectual property rights relating to the Contributions to the Ministry.
 *	The Contributor hereby grants the Ministry a perpetual, worldwide, non-exclusive, sublicensable, irrevocable and unrestricted right of use to the Contributions. This right of use pertains to all intellectual property rights that could attach to the Contributions, which in any event includes copyrights, trademark rights, database rights and patents.
 *	The right of use to the Contributions in any event includes but is not limited to the right to:
-*	use the Contributions, copies and adaptations thereof in any circumstances and for all usages;
-*	publish the Contributions, copies and adaptations thereof;
-*	reproduce the Contributions, copies and adaptations thereof;
-*	communicate to the public the Contributions, copies and adaptations thereof, including the right to make available or to display to the public the work or copies thereof and, where appropriate, to perform the work in public;
-*	distribute the Contributions, copies and adaptations thereof;
-*	lend and let out the Contributions, copies and adaptations thereof; 
-*	modify the Contributions, copies and adaptations thereof and create derivative works;
-*	sublicense the Contributions (including copies and adaptations thereof and derivative works) to any third party under the terms and conditions of the most recent version of the European Union Public Licence (EUPL) or a 'compatible licence' within the meaning of the EUPL.
+    *	use the Contributions, copies and adaptations thereof in any circumstances and for all usages;
+    *	publish the Contributions, copies and adaptations thereof;
+    *	reproduce the Contributions, copies and adaptations thereof;
+    *	communicate to the public the Contributions, copies and adaptations thereof, including the right to make available or to display to the public the work or copies thereof and, where appropriate, to perform the work in public;
+    *	distribute the Contributions, copies and adaptations thereof;
+    *	lend and let out the Contributions, copies and adaptations thereof; 
+    *	modify the Contributions, copies and adaptations thereof and create derivative works;
+    *	sublicense the Contributions (including copies and adaptations thereof and derivative works) to any third party under the terms and conditions of the most recent version of the European Union Public Licence (EUPL) or a 'compatible licence' within the meaning of the EUPL.
 *	Those rights can be exercised on any media, supports and formats, whether now known or later invented, as far as the applicable law permits so.
 *	The Contributor waives its right to exercise its immaterial rights to the extent permitted by applicable law in order to enable the effective exercise of the aforementioned licensed economic rights.
 *	The Ministry does not owe the Contributor any fee for the right of use.
