@@ -149,21 +149,18 @@ Deriving the ideal datasets that users of contact tracing apps need, from the ab
 
 <table>
 <tr>
-<td>Traveler’s app requires: 	</td>
-<td>
-  1) All domestic keys of origin  
-  2) Keys of all travelers who traveled to origin 
-  3) All domestic keys of destination 
-  4) Keys of all travelers who traveled to destination
+ <td rowspan="4">Traveler’s app requires: 	</td>
+ <td>1. All domestic keys of origin</td>  
+</tr>
+<tr><td>2. Keys of all travelers who traveled to origin </td></tr>
+<tr><td>3. All domestic keys of destination </td></tr>
+<tr><td>4. Keys of all travelers who traveled to destination</td></tr>
 </td>
 </tr>
 <tr>
-<td>Non-traveler’s app requires:</td>
-<td>
-  1) All domestic keys of origin
-  2) Keys of all travelers who traveled to origin
-</td>
-</tr>
+<td rowspan="2">Non-traveler’s app requires:</td>
+<td>1. All domestic keys of origin</td></tr>
+<tr><td>2. Keys of all travelers who traveled to origin</td></tr>
 </table>
 
 This maps nicely on the proposal for the Federation Gateway from the e-health initiative. This gateway stores keys for all participating countries and adds 2 important fields:
@@ -177,22 +174,15 @@ Mapping the country of interest on the above datasets, we get (for the example o
 
 <table>
 <tr>
-<td>Traveler’s app requires:</td>
-<td>
-1. All domestic keys of origin (keys with origin = NL)
-2. Keys of all travelers who traveled to origin (keys with region of interest = NL)
-3. All domestic keys of destination (keys with origin = DE)
-4. Keys of all travelers who traveled to destination (keys with region of interest = DE)
-	
-</td>
-</tr>
+<td rowspan="4">Traveler’s app requires:</td>
+<td>1. All domestic keys of origin</td><td>keys with origin = NL</td></tr>
+<tr><td>2. Keys of all travelers who traveled to origin</td><td>keys with region of interest = NL</td></tr>
+<tr><td>3. All domestic keys of destination</td><td>keys with origin = DE</td></tr>
+<tr><td>4. Keys of all travelers who traveled to destination</td><td>keys with region of interest = DE</td></tr>	
 <tr>
-<td>Non-traveler’s app requires:</td>
-<td>	
-1. All domestic keys of origin (keys with origin = NL)
-2. Keys of all travelers who traveled to origin (keys with region of interest = NL)
-</td>
-</tr>
+<td rowspan="2">Non-traveler’s app requires:</td>
+<td>1. All domestic keys of origin</td><td>keys with origin = NL</td></tr>
+<tr><td>2. Keys of all travelers who traveled to origin</td><td>keys with region of interest = NL</td></tr>
 </table>
 
 ## Example scenario
