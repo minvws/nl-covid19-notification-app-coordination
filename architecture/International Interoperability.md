@@ -379,25 +379,24 @@ In the first phase we will implment the upload and download of keys to the Feder
 
 The focus in this phase is on getting the communication pipeline up and running in a stable manner whilst minimizing changes to existing code.
 
-The following changes will be made to the backend:
+- The following changes will be made to the backend:
+  * The database will be expanded with **origin** and **region of interest** fields to the TEK.
+  * The backend services will be expanded to accept the regions of interest per day from the GGD authorization flow<sup>[1](#ggd-auth-flow-footnote)</sup>.
+  * The EksEngine will be modified to support the new stuffing requirements described under [Key Stuffing](#Key-Stuffing).
+  * GGD Portal will be modified to allow the GGDs to specify regions of interest per day.
 
-* The database will be expanded with *origin* and *region of interest* fields to the TEK.
-* The backend services will be expanded to accept the regions of interest per day from the GGD authorization flow [^1].
-* The EksEngine will be modified to support the new stuffing requirements described under [].
-* GGD Portal will be modified to allow the GGDs to specify regions of interest per day.
-
-* Interop server will be implemented, supporting:
+- Interop server will be implemented, supporting:
   * Upload of our keys (i.e. origin of NL) to the Federation platform.
-  * Filtering of keys before upload (*egress* filter)
+  * Filtering of keys before upload (**egress** filter)
   * Download of keys from the Federation platform on a regular but configurable schedule.
-  * Filtering of keys downloaded (*ingress* filter).
+  * Filtering of keys downloaded (**ingress** filter).
   * Insertion of keys from origins other than NL into our Exposure Key Sets.
 
-No changes will be made to either app.
+- No changes will be made to either app.
 
 The implementation will be described in detail in the folder /docs/technical-designs/interop.md in the backend repository.
 
-[^1] Note a caveat: GGD authorization and Keys arrive in the back end asynchronously via 2 different channels - this should be taken into account when applying the ROI to keys - the ROI might arrive before the actual keys arrive.
+<a name="ggd-auth-flow-footnote">1</a>: Note a caveat: GGD authorization and Keys arrive in the back end asynchronously via 2 different channels - this should be taken into account when applying the ROI to keys - the ROI might arrive before the actual keys arrive.
 
 ### Phase two
 
@@ -405,19 +404,17 @@ In the second phase we will add support for on-demand downloading of keys from o
 
 The focus of phase two will be on publishing keys from each origin to their own dedicated streams and updating the apps so that users can download keys from other origins on-demand.
 
-The following changes will be made to the backend:
-
-* EksEngine will be updated to generate multiple Exposure Key Sets (EKS), one per origin, such that each EKS contains keys from a single origin.
-* A new InteropManifestEngine will be built. This engine is similar to ManifestEngine, only it will implement the new InteropManifest specified under [API Design]. It will generate one manifest per origin for all origins except NL.
-* ManifestEngine will be updated so that it only operates on keys with the origin of NL.
-* ContentApi will be expanded to support the new APIs specified under [API Design].
+- The following changes will be made to the backend:
+  * EksEngine will be updated to generate multiple Exposure Key Sets (EKS), one per origin, such that each EKS contains keys from a single origin.
+  * A new InteropManifestEngine will be built. This engine is similar to ManifestEngine, only it will implement the new InteropManifest specified under [API Design](#API-Design). It will generate one manifest per origin for all origins except NL.
+  * ManifestEngine will be updated so that it only operates on keys with the origin of NL.
+  * ContentApi will be expanded to support the new APIs specified under [API Design](#API-Design).
 
 The backend implementation will be described in detail in the folder /docs/technical-designs/interop.md in the backend repository.
 
-The following changes will be made to both the iOS and Android apps:
-
-* A new UI will be added to allow the user to decide which countries to scan.
-* The new APIs specified under [API Design] will be supported.
+- The following changes will be made to both the iOS and Android apps:
+  * A new UI will be added to allow the user to decide which countries to scan.
+  * The new APIs specified under [API Design](#API-Design) will be supported.
 
 [TODO: where will be screens be designed and technical design added for the he frontend implementation?].
 
