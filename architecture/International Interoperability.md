@@ -41,7 +41,7 @@ This document outlines all the technical and non functional details regarding th
   * [Definitions](#definitions)
   * [Required key data for the app user](#required-key-data-for-the-app-user)
   * [Example scenario](#example-scenario)
-  * [Determining regions of interest](#determining-regions-of-interest)
+  * [Determining countries of interest](#determining-countries-of-interest)
   * [Coordinating transmission risk levels between countries](#coordinating-transmission-risk-levels-between-countries)
   * [Avoiding duplicate notifications](#avoiding-duplicate-notifications)
 - [High Level Architecture](#high-level-architecture)
