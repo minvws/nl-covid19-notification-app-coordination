@@ -197,9 +197,9 @@ To deal with two travellers meeting the process is as follows (for example for a
 5. A German citizen’s mobile app picks up the German set **(a,b)** -- this yields a match from set **b**.
 6. The Dutch citizen’s mobile app picks up the Dutch set **(a,b)**. This yields no matches. The Dutch citizen indicates that he has traveled to Germany and therefore also picks up set **c** and **d**; this yields a match on set **d**.
 
-## Determining regions of interest
+## Determining countries of interest
 
-A key aspect in the above approach is that we need to know the ‘region of interest’ of all the keys that a user has collected in the 14 days before their positive test.
+A key aspect in the above approach is that we need to know the ‘countries of interest’ of all the keys that a user has collected in the 14 days before their positive test.
 
 The following diagram shows an example of a traveler who travels to Germany, then to Estonia and finally back home. 
 
@@ -207,14 +207,14 @@ The following diagram shows an example of a traveler who travels to Germany, the
 
 *Figure 1: schematic of what countries a key is relevant for (T = day of test result)*
 
-As we can see here, some keys only are relevant for the Dutch app ecosystem and have region of interest = NL. But on T-10, T-7 and T-4, the keys have 2 regions of interest, because the key (which has a lifetime of a day typically) has RPIs that were broadcast in 2 countries on those days. The below table shows how the keys get ‘tagged’ after determining the regions of interest:
+As we can see here, some keys only are relevant for the Dutch app ecosystem and have countries of interest = NL. But on T-10, T-7 and T-4, the keys have 2 countries of interest, because the key (which has a lifetime of a day typically) has RPIs that were broadcast in 2 countries on those days. The below table shows how the keys get ‘tagged’ after determining the countries of interest:
 
 <table>
   <tr>
     <th>Key</th>
     <th>Day</th>
     <th>Origin</th>
-    <th>Regions of interest</th>
+    <th>Countries of interest</th>
   </tr>
   <tr>
     <td>1</td>
@@ -333,15 +333,15 @@ If countries use the same definition, interoperability is immediately achieved. 
 
 ## Avoiding duplicate notifications
 
-Because we are performing a 2-way exchange of keys between the gateway and our back-end, we must pay attention to not create duplicate notifications (for example because keys we have contributed to the gateway are re-downloaded when we download from the gateway). This can also be a problem if a key has 2 regions of interest and ends up both in the domestic and the foreign set. We want to avoid duplicate notifications, so the Dutch server should publish each key only once for its users.
+Because we are performing a 2-way exchange of keys between the gateway and our back-end, we must pay attention to not create duplicate notifications (for example because keys we have contributed to the gateway are re-downloaded when we download from the gateway). This can also be a problem if a key has 2 countries of interest and ends up both in the domestic and the foreign set. We want to avoid duplicate notifications, so the Dutch server should publish each key only once for its users.
 
 # High Level Architecture
 
 ## Overview
 
-The following diagram depicts a high level architecture of our interaction with the Federation Gateway. Here we can see the relationship between the *origin* of the key and the *regions of interest* of the keys, and where keys come from and how they are published.
+The following diagram depicts a high level architecture of our interaction with the Federation Gateway. Here we can see the relationship between the *origin* of the key and the *countries of interest* of the keys, and where keys come from and how they are published.
 
-We publish the foreign keysets on the CDN in a separate folder so that these files can be selectively downloaded by only those residents who have traveled *to* a particular country. Residents who do not travel only need the NL keysets, which include all keys that have ‘region of interest’ NL (whether they originated from NL or from other countries).
+We publish the foreign keysets on the CDN in a separate folder so that these files can be selectively downloaded by only those residents who have traveled *to* a particular country. Residents who do not travel only need the NL keysets, which include all keys that have ‘countries of interest’ NL (whether they originated from NL or from other countries).
 
 The blue parts are new compared to the existing setup. The yellow parts are external.
 
@@ -380,10 +380,10 @@ In the first phase we will implment the upload and download of keys to the Feder
 The focus in this phase is on getting the communication pipeline up and running in a stable manner whilst minimizing changes to existing code.
 
 - The following changes will be made to the backend:
-  * The database will be expanded with **origin** and **region of interest** fields to the TEK.
-  * The backend services will be expanded to accept the regions of interest per day from the GGD authorization flow<sup>[1](#ggd-auth-flow-footnote)</sup>.
+  * The database will be expanded with **origin** and **countries of interest** fields to the TEK.
+  * The backend services will be expanded to accept the countries of interest per day from the GGD authorization flow<sup>[1](#ggd-auth-flow-footnote)</sup>.
   * The EksEngine will be modified to support the new stuffing requirements described under [Key Stuffing](#Key-Stuffing).
-  * GGD Portal will be modified to allow the GGDs to specify regions of interest per day.
+  * GGD Portal will be modified to allow the GGDs to specify countries of interest per day.
 
 - Interop server will be implemented, supporting:
   * Upload of our keys (i.e. origin of NL) to the Federation platform.
@@ -433,13 +433,13 @@ This model ensures that the Dutch back-end only needs outgoing connections, and 
 
 ## Interface between Dutch back-end and the Dutch app
 
-The interface between the Dutch CoronaMelder backend and the apps is enhanced with 2 urls, which are more or less the same as the current calls, but separated per ‘region of interest’
+The interface between the Dutch CoronaMelder backend and the apps is enhanced with 2 urls, which are more or less the same as the current calls, but separated per ‘countries of interest’
 
 ### Manifest
 
 [https://coronamelder-dist.nl/[country]/manifest](https://coronamelder-dist.nl/[country]/manifest)
 
-The manifest file in the current back-end contains all Dutch key files. To not hugely increase this manifest’s size, we create new separate manifests per region of interest. The international manifests will look like this:
+The manifest file in the current back-end contains all Dutch key files. To not hugely increase this manifest’s size, we create new separate manifests per countries of interest. The international manifests will look like this:
 
 { 
     keySets: [
@@ -486,7 +486,7 @@ When exchanging keys, the Federation Gateway and the Dutch backend mutually auth
 
 ## Key Stuffing
 
-In theory it could happen that we send only a few files from a few infected persons to the gateway. To ensure that a compromised gateway wouldn’t be able to link keys so it can track persons across multiple days, the same stuffing rules as applied domestically are applied before we upload them to the Gateway. In addition to the stuffing we currently do, we should also randomize regions of interest, so real keys are indistinguishable from stuffed keys.
+In theory it could happen that we send only a few files from a few infected persons to the gateway. To ensure that a compromised gateway wouldn’t be able to link keys so it can track persons across multiple days, the same stuffing rules as applied domestically are applied before we upload them to the Gateway. In addition to the stuffing we currently do, we should also randomize countries of interest, so real keys are indistinguishable from stuffed keys.
 
 # Privacy Considerations
 
@@ -498,7 +498,7 @@ Since diagnosis keys rotate on a daily basis and a user may have visited multipl
 
 1. The country that receives keys from travelers, can see how many infected people have traveled to that country, and (depending on the implementation), from where.
 
-2. The Federation Gateway has origin and regions of interest of all keys from all participating countries, so has knowledge about travel patterns between countries. 
+2. The Federation Gateway has origin and countries of interest of all keys from all participating countries, so has knowledge about travel patterns between countries. 
 
 In both cases only the total number is known; the individual residents can’t be derived from just these databases.
 
@@ -506,9 +506,9 @@ The information is limited to a specific day because daily keys are unlinkable. 
 
 ## Key downloads
 
-Theoretically our CDN can ‘see’ which regions of interest an app is downloading, so it might ‘leak’ that a user has traveled. To mitigate this, all countries could be placed in the same files, but that would lead to a lot of extra data for users that may not even have traveled. It is better to rely on not logging requests on the cdn in a way that they can be related to an IP address. At this time the KPN CDN does not log IP addresses nor requests (as defined in the SLA).
+Theoretically our CDN can ‘see’ which countries of interest an app is downloading, so it might ‘leak’ that a user has traveled. To mitigate this, all countries could be placed in the same files, but that would lead to a lot of extra data for users that may not even have traveled. It is better to rely on not logging requests on the cdn in a way that they can be related to an IP address. At this time the KPN CDN does not log IP addresses nor requests (as defined in the SLA).
 
-It is important that the user by choice/consent downloads keys for other regions of interest.
+It is important that the user by choice/consent downloads keys for other countries of interest.
 
 The chosen model ensures that only our own CDN is hit by the user’s app. The foreign keys are never sourced directly from other countries but only via the Federation Gateway and our own interop server. 
 
