@@ -383,13 +383,19 @@ The focus in this phase is on getting the communication pipeline up and running 
   * The database will be expanded with **origin** and **countries of interest** fields to the TEK.
   * The backend services will be expanded to accept the countries of interest per day from the GGD authorization flow<sup>[1](#ggd-auth-flow-footnote)</sup>.
   * The EksEngine will be modified to support the new stuffing requirements described under [Key Stuffing](#Key-Stuffing).
-  * GGD Portal will be modified to allow the GGDs to specify countries of interest per day.
+  * GGD Portal will be modified to allow the GGDs to specify a list of countries of interest per **lab confirmation**. The GGDs will *not* provide this information on day-level.
 
 - Interop server will be implemented, supporting:
   * Upload of our keys (i.e. origin of NL) to the Federation platform.
   * Filtering of keys before upload (**egress** filter)
+    - Risk Transmission level filter will be implemented by a configurable whitelist of levels which may be shared. [2](#rtl-filter-footnote)</sup>.
+    - Countres-of-interest filter will be implemented by a configurable switch, if TRUE the data will be shared, if false it won't be.
   * Download of keys from the Federation platform on a regular but configurable schedule.
+  * Our validation rules will be applied to keys incoming from interop.
   * Filtering of keys downloaded (**ingress** filter).
+    - Risk Transmission levels will be normalized by an N > M mapping, per source country with a default provided.
+    - Risk Transmission level filter implemented by a configurable whitelist of accepted levels.[2](#rtl-filter-footnote)</sup>.
+    - Country-of-origin filter implemented by a configurable whitelist of accepted countries.
   * Insertion of keys from origins other than NL into our Exposure Key Sets.
 
 - No changes will be made to either app.
@@ -397,6 +403,8 @@ The focus in this phase is on getting the communication pipeline up and running 
 The implementation will be described in detail in the folder /docs/technical-designs/interop.md in the backend repository.
 
 <a name="ggd-auth-flow-footnote">1</a>: Note a caveat: GGD authorization and Keys arrive in the back end asynchronously via 2 different channels - this should be taken into account when applying the ROI to keys - the ROI might arrive before the actual keys arrive.
+
+<a name="rtl-filter-footnote">2</a>: Filters are always applied to our Risk Transmission Level.
 
 ### Phase two
 
