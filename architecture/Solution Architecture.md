@@ -45,6 +45,7 @@ The requirements document received from the Dutch health authority GGD are leadi
 - [App Considerations](#app-considerations)
   * [Native vs hybrid development](#native-vs-hybrid-development)
   * [Lifecycle Management](#lifecycle-management)
+  * [Multi language support](#Multi-language-support)
 - [GAEN protocol considerations](#gaen-protocol-considerations)
   * [Challenges to be addressed](#challenges-to-be-addressed)
   * [Proposed enhancements to the GAEN protocol](#proposed-enhancements-to-the-gaen-protocol)
@@ -362,6 +363,12 @@ Apps run on the user’s device and updates require a review process that is not
 * Configuration values or content that are expected to change should be retrieved from a server.
 
 * Apps should offer a ‘forced upgrade’ (i.e. if a new version is available that fixes a critical bug, it should be possible to force the user to upgrade). It is recommended that this forced upgrade can distinguish between the base operation (recording encounters) and other users, so that while we wait for the user to upgrade, they can still record their exposures.
+
+## Multi language support
+
+The Android and iOS apps support 10 languages. The translation of the texts (so-called 'copy') has been a cooperation between a translation agency and the Dutch community.
+We considered servering the languages as resource bundles, in order to be able to change copy server-side without an app update. This raised a number of issues, so the 
+copy is in the apps now, using the resource management functions of the iOS and Android SDKs. Any textual change needs to be translated into 10 languages and then updated in a new app release.
 
 # GAEN protocol considerations
 
