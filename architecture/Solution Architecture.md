@@ -46,6 +46,7 @@ The requirements document received from the Dutch health authority GGD are leadi
   * [Native vs hybrid development](#native-vs-hybrid-development)
   * [Lifecycle Management](#lifecycle-management)
   * [Multi language support](#Multi-language-support)
+  * [Centrally controlled app text content](#Centrally-controlled-app-text-content)
 - [GAEN protocol considerations](#gaen-protocol-considerations)
   * [Challenges to be addressed](#challenges-to-be-addressed)
   * [Proposed enhancements to the GAEN protocol](#proposed-enhancements-to-the-gaen-protocol)
@@ -367,8 +368,13 @@ Apps run on the user’s device and updates require a review process that is not
 ## Multi language support
 
 The Android and iOS apps support 10 languages. The translation of the texts (so-called 'copy') has been a cooperation between a translation agency and the Dutch community.
-We considered servering the languages as resource bundles, in order to be able to change copy server-side without an app update. This raised a number of issues, so the 
-copy is in the apps now, using the resource management functions of the iOS and Android SDKs. Any textual change needs to be translated into 10 languages and then updated in a new app release.
+We considered servering the languages as resource bundles, in order to be able to change copy server-side without an app update. 
+However, on Android resources get compiled into the app. Making this dynamic would require a lot of custom coding. Therefore the 
+copy is in the apps now, using the resource management functions of the iOS and Android SDKs. Any textual change needs to be translated into 10 
+languages and then updated in a new app release.
+
+## Centrally controlled app text content
+It may be desirable for certain app texts (copy) to be controlled server-side without requiring an app update. For this, a mechanism through additional setting(s) in `AppConfig` will be implemented in the apps.
 
 # GAEN protocol considerations
 
