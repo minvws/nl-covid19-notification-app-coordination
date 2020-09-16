@@ -520,6 +520,10 @@ The app does not and will not use location information. This means that the user
 
 2. An infected user already tells the GGD that they have traveled as part of the Bron and Contact Onderzoek (BCO) conversation. The GGD will enter this information into the coronamelder portal, associated only to the 6 digit code that was entered. The coronamelder backend is therefore unable to link back the destination information to a particular user. 
 
+## Use of test data
+
+For all testing purposes (during development, testing, EU pilot etc) we will only supply synthetic, test TEKs that do not originate from real users. Real end user keys will only be used in production. 
+
 # References
 
 [EFGS/1] 	eHealth Network Guidelines to the EU Member States and the European Commission on Interoperability specifications for cross-border transmission chains between approved apps; Basic interoperability elements between COVID+ Keys driven solutions; V1.0 2020-06-16 
