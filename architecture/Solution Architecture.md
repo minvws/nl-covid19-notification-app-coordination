@@ -371,7 +371,7 @@ The Android and iOS apps support 10 languages. The translation of the texts (so-
 Any textual change needs to be translated into 10 languages and then updated in a new app release.
 
 ## Centrally controlled app text content
-It may be desirable for certain app texts (copy) to be controlled server-side without requiring an app update. For this, a mechanism through additional setting(s) in `AppConfig` will be implemented in the apps.
+It may be desirable for certain app texts (copy) to be controlled server-side without requiring an app update. This is e.g. one of several possible action perspectives when the user receives an exposure notification, determined by the health authority. For this, a mechanism through additional setting(s) in `AppConfig` will be implemented in the apps.
 
 # GAEN protocol considerations
 
