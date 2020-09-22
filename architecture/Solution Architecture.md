@@ -12,8 +12,6 @@ Note that, as part of the Dutch Covid19 response, there are also several other w
 
 The requirements document received from the Dutch health authority GGD are leading in the decisions in this solution architecture. The original requirements document can be found at [https://www.rijksoverheid.nl/binaries/rijksoverheid/documenten/publicaties/2020/05/19/programma-van-eisen/20200519+Programma+van+Eisen+def.pdf](https://www.rijksoverheid.nl/binaries/rijksoverheid/documenten/publicaties/2020/05/19/programma-van-eisen/20200519+Programma+van+Eisen+def.pdf)
 
-**This document only details the proof of concept for exposure notification.**
-
 # Table of contents
 
 - [COVID-19 Notification App - Solution Architecture](#covid-19-notification-app---solution-architecture)
