@@ -1,6 +1,6 @@
 # International Interoperability
 
-**Version**: 0.2, 28 august 2020
+**Version**: 0.3, 4 October 2020
 
 **Status**: Draft
 
@@ -331,10 +331,6 @@ Only the bold ones are used in NL. The Negative Case (6) is used only temporaril
 
 If countries use the same definition, interoperability is immediately achieved. If countries use a custom mapping, then our back-end will have to do a conversion between the originating country’s risk levels and our own (or remove them altogether; for example in the case of ‘self diagnosis’, which the Dutch app does not support).
 
-## Avoiding duplicate notifications
-
-Because we are performing a 2-way exchange of keys between the gateway and our back-end, we must pay attention to not create duplicate notifications (for example because keys we have contributed to the gateway are re-downloaded when we download from the gateway). This can also be a problem if a key has 2 countries of interest and ends up both in the domestic and the foreign set. We want to avoid duplicate notifications, so the Dutch server should publish each key only once for its users.
-
 # High Level Architecture
 
 ## Overview
@@ -366,6 +362,22 @@ The **Converter **filter is applied just prior to the data being packaged. It co
 The **Output** filter can filter out certain countries operationally; for example to manage capacity. Initially this filter will not filter anything. The need for filtering will be discussed with the Dutch Health Authority.
 
 The **Egress** filter is applied prior to sending data to the Federation Gateway. For example if the National health authority considers a certain country not yet fit to be informed of the CoI of dutch travellers.
+
+### Deduplication
+
+Because we are performing a 2-way exchange of keys between the gateway and our back-end, we must pay attention to not create duplicate notifications (for example because keys we have contributed to the gateway are re-downloaded when we download from the gateway). This can also be a problem if a key has 2 countries of interest and ends up both in the domestic and the foreign set. We want to avoid duplicate notifications, so the Dutch server should publish each key only once for its users. In order to do so, we need to take into account how a country distribute its keys.
+
+** 'One World pattern' **
+
+This pattern means that a country does not track which countries a user has visited, all users are the same, whether they traveled or not. All keys from all infected persons are always marked relevant to all participating countries. Keys that have this pattern should be stored in our domestic set, as they are relevant for people who travel and people who do not travel. They should NOT be placed inside the keysets that we generate per country. (Caveat: domestic files will grow if countries implement this 'one world' pattern, so it should be not encouraged).
+
+** 'Traveler pattern' **
+
+This pattern means that a country does distinguish between travelers, but not to which country they traveled. In this case, traveler's keys have all participating countries as 'country of interest', non traveler's kes only have the home country as country of interest. In this case we act the same as with the one world pattern: the key will be stored in the domestic file if CoI has multiple values, and in the per-country file if it has a single value.
+
+** 'Country of Interest pattern' **
+
+A country implementing the desired 'country of interest' will specifically mark keys for all countries that are relevant. In this case, we can optimize how we distribute the keys: keys that include NL as one of the country of interest values will be placed in the domestic file. Keys that include other countries will be placed in those country files. 
 
 ## Impact Analysis
 
