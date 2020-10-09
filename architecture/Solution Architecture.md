@@ -2,7 +2,7 @@
 
 ## Baseline for the COVID-19 Notification App CoronaMelder
 
-**Version:** 1.0 (12/8/2020)
+**Version:** 1.0.1 (9/10/2020)
 
 # Introduction
 
@@ -97,13 +97,13 @@ We have defined a number of guiding principles that a solution must adhere to. T
 
 Like most EU countries - the Netherlands believes that a decentralised approach (i.e. no central tracking) best meets the privacy and security expectations of society.
 
-This Proof of Concept therefore focuses on this approach; at the expense of a Central approach.
+This project therefore focuses on this approach; at the expense of a Central approach.
 
 ## Bluetooth Low Energy (BLE)
 
 There are several ways in which contact/encounters between people may be registered on a smartphone; from a simple manual diary to GPS to bluetooth and so on. 
 
-The EU Toolbox recommends the use of Low Energy Bluetooth (BLE).  Although this project keeps open other options - our first ‘Proof of Concept’ version will be BLE based. 
+The EU Toolbox recommends the use of Low Energy Bluetooth (BLE).  Based on research and field testing, we have decided that the Dutch app will be BLE based. 
 
 It is well documented that BLE measurements are inaccurate. For this reason there are several parallel activities (both in this project, by other countries and in collaboration with the other member states) to validate and verify this in field tests and to establish the level of accuracy that we can achieve and whether that is sufficient.
 
@@ -111,9 +111,9 @@ It is also known that for BLE on mobile apps on Android and iOS to work reliably
 
 ## Google/Apple Exposure Notification framework (GAEN) 
 
-Given the timeline (and the desire for cross border interoperability within the EU eHealth network) this ‘‘Proof of Concept’ - a GAEN based approach is currently given priority. 
+Given the timeline (and the desire for cross border interoperability within the EU eHealth network) during the ‘Proof of Concept’ phase - a GAEN based approach was  given priority. 
 
-However it should be noted that alternatives are kept open. We have identified several privacy/security- and practicality issues that will have to be addressed by Google and Apple, or suboptimal workarounds need to be implemented. Based on testing and the international conversations we are having around this subject, we will continuously evaluate if the GAEN path is still the right one.
+Durign the various test phases the protocol was extensively tested, improvements were made on both the Apple and Google side, and various issues were addressed. The final app will therefor be based on the GAEN protocol.
 
 # Baseline Approach
 
@@ -201,7 +201,7 @@ Key elements to be built
 
 ## Overview
 
-The details surrounding the security and privacy implementation of the Proof of Concept is laid out in the document [‘Crypto Raamwerk’](Crypto Raamwerk.docx). While the details and rationale surrounding the choices can be found in that document, for this solution architecture we have outlined the key principles from the preliminary version in the following diagram.
+The details surrounding the security and privacy implementation of the solution is laid out in the document [‘Crypto Raamwerk’](Crypto Raamwerk.docx). While the details and rationale surrounding the choices can be found in that document, for this solution architecture we have outlined the key principles from the preliminary version in the following diagram.
 
 ![Security overview](images/security.png)
 
@@ -288,11 +288,6 @@ Note that this only stores the keys in our database, and doesn't yet publish the
 
 Note 2: A privacy feature of this approach is that the phone never has any clue if the user has received a positive test. Although we read the keys from the apple/google api and upload them, this doesn't guarantee to the phone itself that a user is positive. In fact, a user might choose to simply upload his keys even though there's no test. This helps blind the actual keys uploads. Keys that get uploaded like this never get published because the positive lab indication will be missing. So only if both conditions are true (user has uploaded their keys with consent AND a lab result confirmed a positive test), the exposure keys get distributed. Keys or lab results that don't have matching conditions, get cleaned up and deleted after a timeout period.
 
-### Phase 2, step C: Checking if the upload succeeded
-
-Once the keys are uploaded, the GGD employee can check if the upload succeeeded. This does not give the GGD access to the key, the backend system only returns a true/false if the upload in step B was succesful. A system of temporary poll tokens is used to refresh the UI and display a 'check mark' in the portal upon success. Poll tokens have a lifetime of 30 seconds.
-
-![Complete Phase 2 sequence diagram](images/variant1_step2C_verify.png)
 
 ### Phase 3: Publishing the keys
 
@@ -391,4 +386,4 @@ There are some additional considerations that are not easy to work around, which
 
 Proposals that have been drafted, but later decided that we do not need them:
 
-* GACT-VF-EW - A proposal that builds on top of the above mentioned GACT-VF and adds an ‘early warning’ system by implementing a secondary contact tracing protocol. Although it will not be used in the Proof of Concept app, we have published it for other parties to consider.
+* GACT-VF-EW - A proposal that builds on top of the above mentioned GACT-VF and adds an ‘early warning’ system by implementing a secondary contact tracing protocol. Although it will not be used in the Dutch app, we have published it for other parties to consider.
