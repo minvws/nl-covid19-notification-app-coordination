@@ -118,6 +118,28 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/AppConfig'
+  /resourcebundle/{id}:
+    get:
+      tags:
+        - CDN
+      summary: Get the resource bundle for dynamic content
+      description: |
+        The resource bundle contains content that can be updated from the server side. 
+        This resource should be fetched if the app does not have this version in its cache.
+      parameters:
+        - name: id
+          in: path
+          description: The resourceBundle value from the manifest
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Bundle retrieved succesfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResourceBundle'                
   /caregiverPortal/labconfirm:
     post:
       tags:
@@ -319,6 +341,10 @@ components:
           type: string
           description: Mobile app config to fetch from endpoint /appconfig/{id}. 
           example: aae34fcb
+        resourceBundle:
+          type: string
+          description: id of the resource bundle to fetch from the resource bundle endpoint
+          example: aae34fb
     RiskCalculationParameters:
       type: object
       properties:
@@ -421,12 +447,40 @@ components:
           description: |
             only if value == "deactivated", the app stops working as described in 
             https://github.com/minvws/nl-covid19-notification-app-coordination/blob/master/architecture/App%20Termination%20Plan.md
-        
-    Bundle:
-      type: object
+    ResourceBundleGuidance:
+      description: |
+        Defines the parameters and the structure of the treatment perspective guidance screen
       properties:
-        version:
-          type: string
+            quarantineDays:
+              type: integer
+              example: 10
+            layout:
+              type: array
+              items:
+                type: object
+                example: 
+                  title: example_title_key
+                  body: example_body_key
+                  type: paragraph
+    ResourceBundleResources:
+      type: object
+      example: 
+        en: 
+          example_key: Example translation
+        nl: 
+          example_key: Voorbeeld vertaling
+      additionalProperties:
+        type: object
+    ResourceBundle:
+      type: object
+      required:
+        - resources
+        - guidance
+      properties:
+        resources:
+          $ref: '#/components/schemas/ResourceBundleResources'
+        guidance:
+          $ref: '#/components/schemas/ResourceBundleGuidance'
     LabConfirmationRequest:
       type: object
       properties:
