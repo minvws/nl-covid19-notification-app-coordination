@@ -148,56 +148,17 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/LabVerifyResponse'
+                $ref: '#/components/schemas/LabConfirmationResponse'
               examples:
                 Success:
                   value:
                     valid: true
-                    pollToken: -first_jwt_polltoken-
                 Invalid labConfirmationId:
                   description: Lab Confirmation Id not found
                   value:
                     valid: false
-                    pollToken: null
         400:
           description: Lab Confirmation Id format validation failed
-  /caregiverPortal/labverify:
-    post:
-      tags:
-        - Lab Confirmation
-      summary: Verify if the appuser has uploaded its keys.
-      description: |
-        This method verifies that the appuser, who is temporary linked to the PollToken-session, has uploaded its keys.
-      security: 
-        - caregiverportalJwtAuth: []
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/LabVerifyRequest'
-        required: true
-      responses:
-        200:
-          description: Lab Verify Request Valid
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/LabVerifyResponse'
-              examples:
-                Success:
-                  value:
-                    valid: true
-                    pollToken: null
-                Pending:
-                  value:
-                    valid: false
-                    pollToken: -refreshed_jwt_pollToken-
-                Invalid pollToken:
-                  value:
-                    valid: false
-                    pollToken: null
-        400:
-          description: Lab Verify Request validation failed, expired PollToken or request formatted invalid.
   /register:
     post:
       tags:
@@ -445,26 +406,6 @@ components:
         valid:
           type: boolean
           description: The valid property indicates if the labConfirmationId is valid and linked to a valid bucket.
-        pollToken:
-          type: string
-          format: jwt
-          description: The pollToken identifies a temporary (30 sec.) session where the bucket that is connected to the LabConfirmationId can be checked for key existence. The pollToken property is only filled if the Lab Confirmation is valid (.valid=true).
-    LabVerifyRequest:
-      type: object
-      properties:
-        pollToken:
-          type: string
-          description: The pollToken identifies the currrent Lab Confirmation session. Sourced from the LabConfirmationResponse or LabVerifyResponse.
-    LabVerifyResponse:
-      type: object
-      properties:
-        valid:
-          type: boolean
-          description: The valid field describes the result of the Lab Verify Request. Valid is only true when the pollToken-linked bucket can be found and has been filled with keys *after* the Lab Confirmation took place. 
-        pollToken:
-          type: string
-          format: jwt
-          description: The refreshed PollToken that can be used for the next Lab Verify Request. This field is null when the LabVerifyRequest authorization is insufficient or the LabVerify result is valid (.valid=true) which means that polling should be stopped. 
     EnrollmentRequest:
       type: object
       additionalProperties: false
