@@ -73,9 +73,9 @@ This document outlines all the technical and non functional details regarding th
 
 ## Travel challenges for exposure notifications
 
-Interoperability is not limited to travelers between countries. Residents of a country who do not travel might, unknowingly, still encounter an infected person from another country, who is visiting during a holiday or for work. 
+Interoperability is not limited to travellers between countries. Residents of a country who do not travel might, unknowingly, still encounter an infected person from another country, who is visiting during a holiday or for work. 
 
-Therefore, we need to look at the risks and features we need for both travelers and non-travelers. The following table describes the various options we have to deal with:
+Therefore, we need to look at the risks and features we need for both travellers and non-travellers. The following table describes the various options we have to deal with:
 
 <table>
   <tr>
@@ -85,23 +85,23 @@ Therefore, we need to look at the risks and features we need for both travelers 
     <th>Remark</th>
   </tr>
   <tr>
-    <td rowspan="3">Traveler</td>
+    <td rowspan="3">Traveller</td>
     <td>Residents of country of origin (before departure)</td>
     <td>All keys of infected people in origin country</td>
-    <td>This scenario is equal to domestic contact tracing, it doesn’t matter if the person is a traveler or not.</td>
+    <td>This scenario is equal to domestic contact tracing, it doesn’t matter if the person is a traveller or not.</td>
   </tr>
   <tr>
-    <td>Residents of destination country, when traveler was there </td>
+    <td>Residents of destination country, when traveller was there </td>
     <td>All keys of infected people in destination country</td>
     <td></td>
   </tr>
   <tr>
-    <td>Residents of third party countries that also visited the destination country at the same time as the traveler.</td>
-    <td>All keys of infected people who have traveled to destination country, regardless of their origin</td>
+    <td>Residents of third party countries that also visited the destination country at the same time as the traveller.</td>
+    <td>All keys of infected people who have travelled to destination country, regardless of their origin</td>
     <td>Risk is higher for international events and tourist areas where people from many origins gather.</td>
   </tr>
   <tr>
-    <td rowspan="2">Non-traveler</td>
+    <td rowspan="2">Non-traveller</td>
     <td>Residents of country of origin </td>
     <td>All keys of infected people in origin country</td>
     <td>Equal to domestic contact tracing.</td>
@@ -126,11 +126,11 @@ The following definitions are used in this document:
     <td>The country which made the mobile application that the user is using; this includes the back-end the mobile application interacts with. More specifically - the crucial element is the GAEN public key that the GAEN framework on the phone uses to verify the digital signature on any TEK distributions. This is managed and set by Apple and Google as part of the mobile app approval process. </td>
   </tr>
   <tr>
-    <td>Traveler</td>
+    <td>Traveller</td>
     <td>A user who has a mobile app of a country (A) that is currently traveling in another country (B). I.e. who is traveling in an environment where most phones are originating from that country B; and will get their distributions from that origin B.</td>
   </tr>
   <tr>
-    <td>Non traveler</td>
+    <td>Non traveller</td>
     <td>Person who is in the same country (Origin) as the country whose mobile app he or she is using.</td>
   </tr>
   <tr>
@@ -150,18 +150,18 @@ Deriving the ideal datasets that users of contact tracing apps need, from the ab
 
 <table>
 <tr>
- <td rowspan="4">Traveler’s app requires: 	</td>
+ <td rowspan="4">Traveller’s app requires: 	</td>
  <td>a. All domestic keys of origin</td>  
 </tr>
-<tr><td>b. Keys of all travelers who traveled to origin </td></tr>
+<tr><td>b. Keys of all travellers who travelled to origin </td></tr>
 <tr><td>c. All domestic keys of destination </td></tr>
-<tr><td>d. Keys of all travelers who traveled to destination</td></tr>
+<tr><td>d. Keys of all travellers who travelled to destination</td></tr>
 </td>
 </tr>
 <tr>
-<td rowspan="2">Non-traveler’s app requires:</td>
+<td rowspan="2">Non-traveller’s app requires:</td>
 <td>a. All domestic keys of origin</td></tr>
-<tr><td>b. Keys of all travelers who traveled to origin</td></tr>
+<tr><td>b. Keys of all travellers who travelled to origin</td></tr>
 </table>
 
 This maps nicely on the proposal for the Federation Gateway from the e-health initiative. This gateway stores keys for all participating countries and adds 2 important fields:
@@ -169,21 +169,21 @@ This maps nicely on the proposal for the Federation Gateway from the e-health in
 * The country of origin: which country (app) did the key come from.
 * The *countries of interest*: for which countries is the key relevant.
 
-If a traveler from The Netherlands travels to Germany, then the *origin* is ‘NL’ and the *country of interest* is 'DE', so that when the Dutch person is tested positive for COVID-19, their key can be shared with Germany to notify people they have met during their stay.
+If a traveller from The Netherlands travels to Germany, then the *origin* is ‘NL’ and the *country of interest* is 'DE', so that when the Dutch person is tested positive for COVID-19, their key can be shared with Germany to notify people they have met during their stay.
 
-Mapping the country of interest on the above datasets, we get (for the example of a Dutch traveler to Germany) 4 keysets, marked **a** through **d** below:
+Mapping the country of interest on the above datasets, we get (for the example of a Dutch traveller to Germany) 4 keysets, marked **a** through **d** below:
 
 <table>
 <tr>
-<td rowspan="4">Traveler’s app requires:</td>
+<td rowspan="4">Traveller’s app requires:</td>
 <td>a. All domestic keys of origin</td><td>keys with origin = NL</td></tr>
-<tr><td>b. Keys of all travelers who traveled to origin</td><td>keys with country of interest = NL</td></tr>
+<tr><td>b. Keys of all travellers who travelled to origin</td><td>keys with country of interest = NL</td></tr>
 <tr><td>c. All domestic keys of destination</td><td>keys with origin = DE</td></tr>
-<tr><td>d. Keys of all travelers who traveled to destination</td><td>keys with country of interest = DE</td></tr>	
+<tr><td>d. Keys of all travellers who travelled to destination</td><td>keys with country of interest = DE</td></tr>	
 <tr>
-<td rowspan="2">Non-traveler’s app requires:</td>
+<td rowspan="2">Non-traveller’s app requires:</td>
 <td>a. All domestic keys of origin</td><td>keys with origin = NL</td></tr>
-<tr><td>b. Keys of all travelers who traveled to origin</td><td>keys with country of interest = NL</td></tr>
+<tr><td>b. Keys of all travellers who travelled to origin</td><td>keys with country of interest = NL</td></tr>
 </table>
 
 ## Key distribution pattern
@@ -241,7 +241,7 @@ If countries use the same definition, interoperability is immediately achieved. 
 
 The following diagram depicts a high level architecture of our interaction with the Federation Gateway. Here we can see the relationship between the *origin* of the key and the *countries of interest* of the keys, and where keys come from and how they are published.
 
-We publish the foreign keysets on the CDN in a separate folder so that these files can be selectively downloaded by only those residents who have traveled *to* a particular country. Residents who do not travel only need the NL keysets, which include all keys that have ‘countries of interest’ NL (whether they originated from NL or from other countries).
+We publish the foreign keysets on the CDN in a separate folder so that these files can be selectively downloaded by only those residents who have travelled *to* a particular country. Residents who do not travel only need the NL keysets, which include all keys that have ‘countries of interest’ NL (whether they originated from NL or from other countries).
 
 The blue parts are new compared to the existing setup. The yellow parts are external.
 
@@ -273,11 +273,11 @@ Because we are performing a 2-way exchange of keys between the gateway and our b
 
 ** 'One World pattern' **
 
-This pattern means that a country does not track which countries a user has visited. All users are the same, whether they traveled or not. All keys from all infected persons are always marked relevant to all participating countries. Keys that have this pattern should be stored in our domestic set, as they are relevant for people who travel and people who do not travel. 
+This pattern means that a country does not track which countries a user has visited. All users are the same, whether they travelled or not. All keys from all infected persons are always marked relevant to all participating countries. Keys that have this pattern should be stored in our domestic set, as they are relevant for people who travel and people who do not travel. 
 
-** 'Traveler pattern' **
+** 'Traveller pattern' **
 
-This pattern means that a country does distinguish between travelers, but not to which country they traveled. In this case, traveler's keys have all participating countries as 'country of interest', non traveler's keys only have the home country as country of interest. In this case we act the same as with the one world pattern.
+This pattern means that a country does distinguish between travellers, but not to which country they travelled. In this case, traveller's keys have all participating countries as 'country of interest', non traveller's keys only have the home country as country of interest. In this case we act the same as with the one world pattern.
 
 ** 'Country of Interest pattern' **
 
@@ -328,7 +328,7 @@ A separate DPIA (Data Protection Impact Analysis) of the CoronaMelder app to tak
 
 Since diagnosis keys rotate on a daily basis and a user may have visited multiple countries on the same day, the chosen data sharing solution means that one temporary daily key will be sent to multiple countries, via the gateway. This means that:
 
-1. The country that receives keys from travelers, can see how many infected people have traveled to that country, and (depending on the implementation), from where.
+1. The country that receives keys from travellers, can see how many infected people have travelled to that country, and (depending on the implementation), from where.
 
 2. The Federation Gateway has origin and countries of interest of all keys from all participating countries, so has knowledge about travel patterns between countries. 
 
