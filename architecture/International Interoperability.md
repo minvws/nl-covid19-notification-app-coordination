@@ -188,16 +188,16 @@ Mapping the country of interest on the above datasets, we get (for the example o
 
 ## Key distribution pattern
 
-### Key download patters
+### Key download patterns
 There are three main patterns that countries participating in EFGS are using for distributing EFGS keys to their domestic apps:
 1. **One EU pattern**: distribute _all_ keys downloaded from the EFGS to the domestic app.
 2. **Traveller pattern**: have a user indicate in the app whether or not they travelled. If so, distribute all keys from the EFGS to the user. If not, distribute only the domestic keys to the user.
 3. **Country of interest pattern**: have user indicate in the app the country or countries they are visiting. Have the app fetch key sets for the visited countries accordingly.
 
 ### Key upload patterns
-Similarly, there are three main patters for uploading diagnosis keys to EFGS:
-1. **One EU pattern**: do not ask a diagnosed user whether or not they travelled. Upload the keys of diagnosed users to EFGS without specifying countries of interest.
-2. **Traveller pattern**: ask a diagnosed user whether or not they travelled abroad while they were contagious. If so, upload the keys of the diagnosed user to EFGS _without_ specifying counties of interest. If user did not travel, upload with the country of interest = this country's country code.
+Similarly, there are three main patterns for uploading diagnosis keys to EFGS:
+1. **One EU pattern**: do not ask a diagnosed user whether or not they travelled. Upload the keys of diagnosed users to EFGS and specify _all_ participating countries as countries of interest.
+2. **Traveller pattern**: ask a diagnosed user whether or not they travelled abroad while they were contagious. If so, upload the keys of the diagnosed user to EFGS with _all_ participating countries as countries of interest. If user did not travel, upload with the country of interest = this country's country code.
 3. **Country of interest pattern**: ask a diagnosted user which participating countries they visited while they were contagious. Upload the diagnosis keys to EFGS with countries of interest set accordingly.
 
 ### Choice of distribution pattern
