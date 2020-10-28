@@ -1,6 +1,6 @@
 # International Interoperability
 
-**Version**: 0.3, 4 October 2020
+**Version**: 0.4, 27 October 2020
 
 **Status**: Draft
 
