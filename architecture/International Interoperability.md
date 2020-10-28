@@ -167,9 +167,9 @@ Deriving the ideal datasets that users of contact tracing apps need, from the ab
 This maps nicely on the proposal for the Federation Gateway from the e-health initiative. This gateway stores keys for all participating countries and adds 2 important fields:
 
 * The country of origin: which country (app) did the key come from.
-* The *regions of interest*: for which regions is the key relevant.
+* The *countries of interest*: for which countries is the key relevant.
 
-If a traveler from The Netherlands travels to Germany, then the *origin* is ‘NL’ and the *region of interest* is 'DE', so that when the Dutch person is tested positive for COVID-19, their key can be shared with Germany to notify people they have met during their stay.
+If a traveler from The Netherlands travels to Germany, then the *origin* is ‘NL’ and the *country of interest* is 'DE', so that when the Dutch person is tested positive for COVID-19, their key can be shared with Germany to notify people they have met during their stay.
 
 Mapping the country of interest on the above datasets, we get (for the example of a Dutch traveler to Germany) 4 keysets, marked **a** through **d** below:
 
@@ -177,135 +177,39 @@ Mapping the country of interest on the above datasets, we get (for the example o
 <tr>
 <td rowspan="4">Traveler’s app requires:</td>
 <td>a. All domestic keys of origin</td><td>keys with origin = NL</td></tr>
-<tr><td>b. Keys of all travelers who traveled to origin</td><td>keys with region of interest = NL</td></tr>
+<tr><td>b. Keys of all travelers who traveled to origin</td><td>keys with country of interest = NL</td></tr>
 <tr><td>c. All domestic keys of destination</td><td>keys with origin = DE</td></tr>
-<tr><td>d. Keys of all travelers who traveled to destination</td><td>keys with region of interest = DE</td></tr>	
+<tr><td>d. Keys of all travelers who traveled to destination</td><td>keys with country of interest = DE</td></tr>	
 <tr>
 <td rowspan="2">Non-traveler’s app requires:</td>
 <td>a. All domestic keys of origin</td><td>keys with origin = NL</td></tr>
-<tr><td>b. Keys of all travelers who traveled to origin</td><td>keys with region of interest = NL</td></tr>
+<tr><td>b. Keys of all travelers who traveled to origin</td><td>keys with country of interest = NL</td></tr>
 </table>
 
-## Example scenario
+## Key distribution pattern
 
-To deal with two travellers meeting the process is as follows (for example for a Dutch Traveler and a German national that both met an Italian while all three where in Germany):
+### Key download patters
+There are three main patterns that countries participating in EFGS are using for distributing EFGS keys to their domestic apps:
+1. **One EU pattern**: distribute _all_ keys downloaded from the EFGS to the domestic app.
+2. **Traveller pattern**: have a user indicate in the app whether or not they travelled. If so, distribute all keys from the EFGS to the user. If not, distribute only the domestic keys to the user.
+3. **Country of interest pattern**: have user indicate in the app the country or countries they are visiting. Have the app fetch key sets for the visited countries accordingly.
 
-1. The Italian traveler is tested by the local health authorities in Italy and found infected. 
-2. With her/his consent - her/his TEK(s) are added to the Italian backend; with the Country of Interest ‘DE’ (as the Italian has been in Germany).
-3. The Italian back-end sends its data to the Federation Gateway.
-4. The German back-end picks up this data and mixes this in with its domestic set **(b)**.
-5. A German citizen’s mobile app picks up the German set **(a,b)** -- this yields a match from set **b**.
-6. The Dutch citizen’s mobile app picks up the Dutch set **(a,b)**. This yields no matches. The Dutch citizen indicates that he has traveled to Germany and therefore also picks up set **c** and **d**; this yields a match on set **d**.
+### Key upload patterns
+Similarly, there are three main patters for uploading diagnosis keys to EFGS:
+1. **One EU pattern**: do not ask a diagnosed user whether or not they travelled. Upload the keys of diagnosed users to EFGS without specifying countries of interest.
+2. **Traveller pattern**: ask a diagnosed user whether or not they travelled abroad while they were contagious. If so, upload the keys of the diagnosed user to EFGS _without_ specifying counties of interest. If user did not travel, upload with the country of interest = this country's country code.
+3. **Country of interest pattern**: ask a diagnosted user which participating countries they visited while they were contagious. Upload the diagnosis keys to EFGS with countries of interest set accordingly.
 
-## Determining countries of interest
+### Choice of distribution pattern
+The Traveller and Country of Interest patterns have some drawbacks:
+* All app users need to set travelling modes (domestic/traveling/list of countries) in the app. This is error-prone.
+* Diagnosed users need to be asked about their travels abroad. This may cause privacy concerns, since the CoronaMelder system has been presented to the public as a system that does not track location.
 
-A key aspect in the above approach is that we need to know the ‘countries of interest’ of all the keys that a user has collected in the 14 days before their positive test.
+On the other hand, the One EU pattern has the drawback that the number of keys shared between all countries participating in EFGS may grow to a point that this results in considerable data usage and potential technical problems on the devices during key matching, such as resource problems due to operating system constraints or higher battery usage.
 
-The following diagram shows an example of a traveler who travels to Germany, then to Estonia and finally back home. 
+Assuming 100.000 daily infections across participating countries (which is the case in the 'second Covid-19' wave end of October 2020), about 1.500.000 keys (for maximum 15 contagious days) would be shared to EFGS daily. The upper limit for a TEK file is 750.000 keys. So this amount of keys would have to be shared across two TEK files.
 
-![International Key Distribution](images/interop_keydistrib.png)
-
-*Figure 1: schematic of what countries a key is relevant for (T = day of test result)*
-
-As we can see here, some keys only are relevant for the Dutch app ecosystem and have countries of interest = NL. But on T-10, T-7 and T-4, the keys have 2 countries of interest, because the key (which has a lifetime of a day typically) has RPIs that were broadcast in 2 countries on those days. The below table shows how the keys get ‘tagged’ after determining the countries of interest:
-
-<table>
-  <tr>
-    <th>Key</th>
-    <th>Day</th>
-    <th>Origin</th>
-    <th>Countries of interest</th>
-  </tr>
-  <tr>
-    <td>1</td>
-    <td>T-14</td>
-    <td>NL</td>
-    <td>NL</td>
-  </tr>
-  <tr>
-    <td>2</td>
-    <td>T-13</td>
-    <td>NL</td>
-    <td>NL</td>
-  </tr>
-  <tr>
-    <td>3</td>
-    <td>T-12</td>
-    <td>NL</td>
-    <td>NL</td>
-  </tr>
-  <tr>
-    <td>4</td>
-    <td>T-11</td>
-    <td>NL</td>
-    <td>NL</td>
-  </tr>
-  <tr>
-    <td>5</td>
-    <td>T-10</td>
-    <td>NL</td>
-    <td>NL, DE</td>
-  </tr>
-  <tr>
-    <td>6</td>
-    <td>T-9</td>
-    <td>NL</td>
-    <td>DE</td>
-  </tr>
-  <tr>
-    <td>7</td>
-    <td>T-8</td>
-    <td>NL</td>
-    <td>DE</td>
-  </tr>
-  <tr>
-    <td>8</td>
-    <td>T-7</td>
-    <td>NL</td>
-    <td>DE, EE</td>
-  </tr>
-  <tr>
-    <td>9</td>
-    <td>T-6</td>
-    <td>NL</td>
-    <td>EE</td>
-  </tr>
-  <tr>
-    <td>10</td>
-    <td>T-5</td>
-    <td>NL</td>
-    <td>EE</td>
-  </tr>
-  <tr>
-    <td>11</td>
-    <td>T-4</td>
-    <td>NL</td>
-    <td>EE, NL</td>
-  </tr>
-  <tr>
-    <td>12</td>
-    <td>T-3</td>
-    <td>NL</td>
-    <td>NL</td>
-  </tr>
-  <tr>
-    <td>13</td>
-    <td>T-2</td>
-    <td>NL</td>
-    <td>NL</td>
-  </tr>
-  <tr>
-    <td>14</td>
-    <td>T-1</td>
-    <td>NL</td>
-    <td>NL</td>
-  </tr>
-</table>
-
-
-Side note: in the Dutch CoronaMelder back-end it’s unlikely that we would actually share 14 keys. After applying the ‘days of symptom onset’ a number of keys that are deemed outside the infectious period of the user, will not be shared. But let us assume for now that all 14 keys of this user are infectious and shared. This design also includes the possibility to apply such filtering to the data received from other countries prior to its distribution to dutch citizens and/or adjust these risk settings (the principle here is that each country’s National Health Authority determines these tradeoffs).
-
-All keys are sent to the Federation Gateway. Keys 1 to 5 and 11 to 14 are published on the Dutch CDN. The RPIs of keys 6 to 10 have not been broadcast in NL, so while they are sent to the Gateway, they are not part of the Dutch keysets.  
+Considering all of the above, and also with privacy maximization in mind, we have chosen for the **'One EU' pattern**. That is, we upload all diagnosis keys to EFGS and we distribute all EFGS keys to the CoronaMelder apps.
 
 ## Coordinating transmission risk levels between countries
 
@@ -357,7 +261,7 @@ Note that other countries may well use other Risk Level definitions. The Ingress
 
 The EFGS interface for fetching TEKs takes a date and a batchTag for keeping track of what our server has downloaded so far. No filtering options are available in this interface. Filtering on the Ingress filter does not interfere with fetching the data.
 
-The **Converter **filter is applied just prior to the data being packaged. It converts things such as risk levels. The reason for having this applied post storage is to allow operational changes and retransmission. This also lets the National Health authority delay or speed up certain data - as to adjust capacity and demand.
+The **Converter** filter is applied just prior to the data being packaged. It converts things such as risk levels. The reason for having this applied post storage is to allow operational changes and retransmission. This also lets the National Health authority delay or speed up certain data - as to adjust capacity and demand.
 
 The **Output** filter can filter out certain countries operationally; for example to manage capacity. Initially this filter will not filter anything. The need for filtering will be discussed with the Dutch Health Authority.
 
@@ -365,78 +269,20 @@ The **Egress** filter is applied prior to sending data to the Federation Gateway
 
 ### Deduplication
 
-Because we are performing a 2-way exchange of keys between the gateway and our back-end, we must pay attention to not create duplicate notifications (for example because keys we have contributed to the gateway are re-downloaded when we download from the gateway). This can also be a problem if a key has 2 countries of interest and ends up both in the domestic and the foreign set. We want to avoid duplicate notifications, so the Dutch server should publish each key only once for its users. In order to do so, we need to take into account how a country distribute its keys.
+Because we are performing a 2-way exchange of keys between the gateway and our back-end, we must pay attention to not create duplicate notifications (for example because keys we have contributed to the gateway are re-downloaded when we download from the gateway). This can also be a problem if a key has 2 countries of interest and ends up both in the domestic and the foreign set. We want to avoid duplicate notifications, so the Dutch server should publish each key only once for its users. In order to do so, we need to take into account how a country distributes its keys.
 
 ** 'One World pattern' **
 
-This pattern means that a country does not track which countries a user has visited, all users are the same, whether they traveled or not. All keys from all infected persons are always marked relevant to all participating countries. Keys that have this pattern should be stored in our domestic set, as they are relevant for people who travel and people who do not travel. They should NOT be placed inside the keysets that we generate per country. (Caveat: domestic files will grow if countries implement this 'one world' pattern, so it should be not encouraged).
+This pattern means that a country does not track which countries a user has visited. All users are the same, whether they traveled or not. All keys from all infected persons are always marked relevant to all participating countries. Keys that have this pattern should be stored in our domestic set, as they are relevant for people who travel and people who do not travel. 
 
 ** 'Traveler pattern' **
 
-This pattern means that a country does distinguish between travelers, but not to which country they traveled. In this case, traveler's keys have all participating countries as 'country of interest', non traveler's kes only have the home country as country of interest. In this case we act the same as with the one world pattern: the key will be stored in the domestic file if CoI has multiple values, and in the per-country file if it has a single value.
+This pattern means that a country does distinguish between travelers, but not to which country they traveled. In this case, traveler's keys have all participating countries as 'country of interest', non traveler's keys only have the home country as country of interest. In this case we act the same as with the one world pattern.
 
 ** 'Country of Interest pattern' **
 
-A country implementing the desired 'country of interest' will specifically mark keys for all countries that are relevant. In this case, we can optimize how we distribute the keys: keys that include NL as one of the country of interest values will be placed in the domestic file. Keys that include other countries will be placed in those country files. 
+A country implementing the desired 'country of interest' will specifically mark keys for all countries that are relevant. In this case, we could optimize how we distribute the keys if we were to allow the user to specify their countries of interest. However, since we do not do this, again we include all keys in our domestic key set. 
 
-## Impact Analysis
-
-Currently the number of positive test numbers in Europe is low. This allows us to implement international interoperability in two distinct phases: initially publishing all keys to all users and later on publishing keys from other origins seperately so that they can be downloaded on-demand.
-
-Here follows a high level overview of the implementation.
-
-### Phase One
-
-In the first phase we will implment the upload and download of keys to the Federation Gateway. These keys will be distributed inline with our own keys. There will be no changes made to the apps.
-
-The focus in this phase is on getting the communication pipeline up and running in a stable manner whilst minimizing changes to existing code.
-
-- The following changes will be made to the backend:
-  * The database will be expanded with **origin** and **countries of interest** fields to the TEK.
-  * The backend services will be expanded to accept the countries of interest per day from the GGD authorization flow<sup>[1](#ggd-auth-flow-footnote)</sup>.
-  * The EksEngine will be modified to support the new stuffing requirements described under [Key Stuffing](#Key-Stuffing).
-  * GGD Portal will be modified to allow the GGDs to specify a list of countries of interest per **lab confirmation**. The GGDs will *not* provide this information on day-level.
-
-- Interop server will be implemented, supporting:
-  * Upload of our keys (i.e. origin of NL) to the Federation platform.
-  * Filtering of keys before upload (**egress** filter)
-    - Risk Transmission level filter will be implemented by a configurable whitelist of levels which may be shared. [2](#rtl-filter-footnote)</sup>.
-    - Countres-of-interest filter will be implemented by a configurable switch, if TRUE the data will be shared, if false it won't be.
-  * Download of keys from the Federation platform on a regular but configurable schedule.
-  * Our validation rules will be applied to keys incoming from interop.
-  * Filtering of keys downloaded (**ingress** filter).
-    - Risk Transmission levels will be normalized by an N > M mapping, per source country with a default provided.
-    - Risk Transmission level filter implemented by a configurable whitelist of accepted levels.[2](#rtl-filter-footnote)</sup>.
-    - Country-of-origin filter implemented by a configurable whitelist of accepted countries.
-  * Insertion of keys from origins other than NL into our Exposure Key Sets.
-
-- No changes will be made to either app.
-
-The implementation will be described in detail in the folder /docs/technical-designs/interop.md in the backend repository.
-
-<a name="ggd-auth-flow-footnote">1</a>: Note a caveat: GGD authorization and Keys arrive in the back end asynchronously via 2 different channels - this should be taken into account when applying the ROI to keys - the ROI might arrive before the actual keys arrive.
-
-<a name="rtl-filter-footnote">2</a>: Filters are always applied to our Risk Transmission Level.
-
-### Phase two
-
-In the second phase we will add support for on-demand downloading of keys from origins other than NL.
-
-The focus of phase two will be on publishing keys from each origin to their own dedicated streams and updating the apps so that users can download keys from other origins on-demand.
-
-- The following changes will be made to the backend:
-  * EksEngine will be updated to generate multiple Exposure Key Sets (EKS), one per origin, such that each EKS contains keys from a single origin.
-  * A new InteropManifestEngine will be built. This engine is similar to ManifestEngine, only it will implement the new InteropManifest specified under [API Design](#API-Design). It will generate one manifest per origin for all origins except NL.
-  * ManifestEngine will be updated so that it only operates on keys with the origin of NL.
-  * ContentApi will be expanded to support the new APIs specified under [API Design](#API-Design).
-
-The backend implementation will be described in detail in the folder /docs/technical-designs/interop.md in the backend repository.
-
-- The following changes will be made to both the iOS and Android apps:
-  * A new UI will be added to allow the user to decide which countries to scan.
-  * The new APIs specified under [API Design](#API-Design) will be supported.
-
-[TODO: where will be screens be designed and technical design added for the he frontend implementation?].
 
 # API Design
 
@@ -453,42 +299,8 @@ This model ensures that the Dutch back-end only needs outgoing connections, and 
 
 ## Interface between Dutch back-end and the Dutch app
 
-The interface between the Dutch CoronaMelder backend and the apps is enhanced with 2 urls, which are more or less the same as the current calls, but separated per ‘countries of interest’
+The interface between the Dutch CoronaMelder backend and the apps does not need any modification. Only the number of keys published by the backend and processed by the apps will increase.
 
-### Manifest
-
-[https://coronamelder-dist.nl/[country]/manifest](https://coronamelder-dist.nl/[country]/manifest)
-
-The manifest file in the current back-end contains all Dutch key files. To not hugely increase this manifest’s size, we create new separate manifests per countries of interest. The international manifests will look like this:
-
-{ 
-    keySets: [
-        { 
-            "id": “b2eaf132be1ef”,
-            “dateFrom”: “2020-08-01”,
-            “dateTo”: “2020-08-15”
-        },
-        {
-            “id”: “24bcd345”,
-            ….
-        }
-
-    ]
-
-}
-
-
-The reason each keyset has a dateFrom and dateTo is that this way we can see that it contains keys for a certain date range. Clients could selectively download only files that contain keys for the days that the user was abroad. This would however require that the user not only indicates that he visited another country, but also exact dates.
-
-Note that this manifest contains less fields than the domestic manifest, as there are no risk parameters or app config as we have in the domestic manifest
-
-We need to balance the granularity of the keyfiles with the overhead in each file and the transmission overhead. This will be refined in a future version.
-
-### Exposure Key Set
-
-https://coronamelder-dist.nl/[country]/exposurekeyset/[id]
-
-An Exposure Key Set follows the exact same structure as our existing Exposure Key Sets, but with a country identifier in the URL. The URL includes the filename of the set. (The filename will be determined by the backend, similar to how it's currently producing those filenames for domestic key sets.)
 
 # Security Considerations
 
@@ -506,15 +318,15 @@ When exchanging keys, the Federation Gateway and the Dutch backend mutually auth
 
 ## Key Stuffing
 
-In theory it could happen that we send only a few files from a few infected persons to the gateway. To ensure that a compromised gateway wouldn’t be able to link keys so it can track persons across multiple days, the same stuffing rules as applied domestically are applied before we upload them to the Gateway. In addition to the stuffing we currently do, we should also randomize countries of interest, so real keys are indistinguishable from stuffed keys.
+In theory it could happen that we send only a few files from a few infected persons to the gateway. To ensure that a compromised gateway wouldn’t be able to link keys so it can track persons across multiple days, the same stuffing rules as applied domestically are applied before we upload them to the Gateway.
 
 # Privacy Considerations
 
-It is recommended to update the DPIA (Data Protection Impact Analysis) of the CoronaMelder app to take interoperability considerations into account. The chosen architecture by the European eHealth initiative and our connection with it introduce a number of elements that warrant DPIA analysis. 
+A separate DPIA (Data Protection Impact Analysis) of the CoronaMelder app to take interoperability considerations into account will be performed and documented. The chosen architecture by the European eHealth initiative and our connection with it introduce a number of elements that warrant DPIA analysis. 
 
 ## Key sharing
 
-Since diagnosis keys rotate on a daily basis and a user may have visited multiple countries on the same day, the chosen data sharing solution means that one temporary daily key can be sent to multiple countries, via the gateway. This means that:
+Since diagnosis keys rotate on a daily basis and a user may have visited multiple countries on the same day, the chosen data sharing solution means that one temporary daily key will be sent to multiple countries, via the gateway. This means that:
 
 1. The country that receives keys from travelers, can see how many infected people have traveled to that country, and (depending on the implementation), from where.
 
@@ -526,23 +338,14 @@ The information is limited to a specific day because daily keys are unlinkable. 
 
 ## Key downloads
 
-Theoretically our CDN can ‘see’ which countries of interest an app is downloading, so it might ‘leak’ that a user has traveled. To mitigate this, all countries could be placed in the same files, but that would lead to a lot of extra data for users that may not even have traveled. It is better to rely on not logging requests on the cdn in a way that they can be related to an IP address. At this time the KPN CDN does not log IP addresses nor requests (as defined in the SLA).
+Since all keys from all participating countries are published the same way on the CoronaMelder CDN, foreign keys are not distinguishable from this endpoint. It is possible to download the keys from countries that implement the Country of Interest or the Traveller pattern and derive travel patterns of the collected daily keys. These keys however do not by themselves identify individuals. 
 
-It is important that the user by choice/consent downloads keys for other countries of interest.
-
-The chosen model ensures that only our own CDN is hit by the user’s app. The foreign keys are never sourced directly from other countries but only via the Federation Gateway and our own interop server. 
-
-## Travel Destinations
-
-The app does not and will not use location information. This means that the user needs to indicate they have been traveling. This happens in two places. 
-
-1. If an app user has traveled and wants to receive notifications in case they have met an infected person abroad, they should tell the app that they have traveled to a certain country and want to download that country’s key information for the next 14 days. This info does not need to be shared with the Corona app back-end. The CDN could ‘see’ that the user downloads a particular country, so it’s important to uphold the CDN’s promise of not logging such requests in combination with an IP address. Nevertheless the user should be aware that he is asking for content from a particular country. 
-
-2. An infected user already tells the GGD that they have traveled as part of the Bron and Contact Onderzoek (BCO) conversation. The GGD will enter this information into the coronamelder portal, associated only to the 6 digit code that was entered. The coronamelder backend is therefore unable to link back the destination information to a particular user. 
+The EFGS design ensures that all apps including CoronaMelder only download from their domestic server. The foreign keys are never sourced directly from other countries but only via the Federation Gateway and our own interop server. 
 
 ## Use of test data
 
 For all testing purposes (during development, testing, EU pilot etc) we will only supply synthetic, test TEKs that do not originate from real users. Real end user keys will only be used in production. 
+
 
 # References
 
