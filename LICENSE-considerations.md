@@ -12,7 +12,7 @@ In addition, the EUPL has been developed by the European Commission to publish g
 
 The State of the Netherlands has also drawn up a Contributor License Agreement (CLA) for contributions to the Notification App from the open source community. 
 
-The purpose of the CLA is to provide clarity about the allocation of intellectual property rights in the Notification App. 
+The purpose of the CLA is to provide clarity about the allocation of intellectual property rights in the Notification App. The CLA itself is licensed under the CC0 license. 
 
 By explicitly agreeing on the terms for the contribution to the Notification App, potential disputes about intellectual property rights are prevented as much as possible.
 
