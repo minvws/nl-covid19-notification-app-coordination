@@ -118,6 +118,28 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/AppConfig'
+  /resourcebundle/{id}:
+    get:
+      tags:
+        - CDN
+      summary: Get the resource bundle for dynamic content
+      description: |
+        The resource bundle contains content that can be updated from the server side. 
+        This resource should be fetched if the app does not have this version in its cache.
+      parameters:
+        - name: id
+          in: path
+          description: The resourceBundle value from the manifest
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Bundle retrieved succesfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResourceBundle'
   /caregiverPortal/labconfirm:
     post:
       tags:
@@ -280,6 +302,10 @@ components:
           type: string
           description: Mobile app config to fetch from endpoint /appconfig/{id}. 
           example: aae34fcb
+        resourceBundle:
+          type: string
+          description: id of the resource bundle to fetch from the resource bundle endpoint
+          example: aae34fb    
     RiskCalculationParameters:
       type: object
       properties:
@@ -382,12 +408,88 @@ components:
           description: |
             only if value == "deactivated", the app stops working as described in 
             https://github.com/minvws/nl-covid19-notification-app-coordination/blob/master/architecture/App%20Termination%20Plan.md
-        
-    Bundle:
+    ResourceBundle:
+      type: object
+      required:
+        - resources
+        - guidance
+      properties:
+        resources:
+          $ref: '#/components/schemas/ResourceBundleResources'
+        guidance:
+          $ref: '#/components/schemas/ResourceBundleGuidance'
+    ResourceBundleGuidance:
+      type: object
+      description: |
+        Defines the parameters and the structure of the treatment perspective guidance screen
+      properties:
+            quarantineDays:
+              type: integer
+              example: 10
+            layout:
+              type: array
+              items:
+                $ref: '#/components/schemas/GuidanceLayoutType'
+    ResourcesKeyValue:
+      type: object
+      additionalProperties:
+        type: string
+      example: 
+        exposure_notification_title: You've been near someone with coronavirus
+    ResourceBundleResources:
+      description: |
+        Mapping of resource keys to translations.
+        The resource values can contain placeholders which will be replaced by the clients.
+        <ul>
+        <li>{ExposureDate} - the date of exposure formatted in the locale of the translation</li>
+        <li>{ExposureDaysAgo} - the number of days since exposure, formatted int he locale of the translation: "5 days ago"</li>
+        <li>{StayHomeUntilDate} - the formatted date calulated from {ExposureDate} plus the amount of days to stay at home from the quarantineDays property in the guidance section of the resource bundle
+        </ul>
+        Limited html markup is allowed:
+        <ul>
+        <li> &lt;b> for bold text</li>
+        <li> &lt;i> for italic text</li>
+        <li> &lt;ul> and &lt;li> elements for lists.
+        </ul>
+        All markup needs to be correct and have correct ordering and closing tags.
       type: object
       properties:
-        version:
+        en:
+          $ref: '#/components/schemas/ResourcesKeyValue'
+      additionalProperties:
+          $ref: '#/components/schemas/ResourcesKeyValue'
+      example: 
+        en: 
+          exposure_notification_title: You've been near someone with coronavirus
+          exposure_notification_body: You were near someone on {ExposureDate} ({ExposureDaysAgo}) who was later found to have coronavirus. You were exposed to a higher risk of infection in this situation.\n\nIf you are indeed infected, you can infect other people with coronavirus. Even if you don't feel sick right now.
+        nl: 
+          exposure_notification_title: Je was in de buurt van iemand met het coronavirus
+          exposure_notification_body: Op {ExposureDate} ({ExposureDaysAgo}) ben jij misschien besmet geraakt. Je was die dag minstens 15 minuten dicht bij iemand met corona.\n\nAls je inderdaad besmet bent, kun je het virus aan anderen doorgeven. Ook als je je nu niet ziek voelt.
+    BaseGuidanceLayoutType:
+      properties:
+        type:
           type: string
+    GuidanceLayoutType:
+      oneOf:
+        - $ref: '#/components/schemas/GuidanceLayoutParagraph'
+      discriminator:
+        propertyName: type
+        mapping:
+          paragraph: '#/components/schemas/GuidanceLayoutParagraph'
+    GuidanceLayoutParagraph:
+      description: Represents a paragraph in the treatment perspective
+      allOf:
+        - $ref: '#/components/schemas/BaseGuidanceLayoutType'
+      type: object
+      properties:
+        title:
+          type: string
+        body:
+          type: string
+      example: 
+        title: exposure_notification_title
+        body: exposure_notification_body
+        type: paragraph
     LabConfirmationRequest:
       type: object
       properties:
