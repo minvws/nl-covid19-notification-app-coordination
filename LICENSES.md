@@ -4,7 +4,7 @@ First - The work that is created in the Covid19 context, such as the notificatio
 
 However - that does not mean that all (derived) work is solely under that single license. For example - where appropriate certain (open source) modules may be required and included. These will remain under their original Copyright and License (though some may be released under the EUPL/1.2 if they are unsuitable to be contributed back upstream).
 
-Secondly – The documents of this project that are held in the repository ‘nl-covid19-notification-app-coordination’ are released under the CC0 license (see www.rijksoverheid.nl/copyright). If you use (parts) of these documents, you are not obliged to quote the source, but you must not imply that the Dutch government endorses the derivative work.
+Secondly – The documents of this project that are held in the repository ‘nl-covid19-notification-app-coordination’ are released under the CC0 license (see www.rijksoverheid.nl/copyright). If you use (parts of) these documents, you are not obliged to quote the source, but you must not imply that the Dutch government endorses the derivative work.
 
 The CC0 does not apply to:
  
