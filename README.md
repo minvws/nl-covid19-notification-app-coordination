@@ -14,10 +14,11 @@ This repository contains the documentation of the Dutch COVID-19 Notification Ap
 * [General Public Website](https://github.com/minvws/nl-covid19-notification-app-website)
 * [Community Website](https://github.com/minvws/nl-covid19-notification-app-community-website)
 * [Statistics](https://github.com/minvws/nl-covid19-notification-app-statistics)
-* [Lab app for Bluetooth/GAEN validation tests](https://github.com/minvws/nl-covid19-notification-lab-ios)
+* [iOS lab app for BT/GAEN validation tests](https://github.com/minvws/nl-covid19-notification-lab-ios)
+* [Android lab app for BT/GAEN validation tests](https://github.com/minvws/nl-covid19-notification-lab-android)
 * [Provenance such as notary statements](https://github.com/minvws/nl-covid19-notification-app-provenance)
 * [Portal for GGD staff](https://github.com/minvws/nl-covid19-notification-app-iccportal)
-* [Early experimental Android prototype](https://github.com/minvws/nl-covid19-notification-lab-android)
+
 
 ## Note to contributors
 
